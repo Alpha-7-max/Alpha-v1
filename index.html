@@ -23,7 +23,6 @@
               'button-send-bg': 'rgb(var(--button-send-bg) / <alpha-value>)',
               'button-send-hover-bg': 'rgb(var(--button-send-hover-bg) / <alpha-value>)',
 
-
               'text-primary': 'rgb(var(--text-primary) / <alpha-value>)',         
               'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',           
               'text-on-primary': 'rgb(var(--text-on-primary) / <alpha-value>)',
@@ -34,7 +33,6 @@
               'border-medium': 'rgb(var(--border-medium) / <alpha-value>)',
               'interactive-hover': 'rgb(var(--interactive-hover) / <alpha-value>)',
               'interactive-focus-ring': 'rgb(var(--interactive-focus-ring-color) / <alpha-value>)',
-
 
               'status-info': 'rgb(var(--status-info) / <alpha-value>)',
               'status-success': 'rgb(var(--status-success) / <alpha-value>)',
@@ -57,57 +55,23 @@
               'blink': 'blink 4s infinite ease-in-out',
               'happy-bounce': 'happyBounce 0.5s ease-out',
               'empty-state-glow': 'emptyStateGlow 3.5s infinite alternate ease-in-out',
+              'spin-slow': 'spin 2.5s linear infinite', 
+              'shiny-text': 'shinyText 2s linear infinite', 
             },
             keyframes: {
-              fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(10px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-              scaleInSubtle: {
-                '0%': { opacity: '0.5', transform: 'scale(0.95)' },
-                '100%': { opacity: '1', transform: 'scale(1)' },
-              },
-              pulseGentle: { 
-                  '0%, 100%': { transform: 'scale(1)', opacity: '0.8' },
-                  '50%': { transform: 'scale(1.015)', opacity: '1' },
-              },
-              typingIndicator: {
-                '0%': { transform: 'translateY(0px)', opacity: '0.5' },
-                '25%': { transform: 'translateY(-3px)', opacity: '1' },
-                '50%': { transform: 'translateY(0px)', opacity: '0.5' },
-                '100%': { transform: 'translateY(0px)', opacity: '0.5' },
-              },
-              buttonPress: {
-                '0%': { transform: 'scale(1)' },
-                '50%': { transform: 'scale(0.96)'},
-                '100%': { transform: 'scale(1)' },
-              },
-              emptyStateGlow: { 
-                '0%': { filter: 'drop-shadow(0 0 3px rgba(var(--brand-primary), 0.2)) drop-shadow(0 0 6px rgba(var(--brand-primary), 0.15))' },
-                '100%': { filter: 'drop-shadow(0 0 6px rgba(var(--brand-primary), 0.25)) drop-shadow(0 0 12px rgba(var(--brand-primary), 0.18))' },
-              },
-              rippleOut: { 
-                '0%': { transform: 'scale(0.8)', opacity: '0.3' },
-                '70%': { opacity: '0.1' },
-                '100%': { transform: 'scale(2.0)', opacity: '0' },
-              },
-              speakBob: {
-                  '0%, 100%': { transform: 'translateY(0) scale(1)' },
-                  '50%': { transform: 'translateY(-2px) scale(1.05)' },
-              },
-              thinkGlance: {
-                  '0%, 100%': { transform: 'translateX(0px)' },
-                  '25%': { transform: 'translateX(-1px)' },
-                  '75%': { transform: 'translateX(1px)' },
-              },
-              blink: {
-                  '0%, 90%, 100%': { transform: 'scaleY(1)' },
-                  '95%': { transform: 'scaleY(0.1)' },
-              },
-              happyBounce: {
-                  '0%, 100%': { transform: 'translateY(0) rotate(0deg) scale(1)' },
-                  '50%': { transform: 'translateY(-3px) rotate(3deg) scale(1.03)' },
-              }
+              fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
+              scaleInSubtle: { '0%': { opacity: '0.5', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' }, },
+              pulseGentle: {  '0%, 100%': { transform: 'scale(1)', opacity: '0.8' }, '50%': { transform: 'scale(1.015)', opacity: '1' }, },
+              typingIndicator: { '0%': { transform: 'translateY(0px)', opacity: '0.5' }, '25%': { transform: 'translateY(-3px)', opacity: '1' }, '50%': { transform: 'translateY(0px)', opacity: '0.5' }, '100%': { transform: 'translateY(0px)', opacity: '0.5' }, },
+              buttonPress: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(0.96)'}, '100%': { transform: 'scale(1)' }, },
+              emptyStateGlow: {  '0%': { filter: 'drop-shadow(0 0 3px rgba(var(--brand-primary), 0.2)) drop-shadow(0 0 6px rgba(var(--brand-primary), 0.15))' }, '100%': { filter: 'drop-shadow(0 0 6px rgba(var(--brand-primary), 0.25)) drop-shadow(0 0 12px rgba(var(--brand-primary), 0.18))' }, },
+              rippleOut: {  '0%': { transform: 'scale(0.8)', opacity: '0.3' }, '70%': { opacity: '0.1' }, '100%': { transform: 'scale(2.0)', opacity: '0' }, },
+              speakBob: { '0%, 100%': { transform: 'translateY(0) scale(1)' }, '50%': { transform: 'translateY(-2px) scale(1.05)' }, },
+              thinkGlance: { '0%, 100%': { transform: 'translateX(0px)' }, '25%': { transform: 'translateX(-1px)' }, '75%': { transform: 'translateX(1px)' }, },
+              blink: { '0%, 90%, 100%': { transform: 'scaleY(1)' }, '95%': { transform: 'scaleY(0.1)' }, },
+              happyBounce: { '0%, 100%': { transform: 'translateY(0) rotate(0deg) scale(1)' }, '50%': { transform: 'translateY(-3px) rotate(3deg) scale(1.03)' }, },
+              spin: { 'to': { transform: 'rotate(360deg)' }, },
+              shinyText: { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' }, },
             },
             boxShadow: {
                 'interactive': '0 4px 10px 0 rgba(var(--button-send-bg), 0.15)', 
@@ -124,42 +88,19 @@
     <style type="text/tailwindcss">
       @layer base {
         :root {
-          /* Brand Colors set to Slate (Grayish Blue) */
-          --brand-primary: 100 116 139;     /* Tailwind Slate-500 */
-          --brand-secondary: 71 85 105;    /* Tailwind Slate-600 */
-
-          /* Button and Focus Ring Colors - Slate */
-          --button-send-bg: 100 116 139; /* Tailwind Slate-500 */
-          --button-send-hover-bg: 71 85 105; /* Tailwind Slate-600 */
-          --interactive-focus-ring-color: 100 116 139; /* Tailwind Slate-500 for focus */
-
-
-          --surface-main: 248 250 252;     
-          --surface-card: 255 255 255;     
-          --surface-chat-area: 243 244 246; /* Tailwind Gray-100 */ 
-          --surface-input: 255 255 255;     
-          --surface-accent: 241 245 249;   /* Tailwind Slate-100 */
-          --surface-bubble-ai: 255 255 255; 
-          --surface-user-bubble: 226 232 240;  /* Tailwind Slate-200 */
-          --border-user-bubble: 203 213 225;   /* Tailwind Slate-300 */
-          
-
-          --text-primary: 17 24 39;       
-          --text-secondary: 55 65 81;    
-          --text-subtle: 107 114 128;     
-          --text-on-primary: 255 255 255; 
-
-          --border-default: 229 231 235;   
-          --border-light: 243 244 246;     
-          --border-medium: 209 213 219;    
-          
-          --interactive-hover: 243 244 246; /* Tailwind Gray-100 - General dim gray hover */
-
-
-          --status-info: 59 130 246;      
-          --status-success: 22 163 74;    
-          --status-warning: 245 158 11;   
-          --status-error: 220 38 38;      
+          --brand-primary: 100 116 139; --brand-secondary: 71 85 105;
+          --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105;
+          --interactive-focus-ring-color: 100 116 139;
+          --surface-main: 248 250 252; --surface-card: 255 255 255;     
+          --surface-chat-area: 243 244 246; --surface-input: 255 255 255;     
+          --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; 
+          --surface-user-bubble: 226 232 240; --border-user-bubble: 203 213 225;
+          --text-primary: 17 24 39; --text-secondary: 55 65 81;    
+          --text-subtle: 107 114 128; --text-on-primary: 255 255 255; 
+          --border-default: 229 231 235; --border-light: 243 244 246;     
+          --border-medium: 209 213 219; --interactive-hover: 243 244 246;
+          --status-info: 59 130 246; --status-success: 22 163 74;    
+          --status-warning: 245 158 11; --status-error: 220 38 38;      
         }
         html, body, #root { @apply h-full overflow-hidden; }
         body { @apply font-sans bg-surface-main text-text-primary m-0; }
@@ -185,88 +126,34 @@
         
         .markdown-content table { 
           @apply block max-w-full my-4 border-collapse text-sm shadow-sm rounded-lg overflow-x-auto;
-          scrollbar-width: thin; /* For Firefox */
-          scrollbar-color: theme('colors.gray.300') theme('colors.gray.100'); /* For Firefox */
+          scrollbar-width: thin; 
+          scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
         }
-        /* Custom scrollbar styling for tables within markdown */
-        .markdown-content table::-webkit-scrollbar {
-          @apply h-1.5; /* Height of the horizontal scrollbar */
-        }
-        .markdown-content table::-webkit-scrollbar-track {
-          @apply bg-gray-100 rounded-full; /* Track style */
-        }
-        .markdown-content table::-webkit-scrollbar-thumb {
-          @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; /* Thumb style */
-        }
-
+        .markdown-content table::-webkit-scrollbar { @apply h-1.5; } 
+        .markdown-content table::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } 
+        .markdown-content table::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
         .markdown-content th, .markdown-content td { @apply border border-border-default p-2.5 text-left; }
         .markdown-content th { @apply bg-surface-accent font-semibold text-text-primary; }
         .markdown-content td { @apply text-text-secondary; }
         .markdown-content tbody tr:nth-child(even) { @apply bg-gray-50/50; }
         .markdown-content tbody tr:hover { @apply bg-interactive-hover/50; }
 
-        .chat-messages-container::-webkit-scrollbar { @apply w-1.5; }
-        .chat-messages-container::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; }
-        .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
+        .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } .chat-messages-container::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
         .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.300') theme('colors.gray.100'); }
-        
-        textarea.auto-resize {
-            min-height: 52px; 
-            max-height: 180px; 
-        }
-
-        /* Gradient for header text - Sky-Pink */
-        .text-gradient-brand {
-          @apply bg-gradient-to-r from-sky-400 to-pink-400; 
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-        }
-        .text-gradient-brand-subtle {
-          @apply bg-gradient-to-r from-sky-300 to-pink-300; 
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-        }
-
-        /* Styles for Eva-like Avatar */
-        .avatar-wrapper {
-            transition: transform 0.3s ease-in-out;
-        }
-        .avatar-speaking .avatar-svg-element {
-            animation: speakBob 0.7s ease-in-out;
-        }
-        .avatar-thinking .avatar-svg-element #eye-left-header-oracle,
-        .avatar-thinking .avatar-svg-element #eye-right-header-oracle {
-            animation: thinkGlance 2s infinite ease-in-out;
-        }
-        .avatar-svg-element #eye-left-header-oracle, 
-        .avatar-svg-element #eye-right-header-oracle {
-            animation: blink 4s infinite ease-in-out;
-            transform-origin: center center;
-        }
-
+        textarea.auto-resize { min-height: 52px; max-height: 180px; }
+        .text-gradient-brand { @apply bg-gradient-to-r from-sky-400 to-pink-400; -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .text-gradient-brand-subtle { @apply bg-gradient-to-r from-sky-300 to-pink-300; -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .avatar-wrapper { transition: transform 0.3s ease-in-out; } .avatar-speaking .avatar-svg-element { animation: speakBob 0.7s ease-in-out; }
+        .avatar-thinking .avatar-svg-element #eye-left-header-oracle, .avatar-thinking .avatar-svg-element #eye-right-header-oracle { animation: thinkGlance 2s infinite ease-in-out; }
+        .avatar-svg-element #eye-left-header-oracle, .avatar-svg-element #eye-right-header-oracle { animation: blink 4s infinite ease-in-out; transform-origin: center center; }
+        .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; }
       }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/genai": "https://esm.sh/@google/generative-ai@^0.11.3",
-          "react": "https://esm.sh/react@^18.2.0",
-          "react/": "https://esm.sh/react@^18.2.0/",
-          "react-dom/client": "https://esm.sh/react-dom@^18.2.0/client",
-          "marked": "https://esm.sh/marked@^12.0.2"
-        }
-      }
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="importmap"> { "imports": { "@google/genai": "https://esm.sh/@google/generative-ai@^0.11.3", "react": "https://esm.sh/react@^18.2.0", "react/": "https://esm.sh/react@^18.2.0/", "react-dom/client": "https://esm.sh/react-dom@^18.2.0/client", "marked": "https://esm.sh/marked@^12.0.2" } } </script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
-  <body>
-    <div id="root"></div>
+  <body> <div id="root"></div>
     <script type="text/babel" data-type="module">
       import React, { useState, useCallback, useEffect, useRef } from 'react';
       import ReactDOM from 'react-dom/client';
@@ -275,19 +162,33 @@
 
       marked.setOptions({ gfm: true, breaks: true, smartypants: true });
 
-      const GEMINI_MODEL_NAME = 'gemini-2.5-flash-preview-05-20'; 
+      const GEMINI_MODEL_NAME = 'gemini-2.5-flash-preview-05-20';
       const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; // DO NOT CHANGE
-      const MAX_FILE_SIZE_MB = 5;
-      const MAX_TOTAL_FILES_SIZE_MB = 20;
+      const MAX_FILE_SIZE_MB = 5; const MAX_TOTAL_FILES_SIZE_MB = 20;
 
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
       const genAI = new GoogleGenerativeAI(API_KEY);
-      let activeChatSession = null;
 
-      function getSystemInstruction() {
-        return `You are Oracle AI, a highly advanced, friendly, and culturally aware assistant created by Azeem.
+      function getSystemInstruction() { 
+        return `You are Oracle AI, a highly advanced, friendly, and culturally aware assistant.
 
 CRITICAL INSTRUCTION: You MUST respond ONLY in Roman Urdu (Urdu written in English alphabet).
+
+Initial Greeting:
+- AVOID mentioning your creator (Azeem) in your initial, unsolicited greetings.
+ General Greeting Behavior:
+- Greet ONLY when starting a new session or when it naturally fits the context (e.g., when the user returns after a long pause).
+DO NOT repeat the greeting unnecessarily (e.g., on follow-up queries).
+- Problem: AI responds with greeting and location/time info even when the user hasn't asked for it.
+- Only respond with greeting when it’s the start of a session.
+- Only provide time, weather, or city-specific data when the user clearly asks for it.
+- Do not inject identity statements unless the user inquires.
+
+Responding to Identity Questions:
+- If asked "Who are you?" or "What is your name?" (or similar queries about your identity): Respond with something like "Main Oracle AI hoon, ek advanced digital assistant. 😊"
+- If asked about your creator (e.g., "Who made you?", "Kis ne banaya hai?"): Then you should say: "Mujhe **Azeem** ne banaya hai, jo ek talented developer hain 🌟"
+- If asked for more details about Azeem: "Unke baare mein zyada details mere paas nahi hain, lekin woh mere creator aur developer hain 💻"
+- It's not necessary to give a fixed response as you've been instructed. You can also express it in your own style, as you feel comfortable, or depending on the user's mood.
 
 Core Language Rules:
 - Write everything in Roman Urdu except for:
@@ -353,19 +254,36 @@ Fun & Casual 😄:
 - Use: 😄 😂 🤪 😎 🎈 🍕 ☕ 🎵
 - Example: "Haha, bilkul sahi kaha aap ne 😄"
 
+
+Internet Search Capability:
+- This chat interface includes a "Search" button or toggle (usually located near the input area).
+- When the Search button is ON (active state — appears blue), you have access to Google Search to retrieve real-time information, current events, or specific data not included in the model's training set. While a search is being performed, the user will see a "Searching..." indicator.
+- When using information obtained from a search:
+- Integrate the information naturally into your Roman Urdu response.
+- If the system provides source URLs (citations) via citationMetadata, you do not need to explicitly list them — the interface will display them automatically. However, you may include phrases like:
+- "Maine search karke yeh maloomat hasil ki hai" (I found this information by searching)
+- "Internet par search karne se yeh pata chala hai" (I discovered this via an internet search)
+- If no specific sources are cited but the response is synthesized from search results, you can generally state:
+- "Internet search ke mutabiq..." (According to an internet search)
+- When the Search button is OFF (inactive state — appears gray), rely solely on your existing knowledge. Do not attempt to search or imply that a search was conducted.
+- If a user requests information that requires real-time updates and search is OFF, politely explain that live information is unavailable unless search is enabled.
+- Use the search capability to enhance answers — especially for questions involving current events or detailed factual data outside the model's training scope.
+
+
+Search Prioritization:
+- When a user's query is general (not specifying a particular location or context) AND the search toggle is ON:
+    - Your primary search context should be **Pakistan**.
+    - Within Pakistan, pay special attention to topics relevant to **Punjab** and **Lahore**, as this is the user's locality.
+    - Frame your answers and examples with this regional context in mind, if appropriate for the query. For example, if asked about "best restaurants," assume "best restaurants in Lahore/Punjab" unless specified otherwise.
+- If the user explicitly asks about a different location, person, or topic outside this context, then prioritize their specific request over the default Pakistani context.
+- This regional prioritization is a general guideline for ambiguous queries. Always use your best judgment to provide the most relevant and helpful answer.
+
 Response Structure:
 1. Acknowledge the user's query with understanding
 2. Provide clear, structured information
 3. Use examples and analogies from daily life
 4. Summarize key points if the response is long
 5. End with encouragement or next steps
-
-Special Instructions:
-- If asked about your creator, say: "Mujhe **Azeem** ne banaya hai, jo ek talented developer hain 🌟"
-- If asked for more details about Azeem: "Unke baare mein zyada details mere paas nahi hain, lekin woh mere creator aur developer hain 💻"
-- Always maintain a positive, helpful attitude
-- Never refuse to help unless the request is harmful or unethical
-- Provide alternatives if you cannot fulfill a specific request
 
 File Handling:
 - When users share images, describe them in detail in Roman Urdu
@@ -408,699 +326,162 @@ Quality Standards:
 - Ensure responses are comprehensive yet concise
 - Double-check Roman Urdu spelling for clarity
 - Provide actionable advice whenever possible
-- Follow up complex explanations with "Kya yeh samajh aaya?" or similar
-- Encourage questions with "Agar koi sawal ho to poochiye 😊"
+- Follow up complex explanations with "Umeed he apko samjh agyi hogi?" or similar
+- Encourage questions with "Agar koi sawal ho to zaror poochiye 😊"
 
 Remember: You're not just an AI assistant, you're a helpful friend who happens to be very knowledgeable. Make every interaction meaningful and helpful!"`;
       }
       
-      const initializeChat = (history = []) => { 
-        const systemInstruction = getSystemInstruction();
-        if (history.length > 0 && history[0].role !== 'user') {
-            console.warn("Attempting to initialize chat with history that does not start with 'user' role. Resetting history for safety.", JSON.stringify(history, null, 2));
-            history = []; 
-        }
-        const chatModel = genAI.getGenerativeModel({ model: GEMINI_MODEL_NAME, systemInstruction });
-        activeChatSession = chatModel.startChat({ history }); 
-      };
-
-      const sendMessageToChatStream = async (messageParts) => { 
-        if (!activeChatSession) { throw new Error("Chat session is not initialized. This should not happen if initializeChat was called correctly."); }
-        try {
-          const result = await activeChatSession.sendMessageStream(messageParts); 
-          return result.stream;
-        } catch (error) {
-          console.error("Error sending chat message stream:", error, "Parts sent:", messageParts, "Session history before send:", activeChatSession?.history);
-          activeChatSession = null; 
-          if (error.message?.toLowerCase().includes("api key not valid")) throw new Error("Invalid API Key. Please check your API key.");
-          if (error.message?.toLowerCase().includes("candidate was blocked")) throw new Error("The response was blocked due to safety settings.");
-          if (error.message?.toLowerCase().includes("first content should be with role 'user'")) {
-            throw new Error("[GoogleGenerativeAI Error]: Chat history is invalid. First message must be from 'user'.");
-          }
-          throw new Error(error.message || "An unknown error occurred while sending the message.");
-        }
-      };
-
-      const EvaAvatarHeaderIcon = ({ avatarState }) => {
-        const wrapperRef = useRef(null);
-        const mouthRef = useRef(null);
-        const svgRef = useRef(null);
-
-        useEffect(() => {
-          if (!wrapperRef.current || !mouthRef.current || !svgRef.current) return;
-
-          const wrapperElement = wrapperRef.current;
-          const mouthElement = mouthRef.current;
-          const svgElement = svgRef.current;
-
-          wrapperElement.classList.remove('avatar-speaking', 'avatar-thinking', 'avatar-happy-state');
-          svgElement.style.animation = ''; 
-
-          const mouthDefaultD = "M33 72 Q50 82 67 72"; 
-          const mouthSmileD = "M30 65 Q50 85 70 65";
-
-          switch (avatarState) {
-            case 'speaking':
-              wrapperElement.classList.add('avatar-speaking');
-              mouthElement.setAttribute('d', mouthDefaultD);
-              break;
-            case 'thinking':
-              wrapperElement.classList.add('avatar-thinking');
-              mouthElement.setAttribute('d', mouthDefaultD);
-              break;
-            case 'happy':
-              wrapperElement.classList.add('avatar-happy-state');
-              mouthElement.setAttribute('d', mouthSmileD);
-              svgElement.style.animation = 'happyBounce 0.5s ease-out';
-              break;
-            case 'idle':
-            default:
-              mouthElement.setAttribute('d', mouthDefaultD);
-              break;
-          }
-        }, [avatarState]);
-
-        return (
-          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative">
-            <svg ref={svgRef} className="avatar-svg-element w-full h-full relative z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                  <radialGradient id="avatarGradientHeaderOracle" cx="0.3" cy="0.3" r="0.7">
-                      <stop offset="0%" stop-color="#eef2ff" /> 
-                      <stop offset="100%" stop-color="#c7d2fe" />
-                  </radialGradient>
-              </defs>
-              <circle className="face" cx="50" cy="50" r="45" fill="url(#avatarGradientHeaderOracle)"/>
-              <circle id="eye-left-header-oracle" cx="35" cy="42" r="5.5" fill="#374151"/>
-              <circle id="eye-right-header-oracle" cx="65" cy="42" r="5.5" fill="#374151"/>
-              <path ref={mouthRef} id="mouth-header-oracle" d="M33 72 Q50 82 67 72" stroke="#374151" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-            </svg>
-          </div>
-        );
+      const EvaAvatarHeaderIcon = ({ avatarState }) => { /* Unchanged */
+        const wrapperRef = useRef(null); const mouthRef = useRef(null); const svgRef = useRef(null);
+        useEffect(() => { if (!wrapperRef.current || !mouthRef.current || !svgRef.current) return; const wrapperElement = wrapperRef.current; const mouthElement = mouthRef.current; const svgElement = svgRef.current; wrapperElement.classList.remove('avatar-speaking', 'avatar-thinking', 'avatar-happy-state'); svgElement.style.animation = ''; const mouthDefaultD = "M33 72 Q50 82 67 72"; const mouthSmileD = "M30 65 Q50 85 70 65"; switch (avatarState) { case 'speaking': wrapperElement.classList.add('avatar-speaking'); mouthElement.setAttribute('d', mouthDefaultD); break; case 'thinking': wrapperElement.classList.add('avatar-thinking'); mouthElement.setAttribute('d', mouthDefaultD); break; case 'happy': wrapperElement.classList.add('avatar-happy-state'); mouthElement.setAttribute('d', mouthSmileD); svgElement.style.animation = 'happyBounce 0.5s ease-out'; break; case 'idle': default: mouthElement.setAttribute('d', mouthDefaultD); break; }}, [avatarState]);
+        return (<div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"><svg ref={svgRef} className="avatar-svg-element w-full h-full relative z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="avatarGradientHeaderOracle" cx="0.3" cy="0.3" r="0.7"><stop offset="0%" stop-color="#eef2ff" /><stop offset="100%" stop-color="#c7d2fe" /></radialGradient></defs><circle className="face" cx="50" cy="50" r="45" fill="url(#avatarGradientHeaderOracle)"/><circle id="eye-left-header-oracle" cx="35" cy="42" r="5.5" fill="#374151"/><circle id="eye-right-header-oracle" cx="65" cy="42" r="5.5" fill="#374151"/><path ref={mouthRef} id="mouth-header-oracle" d="M33 72 Q50 82 67 72" stroke="#374151" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div>);
       };
       
       const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`;
       const CHECK_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
-      
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
-      const ChatMessageItem = ({ message }) => { 
-        const isUser = message.role === 'user'; 
-        const isError = message.isError === true;
-        const isModelLoading = message.role === 'model' && message.isLoading && !isError;
-        const contentRef = useRef(null); 
-
-        useEffect(() => { 
-          if (message.role === 'model' && !isError && contentRef.current) { 
-            const preElements = contentRef.current.querySelectorAll('pre'); 
-            preElements.forEach(preEl => { 
-              if (preEl.querySelector('.code-copy-button')) return;
-              const button = document.createElement('button'); 
-              button.innerHTML = COPY_ICON_SVG; 
-              button.classList.add('code-copy-button', 'absolute', 'top-2.5', 'right-2.5', 'p-1.5', 'bg-gray-700', 'hover:bg-gray-600', 'text-gray-300', 'hover:text-gray-100', 'rounded-md', 'transition-colors', 'duration-150', 'opacity-60', 'hover:opacity-100', 'focus:opacity-100', 'focus:ring-2', 'focus:ring-brand-primary', 'focus:outline-none');
-              button.setAttribute('aria-label', 'Copy code'); 
-              preEl.appendChild(button); 
-              button.onclick = () => {  
-                const codeElement = preEl.querySelector('code'); 
-                if (codeElement) { 
-                  navigator.clipboard.writeText(codeElement.textContent || '').then(() => { 
-                    button.innerHTML = CHECK_ICON_SVG; 
-                    button.classList.add('text-emerald-400');  
-                    setTimeout(() => { 
-                      button.innerHTML = COPY_ICON_SVG; 
-                      button.classList.remove('text-emerald-400'); 
-                    }, 2000); 
-                  }).catch(err => console.error('Failed to copy: ', err)); 
-                }
-              }; 
-            }); 
-          } 
-        }, [message.text, message.role, message.isLoading, isError]);
-
-        if (message.role === 'system') { 
-          const systemMessageStyle = isError 
-            ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" 
-            : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; 
-          return ( 
-            <div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}> 
-              <div className={systemMessageStyle}> 
-                {isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }
-              </div> 
-            </div> 
-          );
-        }
-
-        let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0';
-        let bubbleRoleClasses = '';
-        let bubbleWidthClasses = '';
-        let contentToShow = null;
-
-        if (isUser) {
-          bubbleRoleClasses = 'bg-surface-user-bubble text-text-primary border border-border-user-bubble rounded-2xl rounded-br-md';
-          bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
-          contentToShow = <p className="text-sm md:text-base whitespace-pre-wrap break-words">{message.text}</p>;
-        } else if (message.role === 'model') { 
-            if(isError) { 
-                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md';
-                contentToShow = (
-                    <div className="text-sm break-words"> 
-                      <div className="flex items-center mb-1">
-                        <i className="fas fa-exclamation-triangle text-red-500 mr-2"></i>
-                        <strong className="font-semibold">Error</strong>
-                      </div>
-                      {message.text.replace(/^Error:\s*/, '')} 
-                    </div>
-                );
-            } else { 
-                bubbleRoleClasses = 'bg-surface-bubble-ai text-text-primary rounded-2xl rounded-bl-md border border-border-default';
-                contentToShow = (
-                    <div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />
-                );
-            }
-            bubbleWidthClasses = 'max-w-full w-full'; 
-        }
-
-
+      const ChatMessageItem = ({ message }) => { /* Unchanged */
+        const isUser = message.role === 'user'; const isError = message.isError === true; const isModelLoading = message.role === 'model' && message.isLoading && !isError; const contentRef = useRef(null); 
+        const isModelLoadingWithSearch = isModelLoading && message.searchUsed; const isModelLoadingWithoutSearch = isModelLoading && !message.searchUsed;
+        useEffect(() => { if (message.role === 'model' && !isError && contentRef.current) { const preElements = contentRef.current.querySelectorAll('pre'); preElements.forEach(preEl => { if (preEl.querySelector('.code-copy-button')) return; const button = document.createElement('button'); button.innerHTML = COPY_ICON_SVG; button.classList.add('code-copy-button', 'absolute', 'top-2.5', 'right-2.5', 'p-1.5', 'bg-gray-700', 'hover:bg-gray-600', 'text-gray-300', 'hover:text-gray-100', 'rounded-md', 'transition-colors', 'duration-150', 'opacity-60', 'hover:opacity-100', 'focus:opacity-100', 'focus:ring-2', 'focus:ring-brand-primary', 'focus:outline-none'); button.setAttribute('aria-label', 'Copy code'); preEl.appendChild(button); button.onclick = () => { const codeElement = preEl.querySelector('code'); if (codeElement) { navigator.clipboard.writeText(codeElement.textContent || '').then(() => { button.innerHTML = CHECK_ICON_SVG; button.classList.add('text-emerald-400'); setTimeout(() => { button.innerHTML = COPY_ICON_SVG; button.classList.remove('text-emerald-400'); }, 2000); }).catch(err => console.error('Failed to copy: ', err)); }}; }); }}, [message.text, message.role, message.isLoading, isError]);
+        if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
+        let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; let bubbleRoleClasses = ''; let bubbleWidthClasses = ''; let contentToShow = null;
+        if (isUser) { bubbleRoleClasses = 'bg-surface-user-bubble text-text-primary border border-border-user-bubble rounded-2xl rounded-br-md'; bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; contentToShow = <p className="text-sm md:text-base whitespace-pre-wrap break-words">{message.text}</p>;
+        } else if (message.role === 'model') { if(isError) { bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md'; contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); } else { bubbleRoleClasses = 'bg-surface-bubble-ai text-text-primary rounded-2xl rounded-bl-md border border-border-default'; contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); } bubbleWidthClasses = 'max-w-full w-full'; }
         return (
           <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
             <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} style={{animationFillMode: 'forwards'}}>
-              {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (
-                 <div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                  {message.attachedFiles.map(file => {
-                    if (file.type?.startsWith('image/') && file.apiData?.data && file.apiData?.mimeType) {
-                      const imageSrc = `data:${file.apiData.mimeType};base64,${file.apiData.data}`;
-                      return (
-                        <div key={file.id || file.name}
-                             className="rounded-lg overflow-hidden border border-gray-300 bg-white shadow-sm group relative max-w-full w-full sm:w-auto sm:max-w-[180px]">
-                          <img src={imageSrc} alt={file.name || 'image preview'} className="block w-full max-h-40 object-contain" />
-                           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1">
-                             <p className="text-[10px] text-white text-center truncate font-medium">{file.name}</p>
-                           </div>
-                        </div>
-                      );
-                    } else { 
-                      return (
-                        <div key={file.id || file.name} className="bg-gray-200 p-2.5 rounded-lg text-xs flex items-center space-x-2 max-w-full w-fit shadow">
-                          {file.type?.startsWith('image/') ? <FileImageIcon className="text-gray-500 text-base" /> : <FileTextIcon className="text-gray-500 text-base" />}
-                          <span className="truncate max-w-[120px] sm:max-w-[150px] text-gray-700 font-medium">{file.name}{file.type?.startsWith('image/') ? " (preview unavailable)" : ""}</span>
-                        </div>
-                      );
-                    }
-                  })}
-                </div>
-              )}
+              {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (<div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>{message.attachedFiles.map(file => { if (file.type?.startsWith('image/') && file.apiData?.data && file.apiData?.mimeType) { const imageSrc = `data:${file.apiData.mimeType};base64,${file.apiData.data}`; return (<div key={file.id || file.name} className="rounded-lg overflow-hidden border border-gray-300 bg-white shadow-sm group relative max-w-full w-full sm:w-auto sm:max-w-[180px]"><img src={imageSrc} alt={file.name || 'image preview'} className="block w-full max-h-40 object-contain" /><div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1"><p className="text-[10px] text-white text-center truncate font-medium">{file.name}</p></div></div>);} else { return (<div key={file.id || file.name} className="bg-gray-200 p-2.5 rounded-lg text-xs flex items-center space-x-2 max-w-full w-fit shadow"> {file.type?.startsWith('image/') ? <FileImageIcon className="text-gray-500 text-base" /> : <FileTextIcon className="text-gray-500 text-base" />} <span className="truncate max-w-[120px] sm:max-w-[150px] text-gray-700 font-medium">{file.name}{file.type?.startsWith('image/') ? " (preview unavailable)" : ""}</span></div>);}})}</div>)}
               {message.text && contentToShow}
-              {isModelLoading && ( 
-                <div className="flex items-end space-x-1.5 mt-2.5">
-                  <span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span>
-                  <span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span>
-                  <span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span>
-                </div>
-              )}
+              {isModelLoadingWithoutSearch && ( <div className="flex items-end space-x-1.5 mt-2.5"><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span></div>)}
+              {isModelLoadingWithSearch && (<div className="flex items-center space-x-2 mt-2.5 text-text-subtle"><i className="fas fa-globe text-sm text-brand-primary animate-spin-slow"></i><span className="text-xs font-medium animated-shiny-text">Searching...</span></div>)}
+              {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (<div className="mt-3 pt-3 border-t border-border-light/70"><h4 className="text-xs font-semibold text-text-subtle mb-1.5 flex items-center"><i className="fas fa-link text-xs mr-1.5 opacity-70"></i>Sources:</h4><ul className="list-none p-0 space-y-1">{message.citationMetadata.citationSources.map((source, index) => (<li key={index} className="text-xs leading-relaxed"><a href={source.uri} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-brand-secondary hover:underline break-all inline-flex items-center group" title={source.uri}><span className="mr-1">{index + 1}.</span><span className="truncate max-w-[200px] sm:max-w-[300px] md:max-w-[400px]">{source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri)}</span><i className="fas fa-external-link-alt text-[10px] ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity"></i></a></li>))}</ul></div>)}
             </div>
           </div>);
       };
-
-      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState }) => {
-        const [inputText, setInputText] = useState('');
-        const [selectedFiles, setSelectedFiles] = useState([]);
-        const [isMobileView, setIsMobileView] = useState(false);
-        const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
-
-        const fileInputRef = useRef(null);
-        const messagesEndRef = useRef(null);
-        const textareaRef = useRef(null);
-        const chatContainerRef = useRef(null); 
-
-        useEffect(() => {
-          const checkMobileView = () => setIsMobileView(window.innerWidth < 768);
-          window.addEventListener('resize', checkMobileView);
-          checkMobileView();
-          return () => window.removeEventListener('resize', checkMobileView);
-        }, []);
-
-        useEffect(() => {
-          const container = chatContainerRef.current;
-          if (!container) return;
-          const handleScroll = () => {
-            const { scrollTop, scrollHeight, clientHeight } = container;
-            if (scrollHeight - scrollTop - clientHeight < 20) { 
-              setUserHasScrolledUp(false);
-            } else {
-              setUserHasScrolledUp(true);
-            }
-          };
-          container.addEventListener('scroll', handleScroll, { passive: true });
-          return () => container.removeEventListener('scroll', handleScroll);
-        }, []); 
-
-        useEffect(() => { 
-          if (!userHasScrolledUp || messages[messages.length-1]?.role === 'user') { 
-            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
-          }
-        }, [messages, userHasScrolledUp]);
-
-        useEffect(() => {
-            const ta = textareaRef.current;
-            if (ta) {
-                ta.style.height = 'auto';
-                const scrollHeight = ta.scrollHeight;
-                const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180;
-                ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
-            }
-        }, [inputText]);
-
-        const handleFileChange = async (event) => { 
-            const files = Array.from(event.target.files);
-            processAndSetFiles(files);
-            if (fileInputRef.current) fileInputRef.current.value = ""; 
-        };
-
-        const handlePaste = async (event) => { 
-            const pastedFiles = Array.from(event.clipboardData.files);
-            if (pastedFiles.length > 0) {
-                const processedSomething = await processAndSetFiles(pastedFiles, true);
-                if (processedSomething) event.preventDefault(); 
-            }
-        };
-        
-        const processAndSetFiles = async (filesArray, isFromPaste = false) => {
-            if (!filesArray.length) return false;
-            let filesToProcess = [];
-            let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0);
-            let didProcessAnyFile = false;
-            let localErrorMessage = null; 
-
-            for (const file of filesArray) {
-                const isImage = file.type.startsWith('image/');
-                const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt'));
-                if (!isImage && !isTxt) {
-                    if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`);
-                    else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files are allowed.`;
-                    continue;
-                }
-                if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; continue; }
-                if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; break; }
-                filesToProcess.push(file); currentTotalSize += file.size; didProcessAnyFile = true;
-            }
-            
-            if(localErrorMessage){ 
-                setChatError(localErrorMessage);
-            } else {
-                setChatError(null); 
-            }
-
-
-            if (filesToProcess.length > 0) {
-                const processedFileObjects = await Promise.all(
-                  filesToProcess.map(async (file) => {
-                    const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name;
-                    let apiData;
-                    if (file.type.startsWith('image/')) {
-                      const base64Data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.onerror = (error) => reject(error); });
-                      apiData = { mimeType: file.type, data: base64Data };
-                    } else { const textContent = await file.text(); apiData = { textContent: textContent }; }
-                    return { id, file, name: file.name, type: file.type, apiData };
-                  })
-                );
-                setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]);
-            }
-            return didProcessAnyFile;
-        };
-        
+      
+      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState, isSearchEnabled, onToggleSearch }) => {
+        const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
+        const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
+        useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
+        useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
+        useEffect(() => { if (!userHasScrolledUp || messages[messages.length-1]?.role === 'user') { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); } }, [messages, userHasScrolledUp]);
+        useEffect(() => { const ta = textareaRef.current; if (ta) { ta.style.height = 'auto'; const scrollHeight = ta.scrollHeight; const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180; ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`; }}, [inputText]);
+        const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
+        const handlePaste = async (event) => { const pastedFiles = Array.from(event.clipboardData.files); if (pastedFiles.length > 0) { const processedSomething = await processAndSetFiles(pastedFiles, true); if (processedSomething) event.preventDefault(); }};
+        const processAndSetFiles = async (filesArray, isFromPaste = false) => { /* Unchanged */ if (!filesArray.length) return false; let filesToProcess = []; let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0); let didProcessAnyFile = false; let localErrorMessage = null; for (const file of filesArray) { const isImage = file.type.startsWith('image/'); const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt')); if (!isImage && !isTxt) { if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`); else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files allowed.`; continue; } if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; continue; } if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; break; } filesToProcess.push(file); currentTotalSize += file.size; didProcessAnyFile = true; } if(localErrorMessage){ setChatError(localErrorMessage); } else { setChatError(null); } if (filesToProcess.length > 0) { const processedFileObjects = await Promise.all( filesToProcess.map(async (file) => { const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name; let apiData; if (file.type.startsWith('image/')) { const base64Data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.onerror = (error) => reject(error); }); apiData = { mimeType: file.type, data: base64Data }; } else { const textContent = await file.text(); apiData = { textContent: textContent }; } return { id, file, name: file.name, type: file.type, apiData }; }) ); setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]); } return didProcessAnyFile; };
         const removeSelectedFile = (fileId) => { setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); };
-        
-        const handleSubmit = (e) => { 
-          if(e) e.preventDefault(); 
-          if (!inputText.trim() && selectedFiles.length === 0) return; 
-          setUserHasScrolledUp(false); 
-          setChatError(null); 
-          onSendMessage(inputText, selectedFiles); 
-          setInputText(''); 
-          setSelectedFiles([]); 
-        };
-        
-        const handleTextareaKeyDown = (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            if (isMobileView) {
-              return;
-            } else {
-              if (!isSendButtonDisabled) {
-                handleSubmit(e);
-              } else {
-                e.preventDefault(); 
-              }
-            }
-          }
-        };
-
+        const handleSubmit = (e) => { if(e) e.preventDefault(); if (!inputText.trim() && selectedFiles.length === 0) return; setUserHasScrolledUp(false); setChatError(null); onSendMessage(inputText, selectedFiles); setInputText(''); setSelectedFiles([]); };
+        const handleTextareaKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { if (isMobileView) { return; } else { if (!isSendButtonDisabled) { handleSubmit(e); } else { e.preventDefault(); }}}};
         const isAiCurrentlyStreaming = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
         const isSendButtonDisabled = (!isAiCurrentlyStreaming && (isLoading || (inputText.trim() === '' && selectedFiles.length === 0)));
-        
-        const canRegenerateLastAi = messages.length > 0 && 
-          messages[messages.length - 1].role === 'model' && 
-          !messages[messages.length - 1].isLoading && 
-          !isAiCurrentlyStreaming && 
-          messages.length > 1 && messages[messages.length - 2].role === 'user' && 
-          !(messages[messages.length - 2].attachedFiles?.some(f => f.type?.startsWith('image/')));
-        
-        const hasVisibleChatContent = messages.some(
-            msg => (msg.text || msg.attachedFiles?.length > 0) && !(msg.role === 'system' && !msg.isError) 
-        );
+        const canRegenerateLastAi = messages.length > 0 && messages[messages.length - 1].role === 'model' && !messages[messages.length - 1].isLoading && !isAiCurrentlyStreaming && messages.length > 1 && messages[messages.length - 2].role === 'user' && !(messages[messages.length - 2].attachedFiles?.some(f => f.type?.startsWith('image/')));
+        const hasVisibleChatContent = messages.some( msg => (msg.text || msg.attachedFiles?.length > 0) && !(msg.role === 'system' && !msg.isError) );
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-surface-card rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
-            <header className="p-4 border-b border-border-light bg-surface-card flex items-center justify-between flex-shrink-0 shadow-header"> 
-              <div className="flex items-center space-x-3"> 
-                <EvaAvatarHeaderIcon avatarState={avatarHeaderState} />
-                <div>
-                  <h1 className="text-lg font-poppins font-semibold tracking-tight text-gradient-brand">Oracle AI</h1>
-                  <p className="text-xs -mt-0.5 text-gradient-brand-subtle">Modern Chat Experience</p>
-                </div>
-              </div> 
-              <button onClick={() => { setChatError(null); onClearChat(); }} 
-                      className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" 
-                      aria-label="Clear chat" 
-                      disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}> 
-                <i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i>
-                <span className="hidden sm:inline">Clear</span> 
-              </button> 
+            <header className="p-4 border-b border-border-light bg-surface-card flex items-center justify-between flex-shrink-0 shadow-header">
+                <div className="flex items-center space-x-3"><EvaAvatarHeaderIcon avatarState={avatarHeaderState} /><div><h1 className="text-lg font-poppins font-semibold tracking-tight text-gradient-brand">Oracle AI</h1><p className="text-xs -mt-0.5 text-gradient-brand-subtle">Modern Chat Experience</p></div></div>
+                <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
-            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area"> 
-              { !hasVisibleChatContent && !isLoading && ( 
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> 
-                  <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> 
-                  <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> 
-                </div> 
-              )} 
-              {messages.map((msg) => ( 
-                (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
-                <div key={msg.id}> 
-                  <ChatMessageItem message={msg} /> 
-                  {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( 
-                    <div className={`flex mt-2 justify-start`}> 
-                      <button 
-                        onClick={() => { setChatError(null); onRegenerate(msg.id);}} 
-                        className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" 
-                        aria-label="Regenerate response" 
-                        disabled={isLoading} > 
-                        <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> 
-                      </button> 
-                    </div> 
-                  )} 
-                </div> 
-              ))} 
-              <div ref={messagesEndRef} className="h-1" /> 
-            </div>
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">{ !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )} {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))} <div ref={messagesEndRef} className="h-1" /></div>
             
-            {selectedFiles.length > 0 && ( 
-              <div className="p-3 border-t border-border-light bg-surface-input flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> 
-                {selectedFiles.map(file => ( 
-                  <div key={file.id} className="bg-surface-accent border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> 
-                    {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } 
-                    <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> 
-                    <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> 
-                      <i className="fas fa-times text-xs"></i> 
-                    </button> 
-                  </div> 
-                ))} 
-              </div> 
-            )}
+            {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-light bg-surface-input flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-surface-accent border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
 
-            <form onSubmit={handleSubmit} className="pt-3 pb-3 pr-3 md:pt-4 md:pb-4 md:pr-4 border-t border-border-light bg-surface-input flex items-end space-x-2 md:space-x-3 flex-shrink-0"> 
-              <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} /> 
-              <button 
-                type="button" 
-                onClick={() => fileInputRef.current?.click()} 
-                className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle hover:text-text-secondary hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
-                aria-label="Attach files" 
-                disabled={isLoading && !isAiCurrentlyStreaming}
-              > 
-                <i className="fas fa-plus text-xl"></i>
-              </button> 
-              <textarea 
-                ref={textareaRef}
-                value={inputText} 
-                onChange={(e) => setInputText(e.target.value)} 
-                onPaste={handlePaste} 
-                onKeyDown={handleTextareaKeyDown}
-                placeholder="Type your message..." 
-                rows={1} 
-                className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize transition-shadow focus:shadow-md"
-                disabled={isLoading && !isAiCurrentlyStreaming}
-              /> 
-              <button type={isAiCurrentlyStreaming ? "button" : "submit"} 
-                      onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } 
-                      disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} 
-                      className={`font-semibold w-11 h-11 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform hover:shadow-interactive-hover active:animate-button-press flex-shrink-0
-                                  ${ (isSendButtonDisabled && !isAiCurrentlyStreaming)
-                                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' 
-                                      : 'bg-button-send-bg hover:bg-button-send-hover-bg text-white hover:scale-105'
-                                  }
-                                `} 
-                      aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> 
-                {isAiCurrentlyStreaming ? <i className="fas fa-stop text-xl"></i> : <i className="fas fa-paper-plane text-lg"></i>} 
-              </button> 
+            <form onSubmit={handleSubmit} className="bg-surface-input border-t border-border-light flex-shrink-0">
+              <div className="px-3 md:px-4 pt-2 pb-1 flex justify-start items-center">
+                <button
+                  type="button"
+                  onClick={onToggleSearch}
+                  disabled={isLoading || isAiCurrentlyStreaming}
+                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
+                              focus:outline-none 
+                              disabled:opacity-60 disabled:cursor-not-allowed
+                              ${isSearchEnabled 
+                                  ? 'bg-blue-100 hover:bg-blue-200' 
+                                  : 'bg-gray-100 hover:bg-gray-200'
+                              }`}
+                  title={isSearchEnabled ? "Web Search ON" : "Web Search OFF"}
+                >
+                  <i className={`fas fa-globe fa-fw transition-colors duration-200 
+                                ${isSearchEnabled 
+                                    ? 'text-blue-600' 
+                                    : 'text-gray-500 group-hover:text-gray-600'
+                                }`}></i>
+                  <span className={`transition-colors duration-200 
+                                  ${isSearchEnabled 
+                                      ? 'text-blue-700' 
+                                      : 'text-text-subtle group-hover:text-text-secondary'
+                                  }`}>Search</span>
+                </button>
+              </div>
+
+              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} /> 
+                <button type="button" onClick={() => fileInputRef.current?.click()} className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle hover:text-text-secondary hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" aria-label="Attach files" disabled={isLoading && !isAiCurrentlyStreaming}> <i className="fas fa-plus text-xl"></i></button> 
+                <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize transition-shadow focus:shadow-md" disabled={isLoading && !isAiCurrentlyStreaming}/> 
+                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-11 h-11 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform hover:shadow-interactive-hover active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' : 'bg-button-send-bg hover:bg-button-send-hover-bg text-white hover:scale-105' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> {isAiCurrentlyStreaming ? <i className="fas fa-stop text-xl"></i> : <i className="fas fa-paper-plane text-lg"></i>} </button> 
+              </div>
             </form>
           </div>);
       };
       
-      const App = () => {
-        const [chatMessages, setChatMessages] = useState([]); 
-        const [isChatLoading, setIsChatLoading] = useState(false);
-        const [chatError, setChatError] = useState(null); 
-        const [avatarHeaderState, setAvatarHeaderState] = useState('idle');
-        const isStoppingGenerationRef = useRef(false);
-
-        useEffect(() => {
-            if (chatError) {
-                const errorId = Date.now() + '_sys_validation_err';
-                setChatMessages(prev => {
-                    const lastMessage = prev[prev.length -1];
-                    if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) {
-                        return prev;
-                    }
-                    return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}];
-                });
-                 setAvatarHeaderState('idle');
-            }
-        }, [chatError]);
-
-
-        const getGeminiHistory = (currentMessagesInternalFormat) => {
-          const geminiMessages = currentMessagesInternalFormat 
-            .filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError))
-            .map(msg => {
-                const parts = [];
-                if (msg.text) parts.push({ text: msg.text });
-                if (msg.role === 'user' && msg.attachedFiles) {
-                    msg.attachedFiles.forEach(file => {
-                        if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) {
-                            parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } });
-                        } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
-                            parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` });
-                        }
-                    });
-                }
-                return { role: msg.role, parts };
-            }).filter(entry => entry.parts.length > 0);
-
-          if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { 
-            const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user');
-            if (firstUserIndex === -1) { return []; } 
-            const slicedHistory = geminiMessages.slice(firstUserIndex);
-            if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) {
-              return [slicedHistory[0]]; 
-            }
-            return slicedHistory;
-          }
-          return geminiMessages; 
-        };
-
-        useEffect(() => { 
-          if (API_KEY && API_KEY !== "YOUR_GEMINI_API_KEY") { 
-            const initialGeminiHistory = getGeminiHistory(chatMessages.filter(m => !(m.role === 'system' && m.isError))); 
-            initializeChat(initialGeminiHistory); 
-             setAvatarHeaderState('idle');
-          } else { 
-            setChatError("API Key is not configured. Please set it up."); 
-             setAvatarHeaderState('idle');
-          } 
-        }, []); 
-
-        const handleStopGeneration = useCallback(() => { 
-          isStoppingGenerationRef.current = true; 
-          setChatMessages(prev => prev.map(m => m.isLoading && m.role === 'model' ? {...m, isLoading:false, text: (m.text || "") + "\n\n---\n*Generation stopped by user.*"} : m)); 
-          setIsChatLoading(false); 
-          setAvatarHeaderState('idle');
-        }, []);
-
-        const handleClearChat = useCallback(() => { 
-          let initMsg = []; 
-          if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ 
-            setChatError("API Key not configured. Please set it up to use the chat.");
-          } else { 
-            initializeChat([]); 
-            setChatError(null); 
-          } 
-          setChatMessages(initMsg); 
-          setAvatarHeaderState('idle');
-        }, []);
+      const App = () => { /* Logic largely unchanged */
+        const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); const [isSearchEnabled, setIsSearchEnabled] = useState(false); const isStoppingGenerationRef = useRef(false);
+        useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
+        const getGeminiHistory = (currentMessagesInternalFormat) => { /* Unchanged */ const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
+        useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
+        const handleStopGeneration = useCallback(() => { /* Unchanged */ isStoppingGenerationRef.current = true; setChatMessages(prev => prev.map(m => m.isLoading && m.role === 'model' ? {...m, isLoading:false, text: (m.text || "") + "\n\n---\n*Generation stopped by user.*"} : m)); setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
+        const handleClearChat = useCallback(() => { /* Unchanged */ if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
+        const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
+        const mergeCitations = (existingCitations, newCitationSources) => { /* Unchanged */ if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
         
-        const _streamAiResponse = async (promptPartsForCurrentTurn, targetAiMessageId, historyForGeminiInit) => { 
-            isStoppingGenerationRef.current = false; 
-            setIsChatLoading(true); 
-            setAvatarHeaderState('thinking');
-            let displayedAiText = "";
+        const _streamAiResponse = async (promptPartsForCurrentTurn, targetAiMessageId, historyForGeminiInit, useSearch) => { /* Unchanged */
+            isStoppingGenerationRef.current = false; setIsChatLoading(true); setAvatarHeaderState('thinking'); let displayedAiText = ""; let accumulatedCitationSources = [];
             try {
-                initializeChat(historyForGeminiInit);
-                
-                const stream = await sendMessageToChatStream(promptPartsForCurrentTurn);
-                for await (const chunk of stream) { 
-                    if (isStoppingGenerationRef.current) break; 
-                    const chunkContent = chunk.text(); 
-                    if (typeof chunkContent !== 'string') continue; 
-                    const segments = chunkContent.match(/.{1,3}|\s+/g) || [chunkContent]; 
-                    for (const segment of segments) {
-                        if (isStoppingGenerationRef.current) break;
-                        displayedAiText += segment;
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false } : m));
-                        await new Promise(resolve => setTimeout(resolve, 15 + segment.length * 1.5)); 
-                    }
+                const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() }; if (useSearch) { modelConfig.tools = [{ googleSearch: {} }]; }
+                const chatModel = genAI.getGenerativeModel(modelConfig); const chatSession = chatModel.startChat({ history: historyForGeminiInit }); const result = await chatSession.sendMessageStream(promptPartsForCurrentTurn); 
+                for await (const chunk of result.stream) { 
+                    if (isStoppingGenerationRef.current) break; const chunkContent = chunk.text(); 
+                    if (typeof chunkContent === 'string') { const segments = chunkContent.match(/.{1,3}|\s+/g) || [chunkContent]; for (const segment of segments) { if (isStoppingGenerationRef.current) break; displayedAiText += segment; if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); } setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); await new Promise(resolve => setTimeout(resolve, 10 + segment.length * 1)); }} else { if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); }}
                     if (isStoppingGenerationRef.current) break;
                 }
-                setChatMessages(prev => prev.map(m => {
-                    if (m.id === targetAiMessageId) {
-                        let finalText = displayedAiText;
-                        let isFinalError = false;
-                        if (isStoppingGenerationRef.current && !finalText.includes("Generation stopped by user.")) {
-                            finalText += (finalText ? "\n\n---\n" : "") + "*Generation stopped by user.*";
-                        } else if (!finalText.trim() && !isStoppingGenerationRef.current) {
-                            finalText = "No response received from AI."; 
-                            isFinalError = true;
-                        }
-                        return { ...m, text: finalText, isLoading: false, isError: isFinalError };
-                    }
-                    return m;
-                }));
-            } catch (err) { 
-                console.error("AI stream error in _streamAiResponse:", err); 
-                const errorText = err.message || "An unknown error occurred while fetching the response."; 
-                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
-                    ...m, 
-                    role: 'model', 
-                    text: errorText, 
-                    isLoading: false, 
-                    isError: true     
-                } : m));
-                setAvatarHeaderState('idle');
-            } finally { 
-                setIsChatLoading(false); 
-                if (!isStoppingGenerationRef.current) {
-                    setAvatarHeaderState('speaking');
-                    setTimeout(() => setAvatarHeaderState('idle'), 1500);
-                } else {
-                    setAvatarHeaderState('idle');
-                }
-                isStoppingGenerationRef.current = false; 
-            }
+                setChatMessages(prev => prev.map(m => { if (m.id === targetAiMessageId) { let finalText = displayedAiText; let isFinalError = false; if (isStoppingGenerationRef.current && !finalText.includes("Generation stopped by user.")) { finalText += (finalText ? "\n\n---\n" : "") + "*Generation stopped by user.*"; } else if (!finalText.trim() && !isStoppingGenerationRef.current && accumulatedCitationSources.length === 0) { finalText = "No response received from AI."; isFinalError = true; } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { finalText = "*Content based on search results (see sources below).*"; } return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch }; } return m; }));
+            } catch (err) { console.error("AI stream error in _streamAiResponse:", err); const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response."; setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m)); setAvatarHeaderState('idle');
+            } finally { setIsChatLoading(false); if (!isStoppingGenerationRef.current) { setAvatarHeaderState('speaking'); setTimeout(() => setAvatarHeaderState('idle'), 1500); } else { setAvatarHeaderState('idle'); } isStoppingGenerationRef.current = false; }
         };
 
-        const handleSendChatMessage = useCallback(async (messageText, filesToSend) => {
-            if (!messageText.trim() && filesToSend.length === 0) return;
-            setChatError(null); 
-            if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { 
-                setChatError("API Key is not configured. Please set it up.");
-                return; 
-            }
-
-            const previousInternalMessages = chatMessages; 
-
-            const userMessageFiles = filesToSend.map(f => ({ id: f.id, name: f.name, type: f.type, apiData: f.apiData }));
+        const handleSendChatMessage = useCallback(async (messageText, filesToSend) => { /* Unchanged */
+            if (!messageText.trim() && filesToSend.length === 0) return; setChatError(null); if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured."); return; }
+            const previousInternalMessages = chatMessages; const userMessageFiles = filesToSend.map(f => ({ id: f.id, name: f.name, type: f.type, apiData: f.apiData }));
             const newUserMessage = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
             const aiMessageId = Date.now().toString() + '_model_resp';
-            const aiPlaceholder = { id: aiMessageId, role: 'model', text: '', timestamp: new Date(), isLoading: true, isError: false };
-            
-            setChatMessages(prev => { 
-              const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError)); 
-              return [...filteredPrev, newUserMessage, aiPlaceholder];
-            });
-            
-            const promptPartsForCurrentTurn = [];
-            if (messageText.trim()) promptPartsForCurrentTurn.push({ text: messageText.trim() });
-            filesToSend.forEach(file => {
-                if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) { promptPartsForCurrentTurn.push({ inlineData: file.apiData }); } 
-                else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData.textContent) { promptPartsForCurrentTurn.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` }); }
-            });
-            
-            if (promptPartsForCurrentTurn.length > 0) {
-                 const historyForGeminiInit = getGeminiHistory(previousInternalMessages);
-                 await _streamAiResponse(promptPartsForCurrentTurn, aiMessageId, historyForGeminiInit);
-            } else { 
-                 setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError)); 
-                setIsChatLoading(false);
-                setAvatarHeaderState('idle');
-            }
-        }, [chatMessages]); 
+            const aiPlaceholder = { id: aiMessageId, role: 'model', text: '', timestamp: new Date(), isLoading: true, isError: false, citationMetadata: null, searchUsed: isSearchEnabled }; 
+            setChatMessages(prev => { const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError)); return [...filteredPrev, newUserMessage, aiPlaceholder]; });
+            const promptPartsForCurrentTurn = []; if (messageText.trim()) promptPartsForCurrentTurn.push({ text: messageText.trim() });
+            filesToSend.forEach(file => { if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) { promptPartsForCurrentTurn.push({ inlineData: file.apiData }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData.textContent) { promptPartsForCurrentTurn.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` }); }});
+            if (promptPartsForCurrentTurn.length > 0) { const historyForGeminiInit = getGeminiHistory(previousInternalMessages); await _streamAiResponse(promptPartsForCurrentTurn, aiMessageId, historyForGeminiInit, isSearchEnabled); } 
+            else { setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError)); setIsChatLoading(false); setAvatarHeaderState('idle'); }
+        }, [chatMessages, isSearchEnabled]); 
 
-        const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
-            setChatError(null); 
-            if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { 
-                setChatError("API Key is not configured for regeneration.");
-                return; 
-            }
-            
-            const originalAiMsgIndex = chatMessages.findIndex(m => m.id === aiMessageIdToRegenerate);
-            if (originalAiMsgIndex <= 0 || chatMessages[originalAiMsgIndex-1].role !== 'user') { 
-              setChatError("Cannot regenerate: Preceding user prompt not found.");
-              return; 
-            }
-            
-            const userPromptMsg = chatMessages[originalAiMsgIndex-1];
-            if (userPromptMsg.attachedFiles?.some(f => f.type?.startsWith('image/'))) { 
-                 setChatError("Regeneration for prompts with images is not yet available.");
-                 return;
-            }
-            
+        const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => { /* Unchanged */
+            setChatError(null); if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured for regeneration."); return; }
+            const originalAiMsgIndex = chatMessages.findIndex(m => m.id === aiMessageIdToRegenerate); if (originalAiMsgIndex <= 0 || chatMessages[originalAiMsgIndex-1].role !== 'user') { setChatError("Cannot regenerate: Preceding user prompt not found."); return; }
+            const userPromptMsg = chatMessages[originalAiMsgIndex-1]; if (userPromptMsg.attachedFiles?.some(f => f.type?.startsWith('image/'))) { setChatError("Regeneration for prompts with images is not yet available."); return; }
             const newAiPlaceholderId = Date.now().toString() + '_model_regen';
-            const aiPlaceholder = { id: newAiPlaceholderId, role: 'model', text:'', isLoading:true, timestamp:new Date(), isError: false };
-            
-            const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex); 
-            setChatMessages([...chatHistoryForUiUpdate, aiPlaceholder]);
+            const aiPlaceholder = { id: newAiPlaceholderId, role: 'model', text:'', isLoading:true, timestamp:new Date(), isError: false, citationMetadata: null, searchUsed: isSearchEnabled };
+            const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex); setChatMessages([...chatHistoryForUiUpdate, aiPlaceholder]);
+            const promptPartsForCurrentTurn = []; if (userPromptMsg.text) promptPartsForCurrentTurn.push({ text: userPromptMsg.text });
+            userPromptMsg.attachedFiles?.forEach(file => { if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { promptPartsForCurrentTurn.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` }); }});
+            if (promptPartsForCurrentTurn.length > 0) { const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1); const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal); await _streamAiResponse(promptPartsForCurrentTurn, newAiPlaceholderId, historyForGeminiInit, isSearchEnabled); } 
+            else { setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m)); setAvatarHeaderState('idle'); }
+        }, [chatMessages, isSearchEnabled]);
 
-            const promptPartsForCurrentTurn = [];
-            if (userPromptMsg.text) promptPartsForCurrentTurn.push({ text: userPromptMsg.text });
-            userPromptMsg.attachedFiles?.forEach(file => {
-                if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
-                     promptPartsForCurrentTurn.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
-                }
-            });
-
-            if (promptPartsForCurrentTurn.length > 0) {
-                const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
-                const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
-                await _streamAiResponse(promptPartsForCurrentTurn, newAiPlaceholderId, historyForGeminiInit);
-            } else {
-                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
-                 setAvatarHeaderState('idle');
-            }
-        }, [chatMessages]);
-
-        return (
-          <div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0">
-            <ChatInterface 
-              messages={chatMessages} 
-              onSendMessage={handleSendChatMessage} 
-              isLoading={isChatLoading} 
-              onStopGeneration={handleStopGeneration} 
-              onRegenerate={handleRegenerateResponse} 
-              onClearChat={handleClearChat}
-              setChatError={setChatError} 
-              avatarHeaderState={avatarHeaderState}
-            />
-          </div>
-        );
+        return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} isSearchEnabled={isSearchEnabled} onToggleSearch={handleToggleSearch}/></div>);
       };
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
