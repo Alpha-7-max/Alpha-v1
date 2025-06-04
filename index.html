@@ -55,7 +55,7 @@
               'blink': 'blink 4s infinite ease-in-out',
               'happy-bounce': 'happyBounce 0.5s ease-out',
               'empty-state-glow': 'emptyStateGlow 3.5s infinite alternate ease-in-out',
-              'spin-slow': 'spin 2.5s linear infinite', 
+              'orbit-horizontal': 'orbitHorizontal 2.8s linear infinite',
               'shiny-text': 'shinyText 2s linear infinite', 
             },
             keyframes: {
@@ -70,7 +70,12 @@
               thinkGlance: { '0%, 100%': { transform: 'translateX(0px)' }, '25%': { transform: 'translateX(-1px)' }, '75%': { transform: 'translateX(1px)' }, },
               blink: { '0%, 90%, 100%': { transform: 'scaleY(1)' }, '95%': { transform: 'scaleY(0.1)' }, },
               happyBounce: { '0%, 100%': { transform: 'translateY(0) rotate(0deg) scale(1)' }, '50%': { transform: 'translateY(-3px) rotate(3deg) scale(1.03)' }, },
-              spin: { 'to': { transform: 'rotate(360deg)' }, },
+              orbitHorizontal: {
+                '0%, 100%': { transform: 'translateX(-25%) scale(0.95) rotateY(0deg)', opacity: '0.8' },
+                '25%': { transform: 'translateX(0%) scale(1) rotateY(20deg)', opacity: '1'},
+                '50%': { transform: 'translateX(25%) scale(0.95) rotateY(0deg)', opacity: '0.8' },
+                '75%': { transform: 'translateX(0%) scale(0.9) rotateY(-20deg)', opacity: '0.7' },
+              },
               shinyText: { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' }, },
             },
             boxShadow: {
@@ -414,7 +419,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (<div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>{message.attachedFiles.map(file => { if (file.type?.startsWith('image/') && file.apiData?.data && file.apiData?.mimeType) { const imageSrc = `data:${file.apiData.mimeType};base64,${file.apiData.data}`; return (<div key={file.id || file.name} className="rounded-lg overflow-hidden border border-gray-300 bg-white shadow-sm group relative max-w-full w-full sm:w-auto sm:max-w-[180px]"><img src={imageSrc} alt={file.name || 'image preview'} className="block w-full max-h-40 object-contain" /><div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1"><p className="text-[10px] text-white text-center truncate font-medium">{file.name}</p></div></div>);} else { return (<div key={file.id || file.name} className="bg-gray-200 p-2.5 rounded-lg text-xs flex items-center space-x-2 max-w-full w-fit shadow"> {file.type?.startsWith('image/') ? <FileImageIcon className="text-gray-500 text-base" /> : <FileTextIcon className="text-gray-500 text-base" />} <span className="truncate max-w-[120px] sm:max-w-[150px] text-gray-700 font-medium">{file.name}{file.type?.startsWith('image/') ? " (preview unavailable)" : ""}</span></div>);}})}</div>)}
               {message.text && contentToShow}
               {isModelLoadingWithoutSearch && ( <div className="flex items-end space-x-1.5 mt-2.5"><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span></div>)}
-              {isModelLoadingWithSearch && (<div className="flex items-center space-x-2 mt-2.5 text-text-subtle"><i className="fas fa-globe text-sm text-brand-primary animate-spin-slow"></i><span className="text-xs font-medium animated-shiny-text">Searching...</span></div>)}
+              {isModelLoadingWithSearch && (
+                <div className="flex items-center space-x-2 mt-2.5 text-text-subtle">
+                  <i className="fas fa-globe text-sm text-brand-primary animate-orbit-horizontal"></i>
+                  <span className="text-xs font-medium animated-shiny-text">Searching...</span>
+                </div>
+              )}
               {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (<div className="mt-3 pt-3 border-t border-border-light/70"><h4 className="text-xs font-semibold text-text-subtle mb-1.5 flex items-center"><i className="fas fa-link text-xs mr-1.5 opacity-70"></i>Sources:</h4><ul className="list-none p-0 space-y-1">{message.citationMetadata.citationSources.map((source, index) => (<li key={index} className="text-xs leading-relaxed"><a href={source.uri} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-brand-secondary hover:underline break-all inline-flex items-center group" title={source.uri}><span className="mr-1">{index + 1}.</span><span className="truncate max-w-[200px] sm:max-w-[300px] md:max-w-[400px]">{source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri)}</span><i className="fas fa-external-link-alt text-[10px] ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity"></i></a></li>))}</ul></div>)}
             </div>
           </div>);
@@ -531,8 +541,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { 
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); 
                         } 
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); 
-                        // Removed artificial delay: await new Promise(resolve => setTimeout(resolve, 5 + segment.length * 1.0));
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                     } else { 
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { 
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); 
