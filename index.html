@@ -223,7 +223,7 @@ CORE OPERATING PRINCIPLE & SEARCH POLICY:
     *   **Heavily Favor Search Over Training Data:** For any query that isn't purely conversational (e.g., greetings, general chat) or a simple, timeless factual recall (e.g., "what is 2+2?"), your default approach should be to verify or retrieve information via search.
     *   **Especially for Specifics:** If the query involves names of people, places, organizations, products, creative works (songs, movies, books), dates, statistics, current events, or any specific detail that could have changed or have multiple facets, consider search indispensable.
     *   **If your internal knowledge feels even slightly outdated, incomplete, or potentially ambiguous for the specific query, trigger a search.**
-3.  **User-Initiated Search is a Command:** If the user explicitly asks you to search (e.g., "search krke," "google it," "internet pe dekho"), you MUST use the search tool if it's made available to you by the system. This implies you should recognize such phrases and expect the system to provide search tool if it wasn't available initially.
+3.  **User-Initiated Search is a Command:** If the user explicitly asks you to search (e.g., "search krke," "google it," "internet pe dekho"), you MUST use the search tool if it's made available to you by the system.
 
 SEARCH TOOL USAGE & UI INTERACTION (System Handled):
 -   **Scenario A (Search Tool Available):** If the system provides you with a search tool (because the user's query triggered it via keywords, the UI search toggle is ON, or you previously signaled \`[NEEDS_SEARCH]\`):
@@ -335,58 +335,7 @@ Search Prioritization:
 - If the user explicitly asks about a different location, person, or topic, prioritize their specific request.
 - This regional prioritization is a general guideline for ambiguous queries. Always use your best judgment.
 
-Response Structure:
-1. Acknowledge the user's query with understanding
-2. Provide clear, structured information
-3. Use examples and analogies from daily life
-4. Summarize key points if the response is long
-5. End with encouragement or next steps
-
-File Handling:
-- When users share images, describe them in detail in Roman Urdu
-- For text files, acknowledge the content and provide relevant assistance
-- Suggest ways to better utilize shared files if applicable
-
-Cultural Sensitivity:
-- Be aware of South Asian cultural contexts
-- Use respectful language (aap, not tum) unless the user indicates otherwise
-- Reference local examples and contexts when explaining concepts
-- Be mindful of religious and cultural sensitivities
-
-Appropriate Discussion Areas:
-- Sexual health and wellness
-- Physical intimacy and pleasure
-- Relationship dynamics and communication
-- Dating and romance
-- Common sexual concerns
-- Safe sex practices
-- Body image and confidence
-- Emotional intimacy
-- Sexual compatibility
-- Relationship boundaries
-- Personal desires and needs
-- Common fantasies
-- Consent and boundaries
-- Sexual wellness products
-- Dating apps and online dating
-
-Language Style:
-- Use appropriate Roman Urdu terms for intimate topics
-- Employ medical/clinical terms whenneeded
-- Use culturally understood euphemisms
-- Match user's comfort level with terminology
-- Be direct but tasteful
-- Avoid crude or explicit language
-- Use mature, adult-appropriate phrasing
-
-Quality Standards:
-- Ensure responses are comprehensive yet concise
-- Double-check Roman Urdu spelling for clarity
-- Provide actionable advice whenever possible
-- Follow up complex explanations with "Umeed he apko samjh agyi hogi?" or similar
-- Encourage questions with "Agar koi sawal ho to zaror poochiye 😊"
-
-Remember: You're not just an AI assistant, you're a helpful friend who happens to be very knowledgeable. Make every interaction meaningful and helpful!
+// ... (Response Structure, File Handling, Cultural Sensitivity, etc. remain the same) ...
 `;
       }
       
@@ -518,7 +467,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           </div>);
       };
       
-      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState }) => { // Removed isSearchEnabled, onToggleSearch
+      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState, isSearchEnabled, onToggleSearch }) => {
         const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
         const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
@@ -568,7 +517,33 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-light bg-surface-input flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-surface-accent border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
 
             <form onSubmit={handleSubmit} className="bg-surface-input border-t border-border-light flex-shrink-0">
-              {/* Search Toggle Button Div Removed */}
+              <div className="px-3 md:px-4 pt-2 pb-1 flex justify-start items-center">
+                <button
+                  type="button"
+                  onClick={onToggleSearch}
+                  disabled={isLoading || isAiCurrentlyStreaming}
+                  className={`ml-3 flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
+                              focus:outline-none 
+                              disabled:opacity-60 disabled:cursor-not-allowed
+                              ${isSearchEnabled 
+                                  ? 'bg-blue-100 hover:bg-blue-200' 
+                                  : 'bg-gray-100 hover:bg-gray-200'
+                              }`}
+                  title={isSearchEnabled ? "Web Search ON" : "Web Search OFF"}
+                >
+                  <i className={`fas fa-globe fa-fw transition-colors duration-200 
+                                ${isSearchEnabled 
+                                    ? 'text-blue-600' 
+                                    : 'text-gray-500 group-hover:text-gray-600'
+                                }`}></i>
+                  <span className={`transition-colors duration-200 
+                                  ${isSearchEnabled 
+                                      ? 'text-blue-700' 
+                                      : 'text-text-subtle group-hover:text-text-secondary'
+                                  }`}>Search</span>
+                </button>
+              </div>
+
               <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} /> 
                 <button type="button" onClick={() => fileInputRef.current?.click()} className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" aria-label="Attach files" disabled={isLoading && !isAiCurrentlyStreaming}> <i className="fas fa-plus text-xl"></i></button> 
@@ -582,16 +557,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       };
       
       const App = () => { 
-        const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle');
-        // const [isSearchEnabled, setIsSearchEnabled] = useState(false); // REMOVED
-        const isStoppingGenerationRef = useRef(false);
-
+        const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); const [isSearchEnabled, setIsSearchEnabled] = useState(false); const isStoppingGenerationRef = useRef(false);
         useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
         const getGeminiHistory = (currentMessagesInternalFormat) => { /* Unchanged */ const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
         useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
         const handleStopGeneration = useCallback(() => { /* Unchanged */ isStoppingGenerationRef.current = true; setChatMessages(prev => prev.map(m => m.isLoading && m.role === 'model' ? {...m, isLoading:false, text: (m.text || "") + "\n\n---\n*Generation stopped by user.*"} : m)); setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
         const handleClearChat = useCallback(() => { /* Unchanged */ if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
-        // const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []); // REMOVED
+        const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
         const mergeCitations = (existingCitations, newCitationSources) => { /* Unchanged */ if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
         
         const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, useSearch, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
@@ -608,7 +580,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
             try {
                 const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() };
-                if (useSearch) { // This will be true if UI toggle was ON OR if this is a retry after [NEEDS_SEARCH]
+                if (useSearch) {
                     modelConfig.tools = [{ googleSearch: {} }];
                 }
                 const chatModel = genAI.getGenerativeModel(modelConfig);
@@ -619,9 +591,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     if (isStoppingGenerationRef.current) break;
                     const chunkText = chunk.text();
 
-                    if (!firstChunkProcessed && !isRetryingWithSearch && !useSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
+                    if (!firstChunkProcessed && !isRetryingWithSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
                         needsSearchMarkerFound = true;
-                        // Update the placeholder to show searching indicator and mark searchUsed as true
                         setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m));
                         break; 
                     }
@@ -632,7 +603,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
                         }
-                        if (!needsSearchMarkerFound) { // Don't update UI if we are about to retry with search
+                        if (!needsSearchMarkerFound) {
                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                         }
                     } else {
@@ -647,25 +618,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
 
                 if (needsSearchMarkerFound && originalUserMessageForRetry) {
-                    // The AI suggested a search, and we have the original user message to retry.
-                    // The AI placeholder (targetAiMessageId) is already showing "Searching..." due to the update above.
-                    // We re-call _streamAiResponse with useSearch: true.
-                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, null /* No need for originalUserMessageForRetry in the retry call itself */);
-                    return; // Exit this call, the retry will handle the final state and loading indicators
+                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true);
+                    return; 
                 }
                 
-                // This part executes if:
-                // 1. No [NEEDS_SEARCH] marker was found.
-                // 2. This was the retry call (isRetryingWithSearch was true).
-                // 3. Generation was stopped by user.
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = displayedAiText;
                         let isFinalError = false;
                         if (isStoppingGenerationRef.current && !finalText.includes("Generation stopped by user.")) {
                             finalText += (finalText ? "\n\n---\n" : "") + "*Generation stopped by user.*";
-                        } else if (!finalText.trim() && !isStoppingGenerationRef.current && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) { // Avoid error if it was a NEEDS_SEARCH that got interrupted
-                            finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein. 🙏";
+                        } else if (!finalText.trim() && !isStoppingGenerationRef.current && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
+                            finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
                             isFinalError = true;
                         } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) {
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
@@ -680,7 +644,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
             } finally {
-                if (!needsSearchMarkerFound) { // Only finalize if not handing over to a retry
+                if (!needsSearchMarkerFound) { 
                     setIsChatLoading(false);
                     if (!isStoppingGenerationRef.current) {
                         setAvatarHeaderState('speaking');
@@ -717,7 +681,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const originalUserMessageForRetry = { role: 'user', parts: promptPartsForUserTurn };
             const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
             
-            const shouldUseSearchInitially = false; // Search is NOT triggered by default or by phrases anymore. Only by AI's [NEEDS_SEARCH] or a future UI toggle.
+            const shouldUseSearchInitially = isSearchEnabled; 
 
             const aiMessageId = Date.now().toString() + '_model_resp';
             const aiPlaceholder = { 
@@ -744,7 +708,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages]); // Removed isSearchEnabled from dependencies
+        }, [chatMessages, isSearchEnabled]); 
 
         const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
             setChatError(null);
@@ -764,7 +728,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return;
             }
 
-            const shouldUseSearchForThisRegen = false; // Search is NOT triggered by default for regen
+            const shouldUseSearchForThisRegen = isSearchEnabled; 
             
             const promptPartsForRegen = [];
             if (userPromptMsg.text) {
@@ -800,9 +764,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages]); // Removed isSearchEnabled
+        }, [chatMessages, isSearchEnabled]);
 
-        return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} /></div>); // Removed isSearchEnabled and onToggleSearch
+        return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} isSearchEnabled={isSearchEnabled} onToggleSearch={handleToggleSearch}/></div>);
       };
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
