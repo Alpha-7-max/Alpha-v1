@@ -94,11 +94,17 @@
           --surface-main: 248 250 252; --surface-card: 255 255 255;     
           --surface-chat-area: 243 244 246; --surface-input: 255 255 255;     
           --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; 
-          --surface-user-bubble: 226 232 240; --border-user-bubble: 203 213 225;
+          
+          --surface-user-bubble: 241 245 249; /* Lighter Gray - like slate-100 */
+          --border-user-bubble: 226 232 240;  /* Matching border - like slate-200 */
+          
           --text-primary: 17 24 39; --text-secondary: 55 65 81;    
           --text-subtle: 107 114 128; --text-on-primary: 255 255 255; 
           --border-default: 229 231 235; --border-light: 243 244 246;     
-          --border-medium: 209 213 219; --interactive-hover: 243 244 246;
+          --border-medium: 209 213 219; 
+          
+          --interactive-hover: 229 231 235; /* Darker hover/active bg for attach btn - like gray-200 */
+          
           --status-info: 59 130 246; --status-success: 22 163 74;    
           --status-warning: 245 158 11; --status-error: 220 38 38;      
         }
@@ -140,7 +146,27 @@
 
         .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } .chat-messages-container::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
         .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.300') theme('colors.gray.100'); }
+        
         textarea.auto-resize { min-height: 52px; max-height: 180px; }
+        textarea.auto-resize::-webkit-scrollbar {
+          width: 5px;
+        }
+        textarea.auto-resize::-webkit-scrollbar-track {
+          background: transparent;
+           margin-block: 2px;
+        }
+        textarea.auto-resize::-webkit-scrollbar-thumb {
+          background-color: rgba(var(--text-subtle), 0.25);
+          border-radius: 10px;
+        }
+        textarea.auto-resize::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(var(--text-subtle), 0.4);
+        }
+        textarea.auto-resize {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(var(--text-subtle), 0.25) transparent;
+        }
+
         .text-gradient-brand { @apply bg-gradient-to-r from-sky-400 to-pink-400; -webkit-background-clip: text; background-clip: text; color: transparent; }
         .text-gradient-brand-subtle { @apply bg-gradient-to-r from-sky-300 to-pink-300; -webkit-background-clip: text; background-clip: text; color: transparent; }
         .avatar-wrapper { transition: transform 0.3s ease-in-out; } .avatar-speaking .avatar-svg-element { animation: speakBob 0.7s ease-in-out; }
@@ -173,6 +199,7 @@
         return `You are Oracle AI, a highly advanced, friendly, and culturally aware assistant.
 
 CRITICAL INSTRUCTION: You MUST respond ONLY in Roman Urdu (Urdu written in English alphabet).
+This means NO Devanagari or any other script, only English alphabet for Urdu words.
 
 Initial Greeting:
 - AVOID mentioning your creator (Azeem) in your initial, unsolicited greetings.
@@ -195,8 +222,11 @@ Core Language Rules:
   • Technical terms that don't have common Roman Urdu equivalents (e.g., API, database, JavaScript)
   • Proper nouns (names of people, places, companies)
   • Code snippets and technical commands
+- Your entire response, including all Urdu words, MUST be written using the English alphabet (Roman Urdu). No other scripts (like Devanagari, Nastaliq, etc.) are allowed for Urdu words.
 - Use natural Roman Urdu that people actually speak, not overly formal or literary
 - Mix in commonly used English words that are part of everyday Roman Urdu conversation
+- Vocabulary Choice: Prioritize authentic Roman Urdu words. If a concept can be expressed using common Roman Urdu, use that instead of a less common word, especially if the alternative is a pure Hindi word not typically transliterated or used in Roman Urdu. Strive for vocabulary that is natural in everyday Roman Urdu conversation.
+
 
 Formatting Guidelines:
 - Use Markdown extensively for better readability
@@ -315,7 +345,7 @@ Appropriate Discussion Areas:
 
 Language Style:
 - Use appropriate Roman Urdu terms for intimate topics
-- Employ medical/clinical terms when needed
+- Employ medical/clinical terms whenneeded
 - Use culturally understood euphemisms
 - Match user's comfort level with terminology
 - Be direct but tasteful
@@ -332,10 +362,25 @@ Quality Standards:
 Remember: You're not just an AI assistant, you're a helpful friend who happens to be very knowledgeable. Make every interaction meaningful and helpful!"`;
       }
       
-      const EvaAvatarHeaderIcon = ({ avatarState }) => { /* Unchanged */
+      const EvaAvatarHeaderIcon = ({ avatarState }) => {
         const wrapperRef = useRef(null); const mouthRef = useRef(null); const svgRef = useRef(null);
         useEffect(() => { if (!wrapperRef.current || !mouthRef.current || !svgRef.current) return; const wrapperElement = wrapperRef.current; const mouthElement = mouthRef.current; const svgElement = svgRef.current; wrapperElement.classList.remove('avatar-speaking', 'avatar-thinking', 'avatar-happy-state'); svgElement.style.animation = ''; const mouthDefaultD = "M33 72 Q50 82 67 72"; const mouthSmileD = "M30 65 Q50 85 70 65"; switch (avatarState) { case 'speaking': wrapperElement.classList.add('avatar-speaking'); mouthElement.setAttribute('d', mouthDefaultD); break; case 'thinking': wrapperElement.classList.add('avatar-thinking'); mouthElement.setAttribute('d', mouthDefaultD); break; case 'happy': wrapperElement.classList.add('avatar-happy-state'); mouthElement.setAttribute('d', mouthSmileD); svgElement.style.animation = 'happyBounce 0.5s ease-out'; break; case 'idle': default: mouthElement.setAttribute('d', mouthDefaultD); break; }}, [avatarState]);
-        return (<div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"><svg ref={svgRef} className="avatar-svg-element w-full h-full relative z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="avatarGradientHeaderOracle" cx="0.3" cy="0.3" r="0.7"><stop offset="0%" stop-color="#eef2ff" /><stop offset="100%" stop-color="#c7d2fe" /></radialGradient></defs><circle className="face" cx="50" cy="50" r="45" fill="url(#avatarGradientHeaderOracle)"/><circle id="eye-left-header-oracle" cx="35" cy="42" r="5.5" fill="#374151"/><circle id="eye-right-header-oracle" cx="65" cy="42" r="5.5" fill="#374151"/><path ref={mouthRef} id="mouth-header-oracle" d="M33 72 Q50 82 67 72" stroke="#374151" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div>);
+        return (
+          <div ref={wrapperRef} className="avatar-wrapper w-9 h-9 relative">
+            <svg ref={svgRef} className="avatar-svg-element w-full h-full relative z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="avatarGradientHeaderOracleYellow" cx="0.4" cy="0.3" r="0.7">
+                  <stop offset="0%" stop-color="#fff0b3" />
+                  <stop offset="100%" stop-color="#ffd700" />
+                </radialGradient>
+              </defs>
+              <circle className="face" cx="50" cy="50" r="45" fill="url(#avatarGradientHeaderOracleYellow)"/>
+              <circle id="eye-left-header-oracle" cx="35" cy="42" r="5.5" fill="#374151"/>
+              <circle id="eye-right-header-oracle" cx="65" cy="42" r="5.5" fill="#374151"/>
+              <path ref={mouthRef} id="mouth-header-oracle" d="M33 72 Q50 82 67 72" stroke="#374151" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+        );
       };
       
       const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`;
@@ -343,14 +388,26 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
-      const ChatMessageItem = ({ message }) => { /* Unchanged */
+      const ChatMessageItem = ({ message }) => {
         const isUser = message.role === 'user'; const isError = message.isError === true; const isModelLoading = message.role === 'model' && message.isLoading && !isError; const contentRef = useRef(null); 
         const isModelLoadingWithSearch = isModelLoading && message.searchUsed; const isModelLoadingWithoutSearch = isModelLoading && !message.searchUsed;
         useEffect(() => { if (message.role === 'model' && !isError && contentRef.current) { const preElements = contentRef.current.querySelectorAll('pre'); preElements.forEach(preEl => { if (preEl.querySelector('.code-copy-button')) return; const button = document.createElement('button'); button.innerHTML = COPY_ICON_SVG; button.classList.add('code-copy-button', 'absolute', 'top-2.5', 'right-2.5', 'p-1.5', 'bg-gray-700', 'hover:bg-gray-600', 'text-gray-300', 'hover:text-gray-100', 'rounded-md', 'transition-colors', 'duration-150', 'opacity-60', 'hover:opacity-100', 'focus:opacity-100', 'focus:ring-2', 'focus:ring-brand-primary', 'focus:outline-none'); button.setAttribute('aria-label', 'Copy code'); preEl.appendChild(button); button.onclick = () => { const codeElement = preEl.querySelector('code'); if (codeElement) { navigator.clipboard.writeText(codeElement.textContent || '').then(() => { button.innerHTML = CHECK_ICON_SVG; button.classList.add('text-emerald-400'); setTimeout(() => { button.innerHTML = COPY_ICON_SVG; button.classList.remove('text-emerald-400'); }, 2000); }).catch(err => console.error('Failed to copy: ', err)); }}; }); }}, [message.text, message.role, message.isLoading, isError]);
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; let bubbleRoleClasses = ''; let bubbleWidthClasses = ''; let contentToShow = null;
-        if (isUser) { bubbleRoleClasses = 'bg-surface-user-bubble text-text-primary border border-border-user-bubble rounded-2xl rounded-br-md'; bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; contentToShow = <p className="text-sm md:text-base whitespace-pre-wrap break-words">{message.text}</p>;
-        } else if (message.role === 'model') { if(isError) { bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md'; contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); } else { bubbleRoleClasses = 'bg-surface-bubble-ai text-text-primary rounded-2xl rounded-bl-md border border-border-default'; contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); } bubbleWidthClasses = 'max-w-full w-full'; }
+        if (isUser) { 
+          bubbleRoleClasses = 'bg-surface-user-bubble text-text-primary border border-border-user-bubble rounded-2xl rounded-br-md'; 
+          bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
+          contentToShow = <p className="text-base whitespace-pre-wrap break-words">{message.text}</p>; 
+        } else if (message.role === 'model') { 
+            if(isError) { 
+                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md'; 
+                contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
+            } else { 
+                bubbleRoleClasses = 'bg-surface-bubble-ai text-text-primary rounded-2xl rounded-bl-md border border-border-default'; 
+                contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); 
+            } 
+            bubbleWidthClasses = 'max-w-full w-full'; 
+        }
         return (
           <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
             <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} style={{animationFillMode: 'forwards'}}>
@@ -368,7 +425,27 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
         useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
-        useEffect(() => { if (!userHasScrolledUp || messages[messages.length-1]?.role === 'user') { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); } }, [messages, userHasScrolledUp]);
+        
+        useEffect(() => {
+          const lastMessage = messages[messages.length - 1];
+          if (!lastMessage) return; 
+
+          const messagesEndEl = messagesEndRef.current;
+          if (!messagesEndEl) return;
+
+          if (lastMessage.role === 'user') {
+            messagesEndEl.scrollIntoView({ behavior: "smooth" });
+          } else if (lastMessage.role === 'model') {
+            if (!userHasScrolledUp) { 
+              if (lastMessage.isLoading) {
+                messagesEndEl.scrollIntoView({ behavior: "auto" }); 
+              } else {
+                messagesEndEl.scrollIntoView({ behavior: "smooth" });
+              }
+            }
+          }
+        }, [messages, userHasScrolledUp]);
+
         useEffect(() => { const ta = textareaRef.current; if (ta) { ta.style.height = 'auto'; const scrollHeight = ta.scrollHeight; const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180; ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`; }}, [inputText]);
         const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
         const handlePaste = async (event) => { const pastedFiles = Array.from(event.clipboardData.files); if (pastedFiles.length > 0) { const processedSomething = await processAndSetFiles(pastedFiles, true); if (processedSomething) event.preventDefault(); }};
@@ -398,7 +475,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   type="button"
                   onClick={onToggleSearch}
                   disabled={isLoading || isAiCurrentlyStreaming}
-                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
+                  className={`ml-3 flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
                               focus:outline-none 
                               disabled:opacity-60 disabled:cursor-not-allowed
                               ${isSearchEnabled 
@@ -422,9 +499,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
               <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} /> 
-                <button type="button" onClick={() => fileInputRef.current?.click()} className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle hover:text-text-secondary hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" aria-label="Attach files" disabled={isLoading && !isAiCurrentlyStreaming}> <i className="fas fa-plus text-xl"></i></button> 
+                <button type="button" onClick={() => fileInputRef.current?.click()} className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" aria-label="Attach files" disabled={isLoading && !isAiCurrentlyStreaming}> <i className="fas fa-plus text-xl"></i></button> 
                 <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize transition-shadow focus:shadow-md" disabled={isLoading && !isAiCurrentlyStreaming}/> 
-                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-11 h-11 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform hover:shadow-interactive-hover active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' : 'bg-button-send-bg hover:bg-button-send-hover-bg text-white hover:scale-105' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> {isAiCurrentlyStreaming ? <i className="fas fa-stop text-xl"></i> : <i className="fas fa-paper-plane text-lg"></i>} </button> 
+                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-10 h-10 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform hover:shadow-interactive-hover active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' : 'bg-button-send-bg hover:bg-button-send-hover-bg text-white hover:scale-105' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> 
+                  {isAiCurrentlyStreaming ? <i className="fas fa-stop text-sm"></i> : <i className="fas fa-paper-plane text-base"></i>} 
+                </button> 
               </div>
             </form>
           </div>);
@@ -440,14 +519,14 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
         const mergeCitations = (existingCitations, newCitationSources) => { /* Unchanged */ if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
         
-        const _streamAiResponse = async (promptPartsForCurrentTurn, targetAiMessageId, historyForGeminiInit, useSearch) => { /* Unchanged */
+        const _streamAiResponse = async (promptPartsForCurrentTurn, targetAiMessageId, historyForGeminiInit, useSearch) => {
             isStoppingGenerationRef.current = false; setIsChatLoading(true); setAvatarHeaderState('thinking'); let displayedAiText = ""; let accumulatedCitationSources = [];
             try {
                 const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() }; if (useSearch) { modelConfig.tools = [{ googleSearch: {} }]; }
                 const chatModel = genAI.getGenerativeModel(modelConfig); const chatSession = chatModel.startChat({ history: historyForGeminiInit }); const result = await chatSession.sendMessageStream(promptPartsForCurrentTurn); 
                 for await (const chunk of result.stream) { 
                     if (isStoppingGenerationRef.current) break; const chunkContent = chunk.text(); 
-                    if (typeof chunkContent === 'string') { const segments = chunkContent.match(/.{1,3}|\s+/g) || [chunkContent]; for (const segment of segments) { if (isStoppingGenerationRef.current) break; displayedAiText += segment; if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); } setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); await new Promise(resolve => setTimeout(resolve, 10 + segment.length * 1)); }} else { if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); }}
+                    if (typeof chunkContent === 'string') { const segments = chunkContent.match(/.{1,3}|\s+/g) || [chunkContent]; for (const segment of segments) { if (isStoppingGenerationRef.current) break; displayedAiText += segment; if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); } setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); await new Promise(resolve => setTimeout(resolve, 5 + segment.length * 1.0)); }} else { if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); }}
                     if (isStoppingGenerationRef.current) break;
                 }
                 setChatMessages(prev => prev.map(m => { if (m.id === targetAiMessageId) { let finalText = displayedAiText; let isFinalError = false; if (isStoppingGenerationRef.current && !finalText.includes("Generation stopped by user.")) { finalText += (finalText ? "\n\n---\n" : "") + "*Generation stopped by user.*"; } else if (!finalText.trim() && !isStoppingGenerationRef.current && accumulatedCitationSources.length === 0) { finalText = "No response received from AI."; isFinalError = true; } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { finalText = "*Content based on search results (see sources below).*"; } return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch }; } return m; }));
