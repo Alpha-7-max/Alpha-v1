@@ -370,7 +370,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             <svg ref={svgRef} className="avatar-svg-element w-full h-full relative z-10" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <radialGradient id="avatarGradientHeaderOracleYellow" cx="0.4" cy="0.3" r="0.7">
-                  <stop offset="0%" stop-color="#fff0b3" />
+                  <stop offset="0%" stop-color="#ffeeaa" /> 
                   <stop offset="100%" stop-color="#ffd700" />
                 </radialGradient>
               </defs>
@@ -526,7 +526,19 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const chatModel = genAI.getGenerativeModel(modelConfig); const chatSession = chatModel.startChat({ history: historyForGeminiInit }); const result = await chatSession.sendMessageStream(promptPartsForCurrentTurn); 
                 for await (const chunk of result.stream) { 
                     if (isStoppingGenerationRef.current) break; const chunkContent = chunk.text(); 
-                    if (typeof chunkContent === 'string') { const segments = chunkContent.match(/.{1,3}|\s+/g) || [chunkContent]; for (const segment of segments) { if (isStoppingGenerationRef.current) break; displayedAiText += segment; if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); } setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); await new Promise(resolve => setTimeout(resolve, 5 + segment.length * 1.0)); }} else { if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); }}
+                    if (typeof chunkContent === 'string') { 
+                        displayedAiText += chunkContent; 
+                        if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { 
+                            accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); 
+                        } 
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); 
+                        // Removed artificial delay: await new Promise(resolve => setTimeout(resolve, 5 + segment.length * 1.0));
+                    } else { 
+                        if (chunk.citationMetadata && chunk.citationMetadata.citationSources) { 
+                            accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources); 
+                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m)); 
+                        }
+                    }
                     if (isStoppingGenerationRef.current) break;
                 }
                 setChatMessages(prev => prev.map(m => { if (m.id === targetAiMessageId) { let finalText = displayedAiText; let isFinalError = false; if (isStoppingGenerationRef.current && !finalText.includes("Generation stopped by user.")) { finalText += (finalText ? "\n\n---\n" : "") + "*Generation stopped by user.*"; } else if (!finalText.trim() && !isStoppingGenerationRef.current && accumulatedCitationSources.length === 0) { finalText = "No response received from AI."; isFinalError = true; } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { finalText = "*Content based on search results (see sources below).*"; } return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch }; } return m; }));
