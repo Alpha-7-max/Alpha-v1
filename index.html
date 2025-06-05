@@ -540,7 +540,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; let bubbleRoleClasses = ''; let bubbleWidthClasses = ''; let contentToShow = null;
         
         if (isUser) { 
-          bubbleRoleClasses = 'bg-brand-primary/5 text-text-primary border border-brand-primary/10 rounded-2xl rounded-br-md'; 
+          bubbleRoleClasses = 'bg-surface-accent text-text-primary rounded-2xl rounded-br-md'; 
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="text-base whitespace-pre-wrap break-words">{message.text}</p>; 
         } else if (message.role === 'model') { 
