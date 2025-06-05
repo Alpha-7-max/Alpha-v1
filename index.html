@@ -17,7 +17,7 @@
               'surface-input': 'rgb(var(--surface-input) / <alpha-value>)',    
               'surface-accent': 'rgb(var(--surface-accent) / <alpha-value>)',    
               'surface-bubble-ai': 'rgb(var(--surface-bubble-ai) / <alpha-value>)',
-              'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)',
+              'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)', // Will be overridden by direct class
               'surface-user-bubble': 'rgb(var(--surface-user-bubble) / <alpha-value>)', 
               'border-user-bubble': 'rgb(var(--border-user-bubble) / <alpha-value>)',
               'button-send-bg': 'rgb(var(--button-send-bg) / <alpha-value>)',
@@ -57,7 +57,7 @@
               'empty-state-glow': 'emptyStateGlow 3.5s infinite alternate ease-in-out',
               'shiny-text': 'shinyText 2s linear infinite', 
               'dot-pulse': 'dotPulse 1.4s infinite ease-in-out',
-              'globe-blink-slow': 'globeBlinkSlow 2.5s infinite ease-in-out', // Added globe blink animation
+              'globe-blink-slow': 'globeBlinkSlow 2.5s infinite ease-in-out',
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
@@ -76,7 +76,7 @@
                 '0%, 80%, 100%': { transform: 'scale(0)', opacity: '0' },
                 '40%': { transform: 'scale(1.0)', opacity: '1' }
               },
-              globeBlinkSlow: { // Added keyframes for globe blink
+              globeBlinkSlow: { 
                 '0%, 100%': { opacity: '1' },
                 '50%': { opacity: '0.4' },
               },
@@ -103,11 +103,12 @@
           --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105;
           --interactive-focus-ring-color: 100 116 139;
           --surface-main: 248 250 252; --surface-card: 255 255 255;     
-          --surface-chat-area: 243 244 246; --surface-input: 255 255 255;     
-          --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; 
+          --surface-chat-area: 243 244 246; /* This will be overridden by bg-[#F5F5F5] in the component */
+          --surface-input: 255 255 255;     
+          --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; /* AI bubble bg changed in component */
           
-          --surface-user-bubble: 219 234 254; 
-          --border-user-bubble: 191 219 254;  
+          --surface-user-bubble: 219 234 254;  /* User bubble bg changed in component */
+          --border-user-bubble: 191 219 254;   /* User bubble border changed in component */
           
           --text-primary: 17 24 39; --text-secondary: 55 65 81;    
           --text-subtle: 107 114 128; --text-on-primary: 255 255 255; 
@@ -413,7 +414,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         );
       };
 
-      // MODIFIED: ThreeDeeGlobeSpinner now accepts a className prop
       const ThreeDeeGlobeSpinner = ({ size = 20, className = '' }) => {
         const mountRef = useRef(null);
         const rendererRef = useRef(null);
@@ -477,7 +477,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           };
         }, [size]);
 
-        // MODIFIED: Apply className to the root div
         return <div ref={mountRef} className={className} style={{ width: size, height: size, display: 'inline-block', verticalAlign: 'middle' }} />;
       };
       
@@ -492,8 +491,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         useEffect(() => { if (message.role === 'model' && !isError && contentRef.current) { const preElements = contentRef.current.querySelectorAll('pre'); preElements.forEach(preEl => { if (preEl.querySelector('.code-copy-button')) return; const button = document.createElement('button'); button.innerHTML = COPY_ICON_SVG; button.classList.add('code-copy-button', 'absolute', 'top-2.5', 'right-2.5', 'p-1.5', 'bg-gray-700', 'hover:bg-gray-600', 'text-gray-300', 'hover:text-gray-100', 'rounded-md', 'transition-colors', 'duration-150', 'opacity-60', 'hover:opacity-100', 'focus:opacity-100', 'focus:ring-2', 'focus:ring-brand-primary', 'focus:outline-none'); button.setAttribute('aria-label', 'Copy code'); preEl.appendChild(button); button.onclick = () => { const codeElement = preEl.querySelector('code'); if (codeElement) { navigator.clipboard.writeText(codeElement.textContent || '').then(() => { button.innerHTML = CHECK_ICON_SVG; button.classList.add('text-emerald-400'); setTimeout(() => { button.innerHTML = COPY_ICON_SVG; button.classList.remove('text-emerald-400'); }, 2000); }).catch(err => console.error('Failed to copy: ', err)); }}; }); }}, [message.text, message.role, message.isLoading, isError]);
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; let bubbleRoleClasses = ''; let bubbleWidthClasses = ''; let contentToShow = null;
+        
         if (isUser) { 
-          bubbleRoleClasses = 'bg-surface-user-bubble text-text-primary border border-border-user-bubble rounded-2xl rounded-br-md'; 
+          bubbleRoleClasses = 'bg-brand-primary/5 text-text-primary border border-brand-primary/10 rounded-2xl rounded-br-md'; 
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="text-base whitespace-pre-wrap break-words">{message.text}</p>; 
         } else if (message.role === 'model') { 
@@ -501,24 +501,70 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md'; 
                 contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
             } else { 
-                bubbleRoleClasses = 'bg-surface-bubble-ai text-text-primary rounded-2xl rounded-bl-md border border-border-default'; 
+                bubbleRoleClasses = 'bg-[#F9F9FA] text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]'; 
                 contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); 
             } 
             bubbleWidthClasses = 'max-w-full w-full'; 
         }
+
         return (
           <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
             <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} style={{animationFillMode: 'forwards'}}>
-              {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (<div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>{message.attachedFiles.map(file => { if (file.type?.startsWith('image/') && file.apiData?.data && file.apiData?.mimeType) { const imageSrc = `data:${file.apiData.mimeType};base64,${file.apiData.data}`; return (<div key={file.id || file.name} className="rounded-lg overflow-hidden border border-gray-300 bg-white shadow-sm group relative max-w-full w-full sm:w-auto sm:max-w-[180px]"><img src={imageSrc} alt={file.name || 'image preview'} className="block w-full max-h-40 object-contain" /><div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1"><p className="text-[10px] text-white text-center truncate font-medium">{file.name}</p></div></div>);} else { return (<div key={file.id || file.name} className="bg-gray-200 p-2.5 rounded-lg text-xs flex items-center space-x-2 max-w-full w-fit shadow"> {file.type?.startsWith('image/') ? <FileImageIcon className="text-gray-500 text-base" /> : <FileTextIcon className="text-gray-500 text-base" />} <span className="truncate max-w-[120px] sm:max-w-[150px] text-gray-700 font-medium">{file.name}{file.type?.startsWith('image/') ? " (preview unavailable)" : ""}</span></div>);}})}</div>)}
+              {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (
+                <div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {message.attachedFiles.map(file => {
+                    if (file.type?.startsWith('image/') && file.apiData?.data && file.apiData?.mimeType) {
+                      const imageSrc = `data:${file.apiData.mimeType};base64,${file.apiData.data}`;
+                      return (
+                        <div key={file.id || file.name} className="rounded-lg overflow-hidden border border-brand-primary/20 bg-brand-primary/10 shadow-sm group relative max-w-full w-full sm:w-auto sm:max-w-[180px]">
+                          <img src={imageSrc} alt={file.name || 'image preview'} className="block w-full max-h-40 object-contain" />
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center p-1">
+                            <p className="text-[10px] text-white text-center truncate font-medium">{file.name}</p>
+                          </div>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={file.id || file.name} className="bg-brand-primary/10 border border-brand-primary/20 p-2.5 rounded-lg text-xs flex items-center space-x-2 max-w-full w-fit shadow">
+                          {file.type?.startsWith('image/') ? 
+                            <FileImageIcon className="text-brand-primary text-base" /> : 
+                            <FileTextIcon className="text-brand-primary text-base" />
+                          }
+                          <span className="truncate max-w-[120px] sm:max-w-[150px] text-text-primary font-medium">
+                            {file.name}{file.type?.startsWith('image/') ? " (preview unavailable)" : ""}
+                          </span>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+              )}
               {message.text && contentToShow}
-              {isModelLoadingWithoutSearch && ( <div className="flex items-end space-x-1.5 mt-2.5"><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span><span className="w-2 h-2 bg-gray-300 rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span></div>)}
+              {isModelLoadingWithoutSearch && ( <div className="flex items-end space-x-1.5 mt-2.5"><span className="w-2 h-2 bg-text-secondary rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span><span className="w-2 h-2 bg-text-secondary rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span><span className="w-2 h-2 bg-text-secondary rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span></div>)}
               {isModelLoadingWithSearch && (
                 <div className="flex items-center space-x-1.5 mt-2.5 text-text-subtle">
                   <ThreeDeeGlobeSpinner size={16} className="animate-globe-blink-slow" />
                   <span className="text-xs font-medium animated-shiny-text">Searching...</span>
                 </div>
               )}
-              {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (<div className="mt-3 pt-3 border-t border-border-light/70"><h4 className="text-xs font-semibold text-text-subtle mb-1.5 flex items-center"><i className="fas fa-link text-xs mr-1.5 opacity-70"></i>Sources:</h4><ul className="list-none p-0 space-y-1">{message.citationMetadata.citationSources.map((source, index) => (<li key={index} className="text-xs leading-relaxed"><a href={source.uri} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-brand-secondary hover:underline break-all inline-flex items-center group" title={source.uri}><span className="mr-1">{index + 1}.</span><span className="truncate max-w-[200px] sm:max-w-[300px] md:max-w-[400px]">{source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri)}</span><i className="fas fa-external-link-alt text-[10px] ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity"></i></a></li>))}</ul></div>)}
+              {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-[#E5E8EB]/70">
+                  <h4 className="text-xs font-semibold text-text-subtle mb-1.5 flex items-center">
+                    <i className="fas fa-link text-xs mr-1.5 opacity-70 text-text-primary"></i>Sources:
+                  </h4>
+                  <ul className="list-none p-0 space-y-1">
+                    {message.citationMetadata.citationSources.map((source, index) => (
+                      <li key={index} className="text-xs leading-relaxed">
+                        <a href={source.uri} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-brand-secondary hover:underline break-all inline-flex items-center group" title={source.uri}>
+                          <span className="mr-1">{index + 1}.</span>
+                          <span className="truncate max-w-[200px] sm:max-w-[300px] md:max-w-[400px]">{source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri)}</span>
+                          <i className="fas fa-external-link-alt text-[10px] ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>);
       };
@@ -568,7 +614,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
-            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">{ !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )} {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))} <div ref={messagesEndRef} className="h-1" /></div>
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-[#F5F5F5]">{ !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )} {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))} <div ref={messagesEndRef} className="h-1" /></div>
             
             {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-light bg-surface-input flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-surface-accent border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
 
