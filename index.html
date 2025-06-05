@@ -17,7 +17,7 @@
               'surface-input': 'rgb(var(--surface-input) / <alpha-value>)',    
               'surface-accent': 'rgb(var(--surface-accent) / <alpha-value>)',    
               'surface-bubble-ai': 'rgb(var(--surface-bubble-ai) / <alpha-value>)',
-              'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)', // Will be overridden by direct class
+              'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)', 
               'surface-user-bubble': 'rgb(var(--surface-user-bubble) / <alpha-value>)', 
               'border-user-bubble': 'rgb(var(--border-user-bubble) / <alpha-value>)',
               'button-send-bg': 'rgb(var(--button-send-bg) / <alpha-value>)',
@@ -103,12 +103,12 @@
           --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105;
           --interactive-focus-ring-color: 100 116 139;
           --surface-main: 248 250 252; --surface-card: 255 255 255;     
-          --surface-chat-area: 243 244 246; /* This will be overridden by bg-[#F5F5F5] in the component */
+          --surface-chat-area: 243 244 246; 
           --surface-input: 255 255 255;     
-          --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; /* AI bubble bg changed in component */
+          --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; 
           
-          --surface-user-bubble: 219 234 254;  /* User bubble bg changed in component */
-          --border-user-bubble: 191 219 254;   /* User bubble border changed in component */
+          --surface-user-bubble: 219 234 254; 
+          --border-user-bubble: 191 219 254;  
           
           --text-primary: 17 24 39; --text-secondary: 55 65 81;    
           --text-subtle: 107 114 128; --text-on-primary: 255 255 255; 
@@ -540,7 +540,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
               )}
               {message.text && contentToShow}
-              {isModelLoadingWithoutSearch && ( <div className="flex items-end space-x-1.5 mt-2.5"><span className="w-2 h-2 bg-text-secondary rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span><span className="w-2 h-2 bg-text-secondary rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span><span className="w-2 h-2 bg-text-secondary rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span></div>)}
+              {isModelLoadingWithoutSearch && ( 
+                <div className="flex items-end space-x-1.5 mt-2.5">
+                  <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span>
+                  <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span>
+                  <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span>
+                </div>
+              )}
               {isModelLoadingWithSearch && (
                 <div className="flex items-center space-x-1.5 mt-2.5 text-text-subtle">
                   <ThreeDeeGlobeSpinner size={16} className="animate-globe-blink-slow" />
@@ -648,7 +654,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
               <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} /> 
-                <button type="button" onClick={() => fileInputRef.current?.click()} className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" aria-label="Attach files" disabled={isLoading && !isAiCurrentlyStreaming}> <i className="fas fa-plus text-xl"></i></button> 
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current?.click()} 
+                  className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-surface-accent hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" 
+                  aria-label="Attach files" 
+                  disabled={isLoading && !isAiCurrentlyStreaming}
+                > 
+                  <i className="fas fa-plus text-xl"></i>
+                </button> 
                 <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize transition-shadow focus:shadow-md" disabled={isLoading && !isAiCurrentlyStreaming}/> 
                 <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-10 h-10 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform hover:shadow-interactive-hover active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' : 'bg-button-send-bg hover:bg-button-send-hover-bg text-white hover:scale-105' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> 
                   {isAiCurrentlyStreaming ? <i className="fas fa-stop text-sm"></i> : <i className="fas fa-paper-plane text-base"></i>} 
