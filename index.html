@@ -86,8 +86,8 @@
             },
             boxShadow: {
                 'interactive': '0 4px 10px 0 rgba(var(--button-send-bg), 0.15)', 
-                'interactive-hover': '0 5px 14px 0 rgba(var(--button-send-bg), 0.20)', 
-                'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)',
+                // 'interactive-hover': '0 5px 14px 0 rgba(var(--button-send-bg), 0.20)', 
+                'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)', 
                 'header': '0 1px 2px rgba(var(--text-primary), 0.03), 0 1px 1px rgba(var(--text-primary), 0.015)',
                 'input-focus': '0 0 0 1px rgb(var(--interactive-focus-ring-color) / 1)', 
                 'chat-window': '0 15px 50px -8px rgba(var(--text-primary), 0.08), 0 8px 25px -8px rgba(var(--text-primary),0.05)',
@@ -100,12 +100,14 @@
       @layer base {
         :root {
           --brand-primary: 100 116 139; --brand-secondary: 71 85 105;
-          --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105;
+          --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105; 
           --interactive-focus-ring-color: 100 116 139;
-          --surface-main: 248 250 252; --surface-card: 255 255 255;     
-          --surface-chat-area: 243 244 246; 
-          --surface-input: 255 255 255;     
-          --surface-accent: 241 245 249; --surface-bubble-ai: 255 255 255; 
+          --surface-main: 248 250 252; 
+          --surface-card: 255 255 255;
+          --surface-chat-area: 255 255 255;
+          --surface-input: 255 255 255;
+          --surface-accent: 241 245 249; 
+          --surface-bubble-ai: 255 255 255; 
           
           --surface-user-bubble: 219 234 254; 
           --border-user-bubble: 191 219 254;  
@@ -122,7 +124,7 @@
         }
         html, body, #root { @apply h-full overflow-hidden; }
         body { @apply font-sans bg-surface-main text-text-primary m-0; }
-        ::selection { @apply bg-gray-300 text-gray-700; } 
+        ::selection { @apply bg-blue-100 text-blue-700; } 
       }
       @layer components {
         .markdown-content p { @apply mb-3 last:mb-0; }
@@ -133,8 +135,13 @@
         .markdown-content strong, .markdown-content b { @apply font-semibold text-text-primary; }
         .markdown-content em, .markdown-content i { @apply italic text-text-secondary; }
         .markdown-content code { @apply bg-gray-100 text-gray-700 text-xs px-1.5 py-0.5 rounded-md font-mono shadow-sm border border-gray-200; }
-        .markdown-content pre { @apply bg-gray-800 text-gray-100 p-4 rounded-lg shadow-md overflow-x-auto text-sm my-4 font-mono relative; }
-        .markdown-content pre code { @apply bg-transparent text-gray-100 p-0 shadow-none border-none; }
+        .markdown-content pre { @apply bg-[#F4E4BC] text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative border border-gray-400; } 
+        .markdown-content pre code { @apply block bg-transparent text-gray-800 p-0 shadow-none border-none px-4 pb-4 pt-8; } 
+        .markdown-content pre::-webkit-scrollbar { @apply h-1.5; } 
+        .markdown-content pre::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } 
+        .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-400 rounded-full hover:bg-gray-500 transition-colors; } 
+        .markdown-content pre { scrollbar-width: thin; scrollbar-color: theme('colors.gray.400') theme('colors.gray.100'); }
+
         .markdown-content a { @apply text-brand-primary hover:text-brand-secondary underline decoration-brand-primary/50 hover:decoration-brand-secondary/50 transition-colors; } 
         .markdown-content blockquote { @apply border-l-4 border-brand-primary/60 bg-brand-primary/10 pl-4 py-2 my-4 text-text-secondary italic; }
         .markdown-content h1, .markdown-content h2, .markdown-content h3,
@@ -156,8 +163,10 @@
         .markdown-content tbody tr:nth-child(even) { @apply bg-gray-50/50; }
         .markdown-content tbody tr:hover { @apply bg-interactive-hover/50; }
 
-        .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } .chat-messages-container::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
-        .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.300') theme('colors.gray.100'); }
+        .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } 
+        .chat-messages-container::-webkit-scrollbar-track { @apply bg-transparent rounded-full; } 
+        .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
+        .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; } 
         
         textarea.auto-resize { min-height: 52px; max-height: 180px; }
         textarea.auto-resize::-webkit-scrollbar {
@@ -268,16 +277,16 @@ Core Language Rules:
   • Code snippets and technical commands
 - Your entire response, including all Urdu words, MUST be written using the English alphabet (Roman Urdu). No other scripts (like Devanagari, Nastaliq, etc.) are allowed for Urdu words.
 - Use natural Roman Urdu that people actually speak, not overly formal or literary
-- Mix in commonly used English words that are part of everyday Roman Urdu conversation
-- Vocabulary Choice: Prioritize authentic Roman Urdu words. If a concept can be expressed using common Roman Urdu, use that instead of a less common word, especially if the alternative is a pure Hindi word not typically transliterated or used in Roman Urdu. Strive for vocabulary that is natural in everyday Roman Urdu conversation.
+- Mix in commonly used English words that are part of everyday Roman Urdu conversation.
+- CRITICAL LANGUAGE NOTE: Absolutely NO Hindi words. Your vocabulary must be pure Roman Urdu as commonly spoken in Pakistan. Hindi words are not understood and will be perceived negatively. Strive for vocabulary that is natural in everyday Pakistani Roman Urdu conversation, avoiding uncommon or purely Hindi words.
 
 
 Formatting Guidelines:
 - Use Markdown extensively for better readability
 - Create tables for comparisons and structured data
 - Use bullet points and numbered lists where appropriate
-- Format code blocks properly with syntax highlighting
-- Use **bold** for emphasis and *italic* for subtle highlights
+- Format code blocks properly.
+- Use **bold** for emphasis and *italic* for subtle highlights.
 - Add horizontal rules (---) to separate major sections
 
 Personality & Communication Style:
@@ -488,7 +497,45 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const ChatMessageItem = ({ message }) => {
         const isUser = message.role === 'user'; const isError = message.isError === true; const isModelLoading = message.role === 'model' && message.isLoading && !isError; const contentRef = useRef(null); 
         const isModelLoadingWithSearch = isModelLoading && message.searchUsed; const isModelLoadingWithoutSearch = isModelLoading && !message.searchUsed;
-        useEffect(() => { if (message.role === 'model' && !isError && contentRef.current) { const preElements = contentRef.current.querySelectorAll('pre'); preElements.forEach(preEl => { if (preEl.querySelector('.code-copy-button')) return; const button = document.createElement('button'); button.innerHTML = COPY_ICON_SVG; button.classList.add('code-copy-button', 'absolute', 'top-2.5', 'right-2.5', 'p-1.5', 'bg-gray-700', 'hover:bg-gray-600', 'text-gray-300', 'hover:text-gray-100', 'rounded-md', 'transition-colors', 'duration-150', 'opacity-60', 'hover:opacity-100', 'focus:opacity-100', 'focus:ring-2', 'focus:ring-brand-primary', 'focus:outline-none'); button.setAttribute('aria-label', 'Copy code'); preEl.appendChild(button); button.onclick = () => { const codeElement = preEl.querySelector('code'); if (codeElement) { navigator.clipboard.writeText(codeElement.textContent || '').then(() => { button.innerHTML = CHECK_ICON_SVG; button.classList.add('text-emerald-400'); setTimeout(() => { button.innerHTML = COPY_ICON_SVG; button.classList.remove('text-emerald-400'); }, 2000); }).catch(err => console.error('Failed to copy: ', err)); }}; }); }}, [message.text, message.role, message.isLoading, isError]);
+        
+        useEffect(() => { 
+          if (message.role === 'model' && !isError && contentRef.current) { 
+            const preElements = contentRef.current.querySelectorAll('pre'); 
+            preElements.forEach(preEl => { 
+              const codeElement = preEl.querySelector('code');
+              // Syntax highlighting logic removed. Code will be plain.
+
+              if (preEl.querySelector('.code-copy-button')) return; 
+              const button = document.createElement('button'); 
+              button.innerHTML = COPY_ICON_SVG; 
+              button.classList.add('code-copy-button', 'absolute', 'p-1', 
+                                 'bg-slate-200',       
+                                 'text-slate-700',     
+                                 'border', 'border-slate-400',
+                                 'rounded-md', 'transition-colors', 'duration-150', 
+                                 'opacity-70', 'hover:opacity-100' ); 
+              button.style.top = '0.25rem'; 
+              button.style.right = '0.5rem'; 
+              button.setAttribute('aria-label', 'Copy code'); 
+              preEl.appendChild(button); 
+              button.onclick = () => { 
+                if (codeElement) { 
+                  navigator.clipboard.writeText(codeElement.textContent || '').then(() => { 
+                    button.innerHTML = CHECK_ICON_SVG; 
+                    button.classList.add('text-emerald-600'); 
+                    button.classList.remove('text-slate-700'); 
+                    setTimeout(() => { 
+                      button.innerHTML = COPY_ICON_SVG; 
+                      button.classList.remove('text-emerald-600'); 
+                      button.classList.add('text-slate-700'); 
+                    }, 2000); 
+                  }).catch(err => console.error('Failed to copy: ', err)); 
+                }
+              }; 
+            }); 
+          }
+        }, [message.text, message.role, message.isLoading, isError]);
+
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; let bubbleRoleClasses = ''; let bubbleWidthClasses = ''; let contentToShow = null;
         
@@ -614,17 +661,17 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const hasVisibleChatContent = messages.some( msg => (msg.text || msg.attachedFiles?.length > 0) && !(msg.role === 'system' && !msg.isError) );
 
         return (
-          <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-surface-card rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
-            <header className="p-4 border-b border-border-light bg-surface-card flex items-center justify-between flex-shrink-0 shadow-header">
+          <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
+            <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3"><EvaAvatarHeaderIcon avatarState={avatarHeaderState} /><div><h1 className="text-lg font-poppins font-semibold tracking-tight text-gradient-brand">Oracle AI</h1><p className="text-xs -mt-0.5 text-gradient-brand-subtle">Modern Chat Experience</p></div></div>
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
-            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-[#F5F5F5]">{ !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )} {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))} <div ref={messagesEndRef} className="h-1" /></div>
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-white">{ !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )} {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))} <div ref={messagesEndRef} className="h-1" /></div>
             
-            {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-light bg-surface-input flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-surface-accent border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
+            {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-default bg-white flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-gray-100 border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
 
-            <form onSubmit={handleSubmit} className="bg-surface-input border-t border-border-light flex-shrink-0">
+            <form onSubmit={handleSubmit} className="bg-white border-t border-border-default flex-shrink-0">
               <div className="px-3 md:px-4 pt-2 pb-1 flex justify-start items-center">
                 <button
                   type="button"
@@ -663,8 +710,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 > 
                   <i className="fas fa-plus text-xl"></i>
                 </button> 
-                <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize transition-shadow focus:shadow-md" disabled={isLoading && !isAiCurrentlyStreaming}/> 
-                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-10 h-10 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform hover:shadow-interactive-hover active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' : 'bg-button-send-bg hover:bg-button-send-hover-bg text-white hover:scale-105' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> 
+                <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize" disabled={isLoading && !isAiCurrentlyStreaming}/> 
+                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-10 h-10 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none' : 'bg-button-send-bg text-white' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> 
                   {isAiCurrentlyStreaming ? <i className="fas fa-stop text-sm"></i> : <i className="fas fa-paper-plane text-base"></i>} 
                 </button> 
               </div>
@@ -677,7 +724,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
         const getGeminiHistory = (currentMessagesInternalFormat) => { /* Unchanged */ const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
         useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
-        const handleStopGeneration = useCallback(() => { /* Unchanged */ isStoppingGenerationRef.current = true; setChatMessages(prev => prev.map(m => m.isLoading && m.role === 'model' ? {...m, isLoading:false, text: (m.text || "") + "\n\n---\n*Generation stopped by user.*"} : m)); setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
+        const handleStopGeneration = useCallback(() => { isStoppingGenerationRef.current = true; /* Logic to update message text is now handled in _streamAiResponse's finally block or setChatMessages */ setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
         const handleClearChat = useCallback(() => { /* Unchanged */ if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
         const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
         const mergeCitations = (existingCitations, newCitationSources) => { /* Unchanged */ if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
@@ -734,20 +781,30 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
 
                 if (needsSearchMarkerFound && originalUserMessageForRetry) {
-                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true);
-                    return; 
+                    // If AI signaled it needs search, re-call with search enabled
+                    // Make sure to pass the originalUserMessage for retry to the next call
+                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry);
+                    return; // Important: exit this call as the retry will handle the final state
                 }
                 
+                // This block will now execute for normal completion OR if stop was initiated
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = displayedAiText;
                         let isFinalError = false;
-                        if (isStoppingGenerationRef.current && !finalText.includes("Generation stopped by user.")) {
-                            finalText += (finalText ? "\n\n---\n" : "") + "*Generation stopped by user.*";
-                        } else if (!finalText.trim() && !isStoppingGenerationRef.current && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
+
+                        if (isStoppingGenerationRef.current) {
+                            const isInCodeBlock = (finalText.match(/```/g) || []).length % 2 !== 0;
+                            if (isInCodeBlock) {
+                                finalText += "\n```"; // Close the code block
+                            }
+                            if (!finalText.includes("*Generation stopped by user.*")) { 
+                                finalText += (finalText.trim() ? "\n\n---\n" : "") + "*Generation stopped by user.*";
+                            }
+                        } else if (!finalText.trim() && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
                             finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
                             isFinalError = true;
-                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) {
+                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0) { // No !isStoppingGenerationRef.current here
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
                         }
                         return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch };
@@ -760,15 +817,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
             } finally {
-                if (!needsSearchMarkerFound) { 
+                if (!needsSearchMarkerFound) { // Only proceed if not waiting for a retry with search
                     setIsChatLoading(false);
                     if (!isStoppingGenerationRef.current) {
                         setAvatarHeaderState('speaking');
                         setTimeout(() => setAvatarHeaderState('idle'), 1500);
                     } else {
-                        setAvatarHeaderState('idle');
+                        setAvatarHeaderState('idle'); // Already set by handleStopGeneration, but ensure it.
                     }
-                    isStoppingGenerationRef.current = false;
+                    isStoppingGenerationRef.current = false; // Reset for next message
                 }
             }
         };
