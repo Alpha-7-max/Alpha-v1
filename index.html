@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -43,6 +42,7 @@
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
               poppins: ['Poppins', 'sans-serif'],
+              roboto: ['Roboto', 'sans-serif'],
             },
             animation: {
               'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
@@ -87,7 +87,6 @@
             },
             boxShadow: {
                 'interactive': '0 4px 10px 0 rgba(var(--button-send-bg), 0.15)', 
-                // 'interactive-hover': '0 5px 14px 0 rgba(var(--button-send-bg), 0.20)', 
                 'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)', 
                 'header': '0 1px 2px rgba(var(--text-primary), 0.03), 0 1px 1px rgba(var(--text-primary), 0.015)',
                 'input-focus': '0 0 0 1px rgb(var(--interactive-focus-ring-color) / 1)', 
@@ -135,13 +134,21 @@
         .markdown-content li { @apply mb-1.5; }
         .markdown-content strong, .markdown-content b { @apply font-semibold text-text-primary; }
         .markdown-content em, .markdown-content i { @apply italic text-text-secondary; }
-        .markdown-content code { @apply bg-gray-100 text-gray-700 text-xs px-1.5 py-0.5 rounded-md font-mono shadow-sm border border-gray-200; }
-        .markdown-content pre { @apply bg-[#F4E4BC] text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative border border-gray-400; } 
-        .markdown-content pre code { @apply block bg-transparent text-gray-800 p-0 shadow-none border-none px-4 pb-4 pt-8; } 
-        .markdown-content pre::-webkit-scrollbar { @apply h-1.5; } 
-        .markdown-content pre::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } 
-        .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-400 rounded-full hover:bg-gray-500 transition-colors; } 
-        .markdown-content pre { scrollbar-width: thin; scrollbar-color: theme('colors.gray.400') theme('colors.gray.100'); }
+        .markdown-content code:not(pre code) { 
+          @apply bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-md font-mono shadow-sm border border-gray-300; 
+        } 
+        
+        .markdown-content pre { 
+          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative; /* Border removed */
+        } 
+        .markdown-content pre code { 
+          @apply block bg-transparent text-inherit text-sm p-0 shadow-none border-none px-4 pb-4 pt-8 !whitespace-pre; 
+        }
+        
+        .markdown-content pre::-webkit-scrollbar { @apply h-px; } /* Scrollbar height set to 1px (h-px) */
+        .markdown-content pre::-webkit-scrollbar-track { @apply bg-transparent; } 
+        .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
+        .markdown-content pre { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; }
 
         .markdown-content a { @apply text-brand-primary hover:text-brand-secondary underline decoration-brand-primary/50 hover:decoration-brand-secondary/50 transition-colors; } 
         .markdown-content blockquote { @apply border-l-4 border-brand-primary/60 bg-brand-primary/10 pl-4 py-2 my-4 text-text-secondary italic; }
@@ -155,14 +162,14 @@
           scrollbar-width: thin; 
           scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
         }
-        .markdown-content table::-webkit-scrollbar { @apply h-1.5; } 
+        .markdown-content table::-webkit-scrollbar { @apply h-1; } 
         .markdown-content table::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } 
         .markdown-content table::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
         .markdown-content th, .markdown-content td { @apply border border-border-default p-2.5 text-left; }
         .markdown-content th { @apply bg-surface-accent font-semibold text-text-primary; }
         .markdown-content td { @apply text-text-secondary; }
         .markdown-content tbody tr:nth-child(even) { @apply bg-gray-50/50; }
-        .markdown-content tbody tr:hover { @apply bg-interactive-hover/50; }
+        .markdown-content tbody tr:hover { /* Hover effect removed */ }
 
         .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } 
         .chat-messages-container::-webkit-scrollbar-track { @apply bg-transparent rounded-full; } 
@@ -195,9 +202,15 @@
         .avatar-thinking .avatar-svg-element #eye-left-header-oracle, .avatar-thinking .avatar-svg-element #eye-right-header-oracle { animation: thinkGlance 2s infinite ease-in-out; }
         .avatar-svg-element #eye-left-header-oracle, .avatar-svg-element #eye-right-header-oracle { animation: blink 4s infinite ease-in-out; transform-origin: center center; }
         .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; }
+      
+        .hljs { 
+            @apply !bg-transparent !text-inherit; 
+        }
       }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
+
     <script type="importmap">
       {
         "imports": {
@@ -206,7 +219,8 @@
           "react/": "https://esm.sh/react@^18.2.0/",
           "react-dom/client": "https://esm.sh/react-dom@^18.2.0/client",
           "marked": "https://esm.sh/marked@^12.0.2",
-          "three": "https://esm.sh/three@0.163.0"
+          "three": "https://esm.sh/three@0.163.0",
+          "highlight.js": "https://esm.sh/highlight.js@^11.9.0"
         }
       }
     </script>
@@ -219,11 +233,12 @@
       import { GoogleGenerativeAI } from '@google/genai';
       import { marked } from 'marked';
       import * as THREE from 'three';
+      import hljs from 'highlight.js';
 
       marked.setOptions({ gfm: true, breaks: true, smartypants: true });
 
       const GEMINI_MODEL_NAME = 'gemini-2.5-flash-preview-05-20';
-      const API_KEY = "AIzaSyCP0_JSlzsnNKczFe-dBTZyoyKBwvvP6UE"; // DO NOT CHANGE
+      const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; // DO NOT CHANGE
       const MAX_FILE_SIZE_MB = 5; const MAX_TOTAL_FILES_SIZE_MB = 20;
 
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
@@ -412,25 +427,19 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const EvaAvatarHeaderIcon = ({ avatarState }) => {
         const wrapperRef = useRef(null);
         const svgRef = useRef(null);
-        // const mouthRef = useRef(null); // mouthRef is no longer used for the new SVG
 
         useEffect(() => {
           if (!wrapperRef.current || !svgRef.current) return;
-
           const wrapperElement = wrapperRef.current;
           const svgElement = svgRef.current;
-
           wrapperElement.classList.remove('avatar-speaking', 'avatar-thinking', 'avatar-happy-state');
-          svgElement.style.animation = ''; // Reset any direct JS animation
-
+          svgElement.style.animation = ''; 
           switch (avatarState) {
             case 'speaking':
               wrapperElement.classList.add('avatar-speaking');
-              // CSS '.avatar-speaking .avatar-svg-element' will apply 'speakBob' if new SVG structure allows
               break;
             case 'thinking':
               wrapperElement.classList.add('avatar-thinking');
-              // CSS for eye animations '.avatar-thinking .avatar-svg-element #eye-left-header-oracle' will not find elements
               break;
             case 'happy':
               wrapperElement.classList.add('avatar-happy-state');
@@ -438,14 +447,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               break;
             case 'idle':
             default:
-              // No specific action needed for mouth or eyes with the new SVG via JS here.
-              // CSS animations for eyes like 'blink' relied on specific IDs no longer present.
               break;
           }
         }, [avatarState]);
 
         return (
-          <div ref={wrapperRef} className="avatar-wrapper w-9 h-9 relative">
+          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"> {/* Avatar size changed */}
             <svg
               ref={svgRef}
               className="avatar-svg-element w-full h-full relative z-10"
@@ -542,41 +549,67 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const isUser = message.role === 'user'; const isError = message.isError === true; const isModelLoading = message.role === 'model' && message.isLoading && !isError; const contentRef = useRef(null); 
         const isModelLoadingWithSearch = isModelLoading && message.searchUsed; const isModelLoadingWithoutSearch = isModelLoading && !message.searchUsed;
         
-        useEffect(() => { 
-          if (message.role === 'model' && !isError && contentRef.current) { 
-            const preElements = contentRef.current.querySelectorAll('pre'); 
-            preElements.forEach(preEl => { 
-              const codeElement = preEl.querySelector('code');
-              // Syntax highlighting logic removed. Code will be plain.
-
-              if (preEl.querySelector('.code-copy-button')) return; 
-              const button = document.createElement('button'); 
-              button.innerHTML = COPY_ICON_SVG; 
-              button.classList.add('code-copy-button', 'absolute', 'p-1', 
-                                 'bg-slate-200',       
-                                 'text-slate-700',     
-                                 'border', 'border-slate-400',
-                                 'rounded-md', 'transition-colors', 'duration-150', 
-                                 'opacity-70', 'hover:opacity-100' ); 
-              button.style.top = '0.25rem'; 
-              button.style.right = '0.5rem'; 
-              button.setAttribute('aria-label', 'Copy code'); 
-              preEl.appendChild(button); 
-              button.onclick = () => { 
-                if (codeElement) { 
-                  navigator.clipboard.writeText(codeElement.textContent || '').then(() => { 
-                    button.innerHTML = CHECK_ICON_SVG; 
-                    button.classList.add('text-emerald-600'); 
-                    button.classList.remove('text-slate-700'); 
-                    setTimeout(() => { 
-                      button.innerHTML = COPY_ICON_SVG; 
-                      button.classList.remove('text-emerald-600'); 
-                      button.classList.add('text-slate-700'); 
-                    }, 2000); 
-                  }).catch(err => console.error('Failed to copy: ', err)); 
+        useEffect(() => {
+          if (message.role === 'model' && !isError && contentRef.current) {
+            const preElements = contentRef.current.querySelectorAll('pre');
+            preElements.forEach(preEl => {
+              if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
+                const existingCodeElement = preEl.querySelector('code');
+                if (existingCodeElement && !existingCodeElement.dataset.highlighted) {
+                    hljs.highlightElement(existingCodeElement);
+                    existingCodeElement.dataset.highlighted = 'true';
                 }
-              }; 
-            }); 
+                return;
+              }
+
+              const codeElement = preEl.querySelector('code');
+              if (!codeElement) return;
+
+              const wrapper = document.createElement('div');
+              wrapper.classList.add('code-block-wrapper');
+              wrapper.style.position = 'relative';
+
+              const button = document.createElement('button');
+              button.innerHTML = COPY_ICON_SVG;
+              button.classList.add(
+                'code-copy-button', 'absolute', 'p-1',
+                'bg-transparent', // Removed background color
+                'text-gray-600', // Initial icon color
+                'border', 'border-gray-300', // Keep border
+                'rounded-md', 'transition-colors', 'duration-150',
+                'opacity-70', 'hover:opacity-100', 'hover:text-gray-800' // No bg change on hover, just icon opacity/color
+              );
+              button.style.top = '0.25rem';
+              button.style.right = '0.5rem';
+              button.style.zIndex = '10';
+              button.setAttribute('aria-label', 'Copy code');
+
+              button.onclick = () => {
+                if (codeElement) {
+                  navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
+                    button.innerHTML = CHECK_ICON_SVG;
+                    button.classList.add('text-emerald-600'); 
+                    button.classList.remove('text-gray-600', 'text-gray-800'); // remove initial/hover text colors
+                    setTimeout(() => {
+                      button.innerHTML = COPY_ICON_SVG;
+                      button.classList.remove('text-emerald-600'); 
+                      button.classList.add('text-gray-600'); // revert to initial icon color
+                    }, 2000);
+                  }).catch(err => console.error('Failed to copy: ', err));
+                }
+              };
+
+              if (preEl.parentNode) {
+                preEl.parentNode.insertBefore(wrapper, preEl);
+                wrapper.appendChild(preEl); 
+                wrapper.appendChild(button); 
+              }
+              
+              if (!codeElement.dataset.highlighted) {
+                hljs.highlightElement(codeElement);
+                codeElement.dataset.highlighted = 'true';
+              }
+            });
           }
         }, [message.text, message.role, message.isLoading, isError]);
 
@@ -640,7 +673,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               )}
               {isModelLoadingWithSearch && (
                 <div className="flex items-center space-x-1.5 mt-2.5 text-text-subtle">
-                  <ThreeDeeGlobeSpinner size={16} className="animate-globe-blink-slow" />
+                  <ThreeDeeGlobeSpinner size={14} className="animate-globe-blink-slow" />
                   <span className="text-xs font-medium animated-shiny-text">Searching...</span>
                 </div>
               )}
@@ -695,7 +728,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         useEffect(() => { const ta = textareaRef.current; if (ta) { ta.style.height = 'auto'; const scrollHeight = ta.scrollHeight; const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180; ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`; }}, [inputText]);
         const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
         const handlePaste = async (event) => { const pastedFiles = Array.from(event.clipboardData.files); if (pastedFiles.length > 0) { const processedSomething = await processAndSetFiles(pastedFiles, true); if (processedSomething) event.preventDefault(); }};
-        const processAndSetFiles = async (filesArray, isFromPaste = false) => { /* Unchanged */ if (!filesArray.length) return false; let filesToProcess = []; let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0); let didProcessAnyFile = false; let localErrorMessage = null; for (const file of filesArray) { const isImage = file.type.startsWith('image/'); const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt')); if (!isImage && !isTxt) { if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`); else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files allowed.`; continue; } if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; continue; } if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; break; } filesToProcess.push(file); currentTotalSize += file.size; didProcessAnyFile = true; } if(localErrorMessage){ setChatError(localErrorMessage); } else { setChatError(null); } if (filesToProcess.length > 0) { const processedFileObjects = await Promise.all( filesToProcess.map(async (file) => { const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name; let apiData; if (file.type.startsWith('image/')) { const base64Data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.onerror = (error) => reject(error); }); apiData = { mimeType: file.type, data: base64Data }; } else { const textContent = await file.text(); apiData = { textContent: textContent }; } return { id, file, name: file.name, type: file.type, apiData }; }) ); setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]); } return didProcessAnyFile; };
+        const processAndSetFiles = async (filesArray, isFromPaste = false) => { if (!filesArray.length) return false; let filesToProcess = []; let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0); let didProcessAnyFile = false; let localErrorMessage = null; for (const file of filesArray) { const isImage = file.type.startsWith('image/'); const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt')); if (!isImage && !isTxt) { if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`); else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files allowed.`; continue; } if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; continue; } if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; break; } filesToProcess.push(file); currentTotalSize += file.size; didProcessAnyFile = true; } if(localErrorMessage){ setChatError(localErrorMessage); } else { setChatError(null); } if (filesToProcess.length > 0) { const processedFileObjects = await Promise.all( filesToProcess.map(async (file) => { const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name; let apiData; if (file.type.startsWith('image/')) { const base64Data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.onerror = (error) => reject(error); }); apiData = { mimeType: file.type, data: base64Data }; } else { const textContent = await file.text(); apiData = { textContent: textContent }; } return { id, file, name: file.name, type: file.type, apiData }; }) ); setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]); } return didProcessAnyFile; };
         const removeSelectedFile = (fileId) => { setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); };
         const handleSubmit = (e) => { if(e) e.preventDefault(); if (!inputText.trim() && selectedFiles.length === 0) return; setUserHasScrolledUp(false); setChatError(null); onSendMessage(inputText, selectedFiles); setInputText(''); setSelectedFiles([]); };
         const handleTextareaKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { if (isMobileView) { return; } else { if (!isSendButtonDisabled) { handleSubmit(e); } else { e.preventDefault(); }}}};
@@ -707,7 +740,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
-                <div className="flex items-center space-x-3"><EvaAvatarHeaderIcon avatarState={avatarHeaderState} /><div><h1 className="text-lg font-poppins font-semibold tracking-tight text-gradient-brand">Oracle AI</h1><p className="text-xs -mt-0.5 text-gradient-brand-subtle">Modern Chat Experience</p></div></div>
+                <div className="flex items-center space-x-3">
+                    <EvaAvatarHeaderIcon avatarState={avatarHeaderState} />
+                    <div>
+                        <h1 className="text-xl font-roboto font-semibold tracking-tight text-gradient-brand">Oracle AI</h1>
+                        <p className="text-xs -mt-0.5 font-roboto text-gradient-brand-subtle">Modern Chat Experience</p>
+                    </div>
+                </div>
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
@@ -766,17 +805,17 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const App = () => { 
         const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); const [isSearchEnabled, setIsSearchEnabled] = useState(false); const isStoppingGenerationRef = useRef(false);
         useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
-        const getGeminiHistory = (currentMessagesInternalFormat) => { /* Unchanged */ const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
+        const getGeminiHistory = (currentMessagesInternalFormat) => { const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
         useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
-        const handleStopGeneration = useCallback(() => { isStoppingGenerationRef.current = true; /* Logic to update message text is now handled in _streamAiResponse's finally block or setChatMessages */ setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
-        const handleClearChat = useCallback(() => { /* Unchanged */ if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
+        const handleStopGeneration = useCallback(() => { isStoppingGenerationRef.current = true; setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
+        const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
         const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
-        const mergeCitations = (existingCitations, newCitationSources) => { /* Unchanged */ if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
+        const mergeCitations = (existingCitations, newCitationSources) => { if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
         
         const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, useSearch, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
-            isStoppingGenerationRef.current = false;
+            // DO NOT reset isStoppingGenerationRef.current here, allow it to persist if stop was clicked.
             setIsChatLoading(true);
-            if (!isRetryingWithSearch) {
+            if (!isRetryingWithSearch) { // Only set to thinking on the initial attempt, not on internal retries with search.
                 setAvatarHeaderState('thinking');
             }
 
@@ -784,6 +823,27 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             let accumulatedCitationSources = [];
             let firstChunkProcessed = false;
             let needsSearchMarkerFound = false;
+
+            // Check if stop was requested BEFORE making the API call
+            if (isStoppingGenerationRef.current) {
+                setChatMessages(prev => prev.map(m => {
+                    if (m.id === targetAiMessageId) {
+                        let finalText = "*Generation stopped by user.*";
+                         // If there was any text before stop, append. Otherwise, just the stop message.
+                        if (displayedAiText.trim()) {
+                             finalText = displayedAiText + (displayedAiText.trim() ? "\n\n---\n" : "") + "*Generation stopped by user.*";
+                             const isInCodeBlock = (displayedAiText.match(/```/g) || []).length % 2 !== 0;
+                             if (isInCodeBlock) finalText += "\n```";
+                        }
+                        return { ...m, text: finalText, isLoading: false, isError: false, searchUsed: useSearch };
+                    }
+                    return m;
+                }));
+                setIsChatLoading(false);
+                setAvatarHeaderState('idle');
+                // isStoppingGenerationRef.current = false; // Reset for the truly next message
+                return; 
+            }
 
             try {
                 const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() };
@@ -810,10 +870,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
                         }
-                        if (!needsSearchMarkerFound) {
+                        if (!needsSearchMarkerFound) { // Only update if not in the [NEEDS_SEARCH] flow for this chunk
                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                         }
-                    } else {
+                    } else { // Non-text chunks (e.g. tool call results that don't directly have text for display)
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
                              if (!needsSearchMarkerFound) {
@@ -825,13 +885,19 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
 
                 if (needsSearchMarkerFound && originalUserMessageForRetry) {
-                    // If AI signaled it needs search, re-call with search enabled
-                    // Make sure to pass the originalUserMessage for retry to the next call
+                     if (isStoppingGenerationRef.current) { // If stop was pressed during the first attempt that led to NEEDS_SEARCH
+                        // The pre-stream check at the start of this function (recursive call) should handle it.
+                        // But ensure UI is reset if somehow that check didn't fully finalize.
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: "*Generation stopped by user.*", isLoading: false, isError: false, searchUsed: true } : m ));
+                        setIsChatLoading(false);
+                        setAvatarHeaderState('idle');
+                        return;
+                    }
                     await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry);
-                    return; // Important: exit this call as the retry will handle the final state
+                    return; 
                 }
                 
-                // This block will now execute for normal completion OR if stop was initiated
+                // This block executes for normal completion OR if stop was initiated during streaming
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = displayedAiText;
@@ -840,7 +906,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         if (isStoppingGenerationRef.current) {
                             const isInCodeBlock = (finalText.match(/```/g) || []).length % 2 !== 0;
                             if (isInCodeBlock) {
-                                finalText += "\n```"; // Close the code block
+                                finalText += "\n```"; 
                             }
                             if (!finalText.includes("*Generation stopped by user.*")) { 
                                 finalText += (finalText.trim() ? "\n\n---\n" : "") + "*Generation stopped by user.*";
@@ -848,7 +914,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         } else if (!finalText.trim() && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
                             finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
                             isFinalError = true;
-                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0) { // No !isStoppingGenerationRef.current here
+                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { 
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
                         }
                         return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch };
@@ -861,21 +927,26 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
             } finally {
-                if (!needsSearchMarkerFound) { // Only proceed if not waiting for a retry with search
+                // This finally block will run for the current invocation of _streamAiResponse.
+                // If it's a recursive call due to needsSearchMarkerFound, this block for the *outer* call
+                // will be skipped if needsSearchMarkerFound was true for it.
+                if (!needsSearchMarkerFound || isStoppingGenerationRef.current ) { 
                     setIsChatLoading(false);
-                    if (!isStoppingGenerationRef.current) {
+                    if (!isStoppingGenerationRef.current) { // If not stopped, transition to speaking then idle
                         setAvatarHeaderState('speaking');
                         setTimeout(() => setAvatarHeaderState('idle'), 1500);
-                    } else {
-                        setAvatarHeaderState('idle'); // Already set by handleStopGeneration, but ensure it.
+                    } else { // If stopped, ensure it's idle
+                        setAvatarHeaderState('idle'); 
                     }
-                    isStoppingGenerationRef.current = false; // Reset for next message
+                    // isStoppingGenerationRef.current should be reset by handleStopGeneration or App logic for the *next* user message
+                    // For now, if it was stopped, it remains true until the next full send.
                 }
             }
         };
 
         const handleSendChatMessage = useCallback(async (messageText, filesToSend) => {
             if (!messageText.trim() && filesToSend.length === 0) return;
+            isStoppingGenerationRef.current = false; // Reset stop state for a new message
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
                 setChatError("API Key is not configured.");
@@ -928,6 +999,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         }, [chatMessages, isSearchEnabled]); 
 
         const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
+            isStoppingGenerationRef.current = false; // Reset stop state for regeneration
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
                 setChatError("API Key is not configured for regeneration.");
