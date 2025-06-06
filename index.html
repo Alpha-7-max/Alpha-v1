@@ -10,21 +10,21 @@
         theme: {
           extend: {
             colors: {
-              'brand-primary': 'rgb(var(--brand-primary) / <alpha-value>)',      
-              'brand-secondary': 'rgb(var(--brand-secondary) / <alpha-value>)',  
-              'surface-main': 'rgb(var(--surface-main) / <alpha-value>)',       
-              'surface-card': 'rgb(var(--surface-card) / <alpha-value>)',      
-              'surface-input': 'rgb(var(--surface-input) / <alpha-value>)',    
-              'surface-accent': 'rgb(var(--surface-accent) / <alpha-value>)',    
+              'brand-primary': 'rgb(var(--brand-primary) / <alpha-value>)',
+              'brand-secondary': 'rgb(var(--brand-secondary) / <alpha-value>)',
+              'surface-main': 'rgb(var(--surface-main) / <alpha-value>)',
+              'surface-card': 'rgb(var(--surface-card) / <alpha-value>)',
+              'surface-input': 'rgb(var(--surface-input) / <alpha-value>)',
+              'surface-accent': 'rgb(var(--surface-accent) / <alpha-value>)',
               'surface-bubble-ai': 'rgb(var(--surface-bubble-ai) / <alpha-value>)',
-              'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)', 
-              'surface-user-bubble': 'rgb(var(--surface-user-bubble) / <alpha-value>)', 
+              'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)',
+              'surface-user-bubble': 'rgb(var(--surface-user-bubble) / <alpha-value>)',
               'border-user-bubble': 'rgb(var(--border-user-bubble) / <alpha-value>)',
               'button-send-bg': 'rgb(var(--button-send-bg) / <alpha-value>)',
               'button-send-hover-bg': 'rgb(var(--button-send-hover-bg) / <alpha-value>)',
 
-              'text-primary': 'rgb(var(--text-primary) / <alpha-value>)',         
-              'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',           
+              'text-primary': 'rgb(var(--text-primary) / <alpha-value>)',
+              'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',
               'text-on-primary': 'rgb(var(--text-on-primary) / <alpha-value>)',
               'text-subtle': 'rgb(var(--text-subtle) / <alpha-value>)',
 
@@ -46,22 +46,24 @@
             },
             animation: {
               'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+              'fade-in-stationary': 'fadeInStationary 0.3s ease-out forwards',
               'scale-in-subtle': 'scaleInSubtle 0.35s ease-out forwards',
-              'pulse-gentle': 'pulseGentle 2.8s infinite ease-in-out', 
+              'pulse-gentle': 'pulseGentle 2.8s infinite ease-in-out',
               'typing-indicator': 'typingIndicator 1.2s infinite ease-in-out',
               'button-press': 'buttonPress 0.2s ease-out',
-              'rippleOut': 'rippleOut 2.5s infinite ease-out', 
+              'rippleOut': 'rippleOut 2.5s infinite ease-out',
               'speak-bob': 'speakBob 0.7s ease-in-out',
               'think-glance': 'thinkGlance 2s infinite ease-in-out',
               'blink': 'blink 4s infinite ease-in-out',
               'happy-bounce': 'happyBounce 0.5s ease-out',
               'empty-state-glow': 'emptyStateGlow 3.5s infinite alternate ease-in-out',
-              'shiny-text': 'shinyText 2s linear infinite', 
+              'shiny-text': 'shinyText 2s linear infinite',
               'dot-pulse': 'dotPulse 1.4s infinite ease-in-out',
               'globe-blink-slow': 'globeBlinkSlow 2.5s infinite ease-in-out',
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
+              fadeInStationary: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
               scaleInSubtle: { '0%': { opacity: '0.5', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' }, },
               pulseGentle: {  '0%, 100%': { transform: 'scale(1)', opacity: '0.8' }, '50%': { transform: 'scale(1.015)', opacity: '1' }, },
               typingIndicator: { '0%': { transform: 'translateY(0px)', opacity: '0.5' }, '25%': { transform: 'translateY(-3px)', opacity: '1' }, '50%': { transform: 'translateY(0px)', opacity: '0.5' }, '100%': { transform: 'translateY(0px)', opacity: '0.5' }, },
@@ -77,19 +79,19 @@
                 '0%, 80%, 100%': { transform: 'scale(0)', opacity: '0' },
                 '40%': { transform: 'scale(1.0)', opacity: '1' }
               },
-              globeBlinkSlow: { 
+              globeBlinkSlow: {
                 '0%, 100%': { opacity: '1' },
                 '50%': { opacity: '0.4' },
               },
             },
-            spacing: { 
-              '1.5': '0.375rem', 
+            spacing: {
+              '1.5': '0.375rem',
             },
             boxShadow: {
-                'interactive': '0 4px 10px 0 rgba(var(--button-send-bg), 0.15)', 
-                'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)', 
+                'interactive': '0 4px 10px 0 rgba(var(--button-send-bg), 0.15)',
+                'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)',
                 'header': '0 1px 2px rgba(var(--text-primary), 0.03), 0 1px 1px rgba(var(--text-primary), 0.015)',
-                'input-focus': '0 0 0 1px rgb(var(--interactive-focus-ring-color) / 1)', 
+                'input-focus': '0 0 0 1px rgb(var(--interactive-focus-ring-color) / 1)',
                 'chat-window': '0 15px 50px -8px rgba(var(--text-primary), 0.08), 0 8px 25px -8px rgba(var(--text-primary),0.05)',
             }
           },
@@ -100,31 +102,31 @@
       @layer base {
         :root {
           --brand-primary: 100 116 139; --brand-secondary: 71 85 105;
-          --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105; 
+          --button-send-bg: 100 116 139; --button-send-hover-bg: 71 85 105;
           --interactive-focus-ring-color: 100 116 139;
-          --surface-main: 248 250 252; 
+          --surface-main: 248 250 252;
           --surface-card: 255 255 255;
           --surface-chat-area: 255 255 255;
           --surface-input: 255 255 255;
-          --surface-accent: 241 245 249; 
-          --surface-bubble-ai: 255 255 255; 
-          
-          --surface-user-bubble: 219 234 254; 
-          --border-user-bubble: 191 219 254;  
-          
-          --text-primary: 17 24 39; --text-secondary: 55 65 81;    
-          --text-subtle: 107 114 128; --text-on-primary: 255 255 255; 
-          --border-default: 229 231 235; --border-light: 243 244 246;     
-          --border-medium: 209 213 219; 
-          
-          --interactive-hover: 229 231 235; 
-          
-          --status-info: 59 130 246; --status-success: 22 163 74;    
-          --status-warning: 245 158 11; --status-error: 220 38 38;      
+          --surface-accent: 241 245 249;
+          --surface-bubble-ai: 255 255 255;
+
+          --surface-user-bubble: 219 234 254;
+          --border-user-bubble: 191 219 254;
+
+          --text-primary: 17 24 39; --text-secondary: 55 65 81;
+          --text-subtle: 107 114 128; --text-on-primary: 255 255 255;
+          --border-default: 229 231 235; --border-light: 243 244 246;
+          --border-medium: 209 213 219;
+
+          --interactive-hover: 229 231 235;
+
+          --status-info: 59 130 246; --status-success: 22 163 74;
+          --status-warning: 245 158 11; --status-error: 220 38 38;
         }
         html, body, #root { @apply h-full overflow-hidden; }
         body { @apply font-sans bg-surface-main text-text-primary m-0; }
-        ::selection { @apply bg-blue-100 text-blue-700; } 
+        ::selection { @apply bg-blue-100 text-blue-700; }
       }
       @layer components {
         .markdown-content p { @apply mb-3 last:mb-0; }
@@ -134,36 +136,36 @@
         .markdown-content li { @apply mb-1.5; }
         .markdown-content strong, .markdown-content b { @apply font-semibold text-text-primary; }
         .markdown-content em, .markdown-content i { @apply italic text-text-secondary; }
-        .markdown-content code:not(pre code) { 
-          @apply bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-md font-mono shadow-sm border border-gray-300; 
-        } 
-        
-        .markdown-content pre { 
-          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative; /* Border removed */
-        } 
-        .markdown-content pre code { 
-          @apply block bg-transparent text-inherit text-sm p-0 shadow-none border-none px-4 pb-4 pt-8 !whitespace-pre; 
+        .markdown-content code:not(pre code) {
+          @apply bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded-md font-mono shadow-sm border border-gray-300;
         }
-        
-        .markdown-content pre::-webkit-scrollbar { @apply h-px; } /* Scrollbar height set to 1px (h-px) */
-        .markdown-content pre::-webkit-scrollbar-track { @apply bg-transparent; } 
-        .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
+
+        .markdown-content pre {
+          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative;
+        }
+        .markdown-content pre code {
+          @apply block bg-transparent text-inherit text-sm p-0 shadow-none border-none px-4 pb-4 pt-8 !whitespace-pre;
+        }
+
+        .markdown-content pre::-webkit-scrollbar { @apply h-px; }
+        .markdown-content pre::-webkit-scrollbar-track { @apply bg-transparent; }
+        .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; }
         .markdown-content pre { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; }
 
-        .markdown-content a { @apply text-brand-primary hover:text-brand-secondary underline decoration-brand-primary/50 hover:decoration-brand-secondary/50 transition-colors; } 
+        .markdown-content a { @apply text-brand-primary hover:text-brand-secondary underline decoration-brand-primary/50 hover:decoration-brand-secondary/50 transition-colors; }
         .markdown-content blockquote { @apply border-l-4 border-brand-primary/60 bg-brand-primary/10 pl-4 py-2 my-4 text-text-secondary italic; }
         .markdown-content h1, .markdown-content h2, .markdown-content h3,
         .markdown-content h4, .markdown-content h5, .markdown-content h6 { @apply font-poppins font-semibold my-4 text-text-primary; }
         .markdown-content h1 { @apply text-xl leading-tight; } .markdown-content h2 { @apply text-lg leading-tight; } .markdown-content h3 { @apply text-base leading-tight; }
         .markdown-content hr { @apply my-6 border-border-default; }
-        
-        .markdown-content table { 
+
+        .markdown-content table {
           @apply block max-w-full my-4 border-collapse text-sm shadow-sm rounded-lg overflow-x-auto;
-          scrollbar-width: thin; 
+          scrollbar-width: thin;
           scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
         }
-        .markdown-content table::-webkit-scrollbar { @apply h-1; } 
-        .markdown-content table::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; } 
+        .markdown-content table::-webkit-scrollbar { @apply h-1; }
+        .markdown-content table::-webkit-scrollbar-track { @apply bg-gray-100 rounded-full; }
         .markdown-content table::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors; }
         .markdown-content th, .markdown-content td { @apply border border-border-default p-2.5 text-left; }
         .markdown-content th { @apply bg-surface-accent font-semibold text-text-primary; }
@@ -171,11 +173,16 @@
         .markdown-content tbody tr:nth-child(even) { @apply bg-gray-50/50; }
         .markdown-content tbody tr:hover { /* Hover effect removed */ }
 
-        .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } 
-        .chat-messages-container::-webkit-scrollbar-track { @apply bg-transparent rounded-full; } 
-        .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
-        .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; } 
-        
+        .chat-messages-container::-webkit-scrollbar { @apply w-1.5; }
+        .chat-messages-container::-webkit-scrollbar-track { @apply bg-transparent rounded-full; }
+        .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; }
+        .chat-messages-container {
+          scrollbar-width: thin;
+          scrollbar-color: theme('colors.gray.200') transparent;
+          scroll-behavior: smooth;
+          overflow-anchor: auto;
+        }
+
         textarea.auto-resize { min-height: 52px; max-height: 180px; }
         textarea.auto-resize::-webkit-scrollbar {
           width: 5px;
@@ -202,9 +209,9 @@
         .avatar-thinking .avatar-svg-element #eye-left-header-oracle, .avatar-thinking .avatar-svg-element #eye-right-header-oracle { animation: thinkGlance 2s infinite ease-in-out; }
         .avatar-svg-element #eye-left-header-oracle, .avatar-svg-element #eye-right-header-oracle { animation: blink 4s infinite ease-in-out; transform-origin: center center; }
         .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; }
-      
-        .hljs { 
-            @apply !bg-transparent !text-inherit; 
+
+        .hljs {
+            @apply !bg-transparent !text-inherit;
         }
       }
     </style>
@@ -244,7 +251,7 @@
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
       const genAI = new GoogleGenerativeAI(API_KEY);
 
-      function getSystemInstruction() { 
+      function getSystemInstruction() {
         return `You are Oracle AI, a highly advanced, friendly, and culturally aware assistant, designed to provide the most accurate and up-to-date information.
 
 CRITICAL INSTRUCTION: You MUST respond ONLY in Roman Urdu (Urdu written in English alphabet).
@@ -354,7 +361,7 @@ Fun & Casual 😄:
 - Example: "Haha, bilkul sahi kaha aap ne 😄"
 
 
-Internet Search Capability: 
+Internet Search Capability:
 - The system may provide you with a search tool based on user input or your "[NEEDS_SEARCH]" signal.
 - When using information from a search:
     - Integrate it naturally into your Roman Urdu response.
@@ -423,7 +430,7 @@ Quality Standards:
 Remember: You're not just an AI assistant, you're a helpful friend who happens to be very knowledgeable. Make every interaction meaningful and helpful!
 `;
       }
-      
+
       const EvaAvatarHeaderIcon = ({ avatarState }) => {
         const wrapperRef = useRef(null);
         const svgRef = useRef(null);
@@ -433,7 +440,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           const wrapperElement = wrapperRef.current;
           const svgElement = svgRef.current;
           wrapperElement.classList.remove('avatar-speaking', 'avatar-thinking', 'avatar-happy-state');
-          svgElement.style.animation = ''; 
+          svgElement.style.animation = '';
           switch (avatarState) {
             case 'speaking':
               wrapperElement.classList.add('avatar-speaking');
@@ -452,7 +459,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         }, [avatarState]);
 
         return (
-          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"> {/* Avatar size changed */}
+          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative">
             <svg
               ref={svgRef}
               className="avatar-svg-element w-full h-full relative z-10"
@@ -490,7 +497,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           sceneRef.current = scene;
 
           const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-          camera.position.z = 1.5; 
+          camera.position.z = 1.5;
           cameraRef.current = camera;
 
           const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -498,9 +505,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           renderer.setPixelRatio(window.devicePixelRatio);
           currentMount.appendChild(renderer.domElement);
           rendererRef.current = renderer;
-          
-          const geometry = new THREE.SphereGeometry(0.7, 16, 8); 
-          const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 }); 
+
+          const geometry = new THREE.SphereGeometry(0.7, 16, 8);
+          const material = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
           const globe = new THREE.Mesh(geometry, material);
           scene.add(globe);
           globeRef.current = globe;
@@ -508,8 +515,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           const animate = () => {
             animationFrameIdRef.current = requestAnimationFrame(animate);
             if (globeRef.current) {
-              globeRef.current.rotation.x += 0.05; 
-              globeRef.current.rotation.y += 0.07; 
+              globeRef.current.rotation.x += 0.05;
+              globeRef.current.rotation.y += 0.07;
             }
             if (rendererRef.current && sceneRef.current && cameraRef.current) {
               rendererRef.current.render(sceneRef.current, cameraRef.current);
@@ -529,7 +536,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             if (rendererRef.current) {
                 rendererRef.current.dispose();
             }
-             if (sceneRef.current) { /* scene cleanup if any other objects were added */ }
+             if (sceneRef.current) { /* scene cleanup */ }
             if (currentMount && rendererRef.current?.domElement && currentMount.contains(rendererRef.current.domElement)) {
               currentMount.removeChild(rendererRef.current.domElement);
             }
@@ -539,18 +546,47 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         return <div ref={mountRef} className={className} style={{ width: size, height: size, display: 'inline-block', verticalAlign: 'middle' }} />;
       };
-      
+
       const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`;
       const CHECK_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
       const ChatMessageItem = ({ message }) => {
-        const isUser = message.role === 'user'; const isError = message.isError === true; const isModelLoading = message.role === 'model' && message.isLoading && !isError; const contentRef = useRef(null); 
-        const isModelLoadingWithSearch = isModelLoading && message.searchUsed; const isModelLoadingWithoutSearch = isModelLoading && !message.searchUsed;
-        
+        const isUser = message.role === 'user';
+        const isModel = message.role === 'model';
+        const isError = message.isError === true;
+
+        const isAiCurrentlyProcessing = isModel && message.isLoading && !isError;
+        const isAiStillJustThinking = isAiCurrentlyProcessing && (!message.text || message.text.trim() === '');
+
+        const contentRef = useRef(null);
+
+        const showTypingDots = isAiStillJustThinking && !message.searchUsed;
+        const showSearchingIndicator = isAiStillJustThinking && message.searchUsed;
+
+        const [hasHadEntry, setHasHadEntry] = useState(false);
+
         useEffect(() => {
-          if (message.role === 'model' && !isError && contentRef.current) {
+          let animationForThisRender = '';
+          if (isAiCurrentlyProcessing) {
+            animationForThisRender = 'animate-fade-in-stationary';
+          } else if (isUser || (isModel && !isAiCurrentlyProcessing && !isError)) {
+            animationForThisRender = 'animate-fade-in-up';
+          }
+
+
+          if (!hasHadEntry && animationForThisRender) {
+            const timer = setTimeout(() => {
+              setHasHadEntry(true);
+            }, 0);
+            return () => clearTimeout(timer);
+          }
+        }, [hasHadEntry, isAiCurrentlyProcessing, isUser, isModel, isError]);
+
+
+        useEffect(() => {
+          if (isModel && !isError && contentRef.current && message.text && !isAiStillJustThinking) {
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
               if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
@@ -561,7 +597,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
                 return;
               }
-
               const codeElement = preEl.querySelector('code');
               if (!codeElement) return;
 
@@ -573,11 +608,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               button.innerHTML = COPY_ICON_SVG;
               button.classList.add(
                 'code-copy-button', 'absolute', 'p-1',
-                'bg-transparent', // Removed background color
-                'text-gray-600', // Initial icon color
-                'border', 'border-gray-300', // Keep border
-                'rounded-md', 'transition-colors', 'duration-150',
-                'opacity-70', 'hover:opacity-100', 'hover:text-gray-800' // No bg change on hover, just icon opacity/color
+                'bg-transparent', 'text-gray-600',
+                'border', 'border-gray-300', 'rounded-md', 'transition-colors', 'duration-150',
+                'opacity-70', 'hover:opacity-100', 'hover:text-gray-800'
               );
               button.style.top = '0.25rem';
               button.style.right = '0.5rem';
@@ -588,52 +621,89 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 if (codeElement) {
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
                     button.innerHTML = CHECK_ICON_SVG;
-                    button.classList.add('text-emerald-600'); 
-                    button.classList.remove('text-gray-600', 'text-gray-800'); // remove initial/hover text colors
+                    button.classList.add('text-emerald-600');
+                    button.classList.remove('text-gray-600', 'text-gray-800');
                     setTimeout(() => {
                       button.innerHTML = COPY_ICON_SVG;
-                      button.classList.remove('text-emerald-600'); 
-                      button.classList.add('text-gray-600'); // revert to initial icon color
+                      button.classList.remove('text-emerald-600');
+                      button.classList.add('text-gray-600');
                     }, 2000);
                   }).catch(err => console.error('Failed to copy: ', err));
                 }
               };
-
               if (preEl.parentNode) {
                 preEl.parentNode.insertBefore(wrapper, preEl);
-                wrapper.appendChild(preEl); 
-                wrapper.appendChild(button); 
+                wrapper.appendChild(preEl);
+                wrapper.appendChild(button);
               }
-              
               if (!codeElement.dataset.highlighted) {
                 hljs.highlightElement(codeElement);
                 codeElement.dataset.highlighted = 'true';
               }
             });
           }
-        }, [message.text, message.role, message.isLoading, isError]);
+        }, [message.text, isModel, isError, isAiStillJustThinking]);
 
-        if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
-        let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; let bubbleRoleClasses = ''; let bubbleWidthClasses = ''; let contentToShow = null;
-        
-        if (isUser) { 
-          bubbleRoleClasses = 'bg-surface-accent text-text-primary rounded-2xl rounded-br-md'; 
-          bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
-          contentToShow = <p className="text-base whitespace-pre-wrap break-words">{message.text}</p>; 
-        } else if (message.role === 'model') { 
-            if(isError) { 
-                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md'; 
-                contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
-            } else { 
-                bubbleRoleClasses = 'bg-[#F9F9FA] text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]'; 
-                contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); 
-            } 
-            bubbleWidthClasses = 'max-w-full w-full'; 
+        if (message.role === 'system') {
+            const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic";
+            return (
+                <div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}>
+                    <div className={systemMessageStyle}>
+                        {isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }
+                    </div>
+                </div>
+            );
+        }
+
+        let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card transition-all duration-300 ease-in-out';
+        let bubbleRoleClasses = '';
+        let bubbleWidthClasses = '';
+        let contentToShow = null;
+
+        if (isUser) {
+          bubbleRoleClasses = 'bg-surface-accent text-text-primary rounded-2xl rounded-br-md';
+          bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]';
+          contentToShow = message.text ? <p className="text-base whitespace-pre-wrap break-words">{message.text}</p> : null;
+        } else if (isModel) {
+            if (isAiStillJustThinking) {
+                bubbleWidthClasses = 'w-fit min-w-[70px]';
+            } else {
+                bubbleWidthClasses = 'max-w-full w-full';
+            }
+
+            if(isError) {
+                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md';
+                contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>);
+            } else {
+                bubbleRoleClasses = 'bg-[#F9F9FA] text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]';
+                if (!isAiStillJustThinking && message.text) {
+                    contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />);
+                } else {
+                    contentToShow = null;
+                }
+            }
+        }
+
+        const rowFlexClasses = ['flex'];
+        if (isUser) {
+          rowFlexClasses.push('justify-end', 'items-end');
+        } else {
+          rowFlexClasses.push('justify-start', 'items-start');
+        }
+
+        let animationClassesForRender = "";
+        if (!hasHadEntry) {
+            const isInitialLoadingAnimation = isModel && isAiCurrentlyProcessing;
+            if (isInitialLoadingAnimation) {
+                animationClassesForRender = "animate-fade-in-stationary opacity-0";
+            } else {
+                animationClassesForRender = "animate-fade-in-up opacity-0";
+            }
         }
 
         return (
-          <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
-            <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} style={{animationFillMode: 'forwards'}}>
+          <div className={`${rowFlexClasses.join(' ')} ${animationClassesForRender}`} style={{animationFillMode: 'forwards'}}>
+            <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`}>
               {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (
                 <div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                   {message.attachedFiles.map(file => {
@@ -650,8 +720,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     } else {
                       return (
                         <div key={file.id || file.name} className="bg-brand-primary/10 border border-brand-primary/20 p-2.5 rounded-lg text-xs flex items-center space-x-2 max-w-full w-fit shadow">
-                          {file.type?.startsWith('image/') ? 
-                            <FileImageIcon className="text-brand-primary text-base" /> : 
+                          {file.type?.startsWith('image/') ?
+                            <FileImageIcon className="text-brand-primary text-base" /> :
                             <FileTextIcon className="text-brand-primary text-base" />
                           }
                           <span className="truncate max-w-[120px] sm:max-w-[150px] text-text-primary font-medium">
@@ -663,21 +733,21 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   })}
                 </div>
               )}
-              {message.text && contentToShow}
-              {isModelLoadingWithoutSearch && ( 
+              {contentToShow}
+              {showTypingDots && (
                 <div className="flex items-end space-x-1.5 mt-2.5">
                   <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span>
                   <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span>
                   <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span>
                 </div>
               )}
-              {isModelLoadingWithSearch && (
+              {showSearchingIndicator && (
                 <div className="flex items-center space-x-1.5 mt-2.5 text-text-subtle">
                   <ThreeDeeGlobeSpinner size={14} className="animate-globe-blink-slow" />
                   <span className="text-xs font-medium animated-shiny-text">Searching...</span>
                 </div>
               )}
-              {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (
+              {isModel && !isError && !isAiCurrentlyProcessing && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-[#E5E8EB]/70">
                   <h4 className="text-xs font-semibold text-text-subtle mb-1.5 flex items-center">
                     <i className="fas fa-link text-xs mr-1.5 opacity-70 text-text-primary"></i>Sources:
@@ -698,28 +768,76 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             </div>
           </div>);
       };
-      
+
       const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState, isSearchEnabled, onToggleSearch }) => {
-        const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
-        const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
+        const [inputText, setInputText] = useState('');
+        const [selectedFiles, setSelectedFiles] = useState([]);
+        const [isMobileView, setIsMobileView] = useState(false);
+        const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
+        const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
+
+        const fileInputRef = useRef(null);
+        const messagesEndRef = useRef(null);
+        const textareaRef = useRef(null);
+        const chatContainerRef = useRef(null);
+
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
-        useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
-        
+
+        useEffect(() => {
+          const container = chatContainerRef.current;
+          if (!container) return;
+
+          const SCROLL_THRESHOLD_BUTTON_SHOW = 150;
+          const SCROLL_THRESHOLD_BUTTON_HIDE = 50;
+
+          const handleScroll = () => {
+            if (!container) return;
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            const distanceToBottom = scrollHeight - scrollTop - clientHeight;
+
+            setUserHasScrolledUp(distanceToBottom >= 20);
+
+            if (distanceToBottom > SCROLL_THRESHOLD_BUTTON_SHOW) {
+              setShowScrollToBottomButton(true);
+            } else if (distanceToBottom < SCROLL_THRESHOLD_BUTTON_HIDE) {
+              setShowScrollToBottomButton(false);
+            }
+          };
+
+          container.addEventListener('scroll', handleScroll, { passive: true });
+          handleScroll(); 
+
+          return () => {
+            if (container) {
+                container.removeEventListener('scroll', handleScroll);
+            }
+          };
+        }, [messages]);
+
+
         useEffect(() => {
           const lastMessage = messages[messages.length - 1];
-          if (!lastMessage) return; 
-
+          if (!lastMessage) return;
           const messagesEndEl = messagesEndRef.current;
           if (!messagesEndEl) return;
+          const container = chatContainerRef.current;
+          if (!container) return;
+
+          const isEffectivelyScrolledToBottom = () => {
+            if (!container) return false;
+            return container.scrollHeight - container.scrollTop <= container.clientHeight + 5;
+          };
 
           if (lastMessage.role === 'user') {
-            messagesEndEl.scrollIntoView({ behavior: "smooth" });
+            messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" });
           } else if (lastMessage.role === 'model') {
-            if (!userHasScrolledUp) { 
-              if (lastMessage.isLoading) {
-                messagesEndEl.scrollIntoView({ behavior: "auto" }); 
-              } else {
-                messagesEndEl.scrollIntoView({ behavior: "smooth" });
+            if (lastMessage.isLoading) {
+              if (!userHasScrolledUp) {
+                messagesEndEl.scrollIntoView({ behavior: "auto", block: "end" });
+              }
+            } else {
+              if (!userHasScrolledUp || isEffectivelyScrolledToBottom()) {
+                messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" });
               }
             }
           }
@@ -732,13 +850,21 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const removeSelectedFile = (fileId) => { setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); };
         const handleSubmit = (e) => { if(e) e.preventDefault(); if (!inputText.trim() && selectedFiles.length === 0) return; setUserHasScrolledUp(false); setChatError(null); onSendMessage(inputText, selectedFiles); setInputText(''); setSelectedFiles([]); };
         const handleTextareaKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { if (isMobileView) { return; } else { if (!isSendButtonDisabled) { handleSubmit(e); } else { e.preventDefault(); }}}};
+
+        const handleScrollToBottomClick = () => {
+          if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+          }
+          setUserHasScrolledUp(false);
+        };
+
         const isAiCurrentlyStreaming = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
         const isSendButtonDisabled = (!isAiCurrentlyStreaming && (isLoading || (inputText.trim() === '' && selectedFiles.length === 0)));
         const canRegenerateLastAi = messages.length > 0 && messages[messages.length - 1].role === 'model' && !messages[messages.length - 1].isLoading && !isAiCurrentlyStreaming && messages.length > 1 && messages[messages.length - 2].role === 'user' && !(messages[messages.length - 2].attachedFiles?.some(f => f.type?.startsWith('image/')));
         const hasVisibleChatContent = messages.some( msg => (msg.text || msg.attachedFiles?.length > 0) && !(msg.role === 'system' && !msg.isError) );
 
         return (
-          <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
+          <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)] relative">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3">
                     <EvaAvatarHeaderIcon avatarState={avatarHeaderState} />
@@ -749,10 +875,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
-            
-            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-white">{ !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )} {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))} <div ref={messagesEndRef} className="h-1" /></div>
-            
-            {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-default bg-white flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-gray-100 border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
+
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-white">
+                { !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )}
+                {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))}
+                <div ref={messagesEndRef} className="h-1" />
+            </div>
+
+             {selectedFiles.length > 0 && (
+              <div className="p-3 border-t border-border-default bg-white flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0">
+                {selectedFiles.map(file => ( <div key={file.id} className="bg-gray-100 border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="bg-white border-t border-border-default flex-shrink-0">
               <div className="px-3 md:px-4 pt-2 pb-1 flex justify-start items-center">
@@ -761,61 +895,102 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   onClick={onToggleSearch}
                   disabled={isLoading || isAiCurrentlyStreaming}
                   className={`ml-3 flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
-                              focus:outline-none 
+                              focus:outline-none
                               disabled:opacity-60 disabled:cursor-not-allowed
-                              ${isSearchEnabled 
-                                  ? 'bg-blue-100 hover:bg-blue-200' 
+                              ${isSearchEnabled
+                                  ? 'bg-blue-100 hover:bg-blue-200'
                                   : 'bg-gray-100 hover:bg-gray-200'
                               }`}
                   title={isSearchEnabled ? "Web Search ON" : "Web Search OFF"}
                 >
-                  <i className={`fas fa-globe fa-fw transition-colors duration-200 
-                                ${isSearchEnabled 
-                                    ? 'text-blue-600' 
+                  <i className={`fas fa-globe fa-fw transition-colors duration-200
+                                ${isSearchEnabled
+                                    ? 'text-blue-600'
                                     : 'text-gray-500 group-hover:text-gray-600'
                                 }`}></i>
-                  <span className={`transition-colors duration-200 
-                                  ${isSearchEnabled 
-                                      ? 'text-blue-700' 
+                  <span className={`transition-colors duration-200
+                                  ${isSearchEnabled
+                                      ? 'text-blue-700'
                                       : 'text-text-subtle group-hover:text-text-secondary'
                                   }`}>Search</span>
                 </button>
               </div>
 
               <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
-                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} /> 
-                <button 
-                  type="button" 
-                  onClick={() => fileInputRef.current?.click()} 
-                  className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-surface-accent hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0" 
-                  aria-label="Attach files" 
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-surface-accent hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
+                  aria-label="Attach files"
                   disabled={isLoading && !isAiCurrentlyStreaming}
-                > 
+                >
                   <i className="fas fa-plus text-xl"></i>
-                </button> 
-                <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize" disabled={isLoading && !isAiCurrentlyStreaming}/> 
-                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-10 h-10 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none' : 'bg-button-send-bg text-white' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}> 
-                  {isAiCurrentlyStreaming ? <i className="fas fa-stop text-sm"></i> : <i className="fas fa-paper-plane text-base"></i>} 
-                </button> 
+                </button>
+                <textarea ref={textareaRef} value={inputText} onChange={(e) => setInputText(e.target.value)} onPaste={handlePaste} onKeyDown={handleTextareaKeyDown} placeholder="Type your message..." rows={1} className="flex-grow px-4 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize" disabled={isLoading && !isAiCurrentlyStreaming}/>
+                <button type={isAiCurrentlyStreaming ? "button" : "submit"} onClick={isAiCurrentlyStreaming ? onStopGeneration : undefined } disabled={isAiCurrentlyStreaming ? false : isSendButtonDisabled} className={`font-semibold w-10 h-10 rounded-xl shadow-interactive flex items-center justify-center transition-all duration-200 ease-in-out transform active:animate-button-press flex-shrink-0 ${ (isSendButtonDisabled && !isAiCurrentlyStreaming) ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none' : 'bg-button-send-bg text-white' }`} aria-label={isAiCurrentlyStreaming ? "Stop generation" : "Send message"}>
+                  {isAiCurrentlyStreaming ? <i className="fas fa-stop text-sm"></i> : <i className="fas fa-paper-plane text-base"></i>}
+                </button>
               </div>
             </form>
+            <button
+              onClick={handleScrollToBottomClick}
+              className={`absolute bottom-[8rem] sm:bottom-[7rem] md:bottom-[7.5rem] right-5 z-20 bg-brand-primary hover:bg-brand-secondary text-white rounded-full w-9 h-9 flex items-center justify-center shadow-xl transition-all duration-300 ease-in-out transform
+                          ${showScrollToBottomButton ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
+              aria-label="Scroll to bottom"
+              disabled={!showScrollToBottomButton}
+            >
+              <i className="fas fa-arrow-down text-sm"></i>
+            </button>
           </div>);
       };
-      
-      const App = () => { 
+
+      const App = () => {
         const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); const [isSearchEnabled, setIsSearchEnabled] = useState(false); const isStoppingGenerationRef = useRef(false);
         useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
         const getGeminiHistory = (currentMessagesInternalFormat) => { const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
-        useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
-        const handleStopGeneration = useCallback(() => { isStoppingGenerationRef.current = true; setIsChatLoading(false); setAvatarHeaderState('idle'); }, []);
+        useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []);
+
+        const handleStopGeneration = useCallback(() => {
+            isStoppingGenerationRef.current = true;
+            setIsChatLoading(false);
+            setAvatarHeaderState('idle');
+
+            setChatMessages(prevMessages =>
+                prevMessages.map(msg => {
+                    if (msg.role === 'model' && msg.isLoading) {
+                        let stopText = "*Generation stopped by user.*";
+                        if (msg.text && msg.text.trim() && !msg.text.includes(stopText)) {
+                           let currentText = msg.text;
+                           const isInCodeBlock = (currentText.match(/```/g) || []).length % 2 !== 0;
+                           if (isInCodeBlock) {
+                               currentText += "\n```"; // Attempt to close code block
+                           }
+                           stopText = currentText + (currentText.trim() ? "\n\n---\n" : "") + stopText;
+                        }
+                        return { ...msg, isLoading: false, text: stopText, isError: false };
+                    }
+                    return msg;
+                })
+            );
+        }, []);
+
+
         const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
         const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
         const mergeCitations = (existingCitations, newCitationSources) => { if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
-        
+
         const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, useSearch, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
-            // DO NOT reset isStoppingGenerationRef.current here, allow it to persist if stop was clicked.
+            if (isStoppingGenerationRef.current) { // Check at the very start, useful for recursive calls
+                // The handleStopGeneration callback should have already updated the message.
+                // This return just prevents further API calls if stop was initiated between calls.
+                setIsChatLoading(false); // Ensure global loading is off
+                setAvatarHeaderState('idle');
+                return;
+            }
+
             setIsChatLoading(true);
-            if (!isRetryingWithSearch) { // Only set to thinking on the initial attempt, not on internal retries with search.
+            if (!isRetryingWithSearch) {
                 setAvatarHeaderState('thinking');
             }
 
@@ -824,26 +999,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             let firstChunkProcessed = false;
             let needsSearchMarkerFound = false;
 
-            // Check if stop was requested BEFORE making the API call
-            if (isStoppingGenerationRef.current) {
-                setChatMessages(prev => prev.map(m => {
-                    if (m.id === targetAiMessageId) {
-                        let finalText = "*Generation stopped by user.*";
-                         // If there was any text before stop, append. Otherwise, just the stop message.
-                        if (displayedAiText.trim()) {
-                             finalText = displayedAiText + (displayedAiText.trim() ? "\n\n---\n" : "") + "*Generation stopped by user.*";
-                             const isInCodeBlock = (displayedAiText.match(/```/g) || []).length % 2 !== 0;
-                             if (isInCodeBlock) finalText += "\n```";
-                        }
-                        return { ...m, text: finalText, isLoading: false, isError: false, searchUsed: useSearch };
-                    }
-                    return m;
-                }));
-                setIsChatLoading(false);
-                setAvatarHeaderState('idle');
-                // isStoppingGenerationRef.current = false; // Reset for the truly next message
-                return; 
-            }
 
             try {
                 const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() };
@@ -854,14 +1009,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const chatSession = chatModel.startChat({ history: historyForGeminiInit });
                 const result = await chatSession.sendMessageStream(originalPromptParts);
 
-                for await (const chunk of result.stream) { 
-                    if (isStoppingGenerationRef.current) break;
+                for await (const chunk of result.stream) {
+                    if (isStoppingGenerationRef.current) break; // Check before processing each chunk
                     const chunkText = chunk.text();
 
                     if (!firstChunkProcessed && !isRetryingWithSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
                         needsSearchMarkerFound = true;
+                         // Update message to show search is active, clear any premature text
                         setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m));
-                        break; 
+                        break;
                     }
                     firstChunkProcessed = true;
 
@@ -870,51 +1026,47 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
                         }
-                        if (!needsSearchMarkerFound) { // Only update if not in the [NEEDS_SEARCH] flow for this chunk
-                           setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
+                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) { // Don't update if stopped or if it's for a NEEDS_SEARCH flow that will recurse
+                           setChatMessages(prev => prev.map(m => m.id === targetAiMessageId && !isStoppingGenerationRef.current ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                         }
-                    } else { // Non-text chunks (e.g. tool call results that don't directly have text for display)
+                    } else {
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                             if (!needsSearchMarkerFound) {
-                                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
+                             if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
+                                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId && !isStoppingGenerationRef.current ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                             }
                         }
                     }
-                    if (isStoppingGenerationRef.current) break;
+                } // End of stream loop
+
+                if (isStoppingGenerationRef.current) { // If loop was broken due to stop
+                    // The handleStopGeneration callback has already updated the message text and isLoading.
+                    // No further setChatMessages needed here for the stop text itself.
+                    setIsChatLoading(false);
+                    setAvatarHeaderState('idle');
+                    return;
                 }
 
                 if (needsSearchMarkerFound && originalUserMessageForRetry) {
-                     if (isStoppingGenerationRef.current) { // If stop was pressed during the first attempt that led to NEEDS_SEARCH
-                        // The pre-stream check at the start of this function (recursive call) should handle it.
-                        // But ensure UI is reset if somehow that check didn't fully finalize.
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: "*Generation stopped by user.*", isLoading: false, isError: false, searchUsed: true } : m ));
-                        setIsChatLoading(false);
-                        setAvatarHeaderState('idle');
+                     if (isStoppingGenerationRef.current) { // Double check before recursive call
+                        // UI already updated by handleStopGeneration
                         return;
                     }
                     await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry);
-                    return; 
+                    return;
                 }
-                
-                // This block executes for normal completion OR if stop was initiated during streaming
+
+                // If not stopped and not a NEEDS_SEARCH that recursed, finalize the message normally
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = displayedAiText;
                         let isFinalError = false;
-
-                        if (isStoppingGenerationRef.current) {
-                            const isInCodeBlock = (finalText.match(/```/g) || []).length % 2 !== 0;
-                            if (isInCodeBlock) {
-                                finalText += "\n```"; 
-                            }
-                            if (!finalText.includes("*Generation stopped by user.*")) { 
-                                finalText += (finalText.trim() ? "\n\n---\n" : "") + "*Generation stopped by user.*";
-                            }
-                        } else if (!finalText.trim() && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
+                        // No need to check isStoppingGenerationRef here again, as handleStopGeneration and earlier checks cover it.
+                        // Final text formatting based on actual content.
+                        if (!finalText.trim() && accumulatedCitationSources.length === 0 ) {
                             finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
                             isFinalError = true;
-                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { 
+                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0 ) {
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
                         }
                         return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch };
@@ -923,39 +1075,39 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }));
 
             } catch (err) {
-                console.error("AI stream error in _streamAiResponse:", err);
-                const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
-                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
+                if (!isStoppingGenerationRef.current) { // Only process error if not stopped
+                    console.error("AI stream error in _streamAiResponse:", err);
+                    const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
+                    setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
+                }
             } finally {
-                // This finally block will run for the current invocation of _streamAiResponse.
-                // If it's a recursive call due to needsSearchMarkerFound, this block for the *outer* call
-                // will be skipped if needsSearchMarkerFound was true for it.
-                if (!needsSearchMarkerFound || isStoppingGenerationRef.current ) { 
+                // This finally block runs regardless of how the try block exits (normal, error, or return from stop check).
+                // We only want to change global loading/avatar if this is the "final" operation instance.
+                if (!needsSearchMarkerFound || isStoppingGenerationRef.current ) {
                     setIsChatLoading(false);
-                    if (!isStoppingGenerationRef.current) { // If not stopped, transition to speaking then idle
+                    // Avatar state should be 'idle' if stopped, otherwise 'speaking' then 'idle'.
+                    // handleStopGeneration already sets it to 'idle'.
+                    if (!isStoppingGenerationRef.current) {
                         setAvatarHeaderState('speaking');
                         setTimeout(() => setAvatarHeaderState('idle'), 1500);
-                    } else { // If stopped, ensure it's idle
-                        setAvatarHeaderState('idle'); 
                     }
-                    // isStoppingGenerationRef.current should be reset by handleStopGeneration or App logic for the *next* user message
-                    // For now, if it was stopped, it remains true until the next full send.
+                    // If it was stopped, avatar is already idle from handleStopGeneration.
                 }
             }
         };
 
         const handleSendChatMessage = useCallback(async (messageText, filesToSend) => {
             if (!messageText.trim() && filesToSend.length === 0) return;
-            isStoppingGenerationRef.current = false; // Reset stop state for a new message
+            isStoppingGenerationRef.current = false; // Reset for new message
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
                 setChatError("API Key is not configured.");
                 return;
             }
 
-            const currentChatMessages = chatMessages; 
+            const currentChatMessages = [...chatMessages];
             const userMessageFiles = filesToSend.map(f => ({ id: f.id, name: f.name, type: f.type, apiData: f.apiData }));
-            
+
             const promptPartsForUserTurn = [];
             if (messageText.trim()) promptPartsForUserTurn.push({ text: messageText.trim() });
             filesToSend.forEach(file => {
@@ -965,24 +1117,24 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     promptPartsForUserTurn.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
                 }
             });
-            
+
             const originalUserMessageForRetry = { role: 'user', parts: promptPartsForUserTurn };
             const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
-            
-            const shouldUseSearchInitially = isSearchEnabled; 
+
+            const shouldUseSearchInitially = isSearchEnabled;
 
             const aiMessageId = Date.now().toString() + '_model_resp';
-            const aiPlaceholder = { 
-                id: aiMessageId, 
-                role: 'model', 
-                text: '', 
-                timestamp: new Date(), 
-                isLoading: true, 
-                isError: false, 
-                citationMetadata: null, 
-                searchUsed: shouldUseSearchInitially 
-            }; 
-            
+            const aiPlaceholder = {
+                id: aiMessageId,
+                role: 'model',
+                text: '',
+                timestamp: new Date(),
+                isLoading: true,
+                isError: false,
+                citationMetadata: null,
+                searchUsed: shouldUseSearchInitially
+            };
+
             setChatMessages(prev => {
                 const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError));
                 return [...filteredPrev, newUserMessageForUi, aiPlaceholder];
@@ -996,34 +1148,58 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages, isSearchEnabled]); 
+        }, [chatMessages, isSearchEnabled]);
 
         const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
-            isStoppingGenerationRef.current = false; // Reset stop state for regeneration
+            isStoppingGenerationRef.current = false; // Reset for new regeneration
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
                 setChatError("API Key is not configured for regeneration.");
                 return;
             }
-            const originalAiMsgIndex = chatMessages.findIndex(m => m.id === aiMessageIdToRegenerate);
-            if (originalAiMsgIndex <= 0 || chatMessages[originalAiMsgIndex-1].role !== 'user') {
-                setChatError("Cannot regenerate: Preceding user prompt not found.");
-                return;
-            }
-            
-            const userPromptMsg = chatMessages[originalAiMsgIndex-1];
+
+            let userPromptMsg = null;
+            let historyForGeminiInit = [];
+            let chatHistoryForUiUpdate = [];
+            let originalAiMessage = null;
+
+
+            setChatMessages(prevMessages => {
+                const originalAiMsgIndex = prevMessages.findIndex(m => m.id === aiMessageIdToRegenerate);
+                if (originalAiMsgIndex <= 0 || prevMessages[originalAiMsgIndex-1].role !== 'user') {
+                    setChatError("Cannot regenerate: Preceding user prompt not found.");
+                    return prevMessages;
+                }
+                userPromptMsg = prevMessages[originalAiMsgIndex-1];
+                originalAiMessage = prevMessages[originalAiMsgIndex];
+
+                const historyBeforeUserPromptInternal = prevMessages.slice(0, originalAiMsgIndex - 1);
+                historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
+                chatHistoryForUiUpdate = prevMessages.slice(0, originalAiMsgIndex);
+                return chatHistoryForUiUpdate;
+            });
+
+            if (!userPromptMsg) return;
+
             if (userPromptMsg.attachedFiles?.some(f => f.type?.startsWith('image/'))) {
                 setChatError("Regeneration for prompts with images is not yet available.");
+                 setChatMessages(prev => {
+                    const currentMessages = [...prev];
+                    if (originalAiMessage && !currentMessages.find(m => m.id === originalAiMessage.id) ) {
+                         currentMessages.push(originalAiMessage);
+                    }
+                    return currentMessages;
+                });
                 return;
             }
 
-            const shouldUseSearchForThisRegen = isSearchEnabled; 
-            
+            const shouldUseSearchForThisRegen = isSearchEnabled;
+
             const promptPartsForRegen = [];
             if (userPromptMsg.text) {
                 promptPartsForRegen.push({ text: userPromptMsg.text });
             }
-            userPromptMsg.attachedFiles?.forEach(file => { 
+            userPromptMsg.attachedFiles?.forEach(file => {
                  if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
                     promptPartsForRegen.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
                 }
@@ -1031,29 +1207,26 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const originalUserMessageForRetry = { role: 'user', parts: promptPartsForRegen };
 
             const newAiPlaceholderId = Date.now().toString() + '_model_regen';
-            const aiPlaceholder = { 
-                id: newAiPlaceholderId, 
-                role: 'model', 
-                text:'', 
-                isLoading:true, 
-                timestamp:new Date(), 
-                isError: false, 
-                citationMetadata: null, 
-                searchUsed: shouldUseSearchForThisRegen 
+            const aiPlaceholder = {
+                id: newAiPlaceholderId,
+                role: 'model',
+                text:'',
+                isLoading:true,
+                timestamp:new Date(),
+                isError: false,
+                citationMetadata: null,
+                searchUsed: shouldUseSearchForThisRegen
             };
-            
-            const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
-            setChatMessages([...chatHistoryForUiUpdate, aiPlaceholder]);
-            
+
+            setChatMessages(prev => [...prev, aiPlaceholder]);
+
             if (promptPartsForRegen.length > 0) {
-                const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
-                const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
                 await _streamAiResponse(promptPartsForRegen, newAiPlaceholderId, historyForGeminiInit, shouldUseSearchForThisRegen, false, originalUserMessageForRetry);
             } else {
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages, isSearchEnabled]);
+        }, [isSearchEnabled, chatMessages]);
 
         return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} isSearchEnabled={isSearchEnabled} onToggleSearch={handleToggleSearch}/></div>);
       };
