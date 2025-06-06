@@ -141,13 +141,13 @@
         } 
         
         .markdown-content pre { 
-          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative; /* Border removed */
+          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative border border-gray-300; 
         } 
         .markdown-content pre code { 
           @apply block bg-transparent text-inherit text-sm p-0 shadow-none border-none px-4 pb-4 pt-8 !whitespace-pre; 
         }
         
-        .markdown-content pre::-webkit-scrollbar { @apply h-px; } /* Scrollbar height set to 1px (h-px) */
+        .markdown-content pre::-webkit-scrollbar { @apply h-px; } 
         .markdown-content pre::-webkit-scrollbar-track { @apply bg-transparent; } 
         .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
         .markdown-content pre { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; }
@@ -491,7 +491,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         }, [avatarState]);
 
         return (
-          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"> {/* Avatar size changed */}
+          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"> 
             <svg
               ref={svgRef}
               className="avatar-svg-element w-full h-full relative z-10"
@@ -613,10 +613,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               button.classList.add(
                 'code-copy-button', 'absolute', 'p-1',
                 'bg-transparent', 
-                'text-gray-600', 
+                'text-gray-500', // UPDATED: Initial icon color (slightly darker)
                 'border', 'border-gray-300', 
                 'rounded-md', 'transition-colors', 'duration-150',
-                'opacity-70', 'hover:opacity-100', 'hover:text-gray-800' 
+                'opacity-80', // UPDATED: Slightly more opaque initially
+                'hover:opacity-100', 'hover:text-gray-700' // UPDATED: Hover icon color (slightly darker)
               );
               button.style.top = '0.25rem';
               button.style.right = '0.5rem';
@@ -628,11 +629,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
                     button.innerHTML = CHECK_ICON_SVG;
                     button.classList.add('text-emerald-600'); 
-                    button.classList.remove('text-gray-600', 'text-gray-800'); 
+                    button.classList.remove('text-gray-500', 'text-gray-700'); 
                     setTimeout(() => {
                       button.innerHTML = COPY_ICON_SVG;
                       button.classList.remove('text-emerald-600'); 
-                      button.classList.add('text-gray-600'); 
+                      button.classList.add('text-gray-500'); // UPDATED: revert to new initial icon color
                     }, 2000);
                   }).catch(err => console.error('Failed to copy: ', err));
                 }
@@ -660,12 +661,24 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="text-base whitespace-pre-wrap break-words">{message.text}</p>; 
         } else if (message.role === 'model') { 
+            let textToParse = message.text || '';
+            // Filter out tool_code lines before sending to marked.parse
+            // This is now handled in _streamAiResponse where `displayedAiText` is built.
+            // So, `message.text` should already be filtered before it reaches here.
+            // We can keep it simple here.
+            // const lines = textToParse.split('\n');
+            // const filteredLines = lines.filter(line =>
+            //     !line.trim().startsWith("tool_code") &&
+            //     !line.trim().startsWith("print(google_search.search")
+            // );
+            // textToParse = filteredLines.join('\n');
+
             if(isError) { 
                 bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md'; 
-                contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
+                contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{textToParse.replace(/^Error:\s*/, '')} </div>); 
             } else { 
                 bubbleRoleClasses = 'bg-[#F9F9FA] text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]'; 
-                contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); 
+                contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(textToParse) }} />); 
             } 
             bubbleWidthClasses = 'max-w-full w-full'; 
         }
@@ -962,16 +975,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
                     if (typeof rawChunkText === 'string') {
                         const lines = rawChunkText.split('\n');
-                        const filteredLines = lines.filter(line =>
+                        const filteredLines = lines.filter(line => 
                             !line.trim().startsWith("tool_code") &&
-                            !line.trim().startsWith("print(google_search.search") &&
-                            line.trim() !== "```"
+                            !line.trim().startsWith("print(google_search.search")
                         );
-                        const potentiallyFilteredText = filteredLines.join('\n');
-                        if (filteredLines.length > 0 && filteredLines.some(line => line.trim() !== "")) {
-                           chunkTextForDisplay = potentiallyFilteredText;
+                        if (filteredLines.length > 0 && filteredLines.some(line => line.trim() !== "" || lines.length === filteredLines.length )) {
+                           chunkTextForDisplay = filteredLines.join('\n');
+                        } else if (filteredLines.length === 0 && rawChunkText.trim() !== "") {
+                            chunkTextForDisplay = ""; 
                         } else {
-                           chunkTextForDisplay = ""; 
+                            chunkTextForDisplay = rawChunkText; 
                         }
                     }
 
@@ -983,19 +996,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     }
                     firstChunkProcessed = true;
 
-                    if (chunkTextForDisplay.trim().length > 0) {
+                    if (chunkTextForDisplay.length > 0 || (chunkTextForDisplay === "" && rawChunkText === "")) { 
                         displayedAiText += chunkTextForDisplay;
-                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
-                            accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                        }
-                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
-                           setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
-                        }
-                    } else if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
+                    }
+                    
+                    if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                         accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
-                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
-                        }
+                    }
+
+                    if ((displayedAiText.trim().length > 0 || accumulatedCitationSources.length > 0) && !needsSearchMarkerFound && !isStoppingGenerationRef.current) {
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                     }
                     
                     if (isStoppingGenerationRef.current) break;
