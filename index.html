@@ -805,7 +805,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           };
 
           container.addEventListener('scroll', handleScroll, { passive: true });
-          handleScroll(); 
+          handleScroll();
 
           return () => {
             if (container) {
@@ -858,6 +858,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           setUserHasScrolledUp(false);
         };
 
+        const clearButtonBaseClasses = "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group";
+        let clearButtonConditionalClasses = "";
+        if (isMobileView) {
+          clearButtonConditionalClasses = "bg-interactive-hover text-text-primary";
+        } else {
+          if (isLoading) { // AI is processing (passed as prop)
+            clearButtonConditionalClasses = "text-text-secondary"; // No hover bg/text change
+          } else {
+            clearButtonConditionalClasses = "text-text-secondary hover:text-text-primary hover:bg-interactive-hover";
+          }
+        }
+
         const isAiCurrentlyStreaming = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
         const isSendButtonDisabled = (!isAiCurrentlyStreaming && (isLoading || (inputText.trim() === '' && selectedFiles.length === 0)));
         const canRegenerateLastAi = messages.length > 0 && messages[messages.length - 1].role === 'model' && !messages[messages.length - 1].isLoading && !isAiCurrentlyStreaming && messages.length > 1 && messages[messages.length - 2].role === 'user' && !(messages[messages.length - 2].attachedFiles?.some(f => f.type?.startsWith('image/')));
@@ -873,7 +885,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         <p className="text-xs -mt-0.5 font-roboto text-gradient-brand-subtle">Modern Chat Experience</p>
                     </div>
                 </div>
-                <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
+                <button
+                  onClick={() => { setChatError(null); onClearChat(); }}
+                  className={`${clearButtonBaseClasses} ${clearButtonConditionalClasses}`}
+                  aria-label="Clear chat"
+                  disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}
+                >
+                    <i className={`fas fa-broom fa-fw text-sm transition-transform ${ (isLoading && !isMobileView) ? '' : 'group-hover:scale-110'}`}></i>
+                    <span className="hidden sm:inline">Clear</span>
+                </button>
             </header>
 
             <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-white">
@@ -964,7 +984,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                            let currentText = msg.text;
                            const isInCodeBlock = (currentText.match(/```/g) || []).length % 2 !== 0;
                            if (isInCodeBlock) {
-                               currentText += "\n```"; // Attempt to close code block
+                               currentText += "\n```";
                            }
                            stopText = currentText + (currentText.trim() ? "\n\n---\n" : "") + stopText;
                         }
@@ -981,10 +1001,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const mergeCitations = (existingCitations, newCitationSources) => { if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
 
         const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, useSearch, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
-            if (isStoppingGenerationRef.current) { // Check at the very start, useful for recursive calls
-                // The handleStopGeneration callback should have already updated the message.
-                // This return just prevents further API calls if stop was initiated between calls.
-                setIsChatLoading(false); // Ensure global loading is off
+            if (isStoppingGenerationRef.current) {
+                setIsChatLoading(false);
                 setAvatarHeaderState('idle');
                 return;
             }
@@ -997,7 +1015,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             let displayedAiText = "";
             let accumulatedCitationSources = [];
             let firstChunkProcessed = false;
-            let needsSearchMarkerFound = false;
+            let needsSearchMarkerFoundAndHandled = false;
 
 
             try {
@@ -1010,13 +1028,14 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const result = await chatSession.sendMessageStream(originalPromptParts);
 
                 for await (const chunk of result.stream) {
-                    if (isStoppingGenerationRef.current) break; // Check before processing each chunk
+                    if (isStoppingGenerationRef.current) break;
                     const chunkText = chunk.text();
 
                     if (!firstChunkProcessed && !isRetryingWithSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
-                        needsSearchMarkerFound = true;
-                         // Update message to show search is active, clear any premature text
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m));
+                        needsSearchMarkerFoundAndHandled = true;
+                        setChatMessages(prev => prev.map(m =>
+                            m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m
+                        ));
                         break;
                     }
                     firstChunkProcessed = true;
@@ -1026,43 +1045,52 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
                         }
-                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) { // Don't update if stopped or if it's for a NEEDS_SEARCH flow that will recurse
-                           setChatMessages(prev => prev.map(m => m.id === targetAiMessageId && !isStoppingGenerationRef.current ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
+                        if (!needsSearchMarkerFoundAndHandled && !isStoppingGenerationRef.current) {
+                           setChatMessages(prev => prev.map(m =>
+                               m.id === targetAiMessageId && !isStoppingGenerationRef.current ?
+                               { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m
+                           ));
                         }
                     } else {
                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                             if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
-                                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId && !isStoppingGenerationRef.current ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
+                             if (!needsSearchMarkerFoundAndHandled && !isStoppingGenerationRef.current) {
+                                setChatMessages(prev => prev.map(m =>
+                                    m.id === targetAiMessageId && !isStoppingGenerationRef.current ?
+                                    { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m
+                                ));
                             }
                         }
                     }
-                } // End of stream loop
+                }
 
-                if (isStoppingGenerationRef.current) { // If loop was broken due to stop
-                    // The handleStopGeneration callback has already updated the message text and isLoading.
-                    // No further setChatMessages needed here for the stop text itself.
+                if (isStoppingGenerationRef.current) {
                     setIsChatLoading(false);
                     setAvatarHeaderState('idle');
                     return;
                 }
 
-                if (needsSearchMarkerFound && originalUserMessageForRetry) {
-                     if (isStoppingGenerationRef.current) { // Double check before recursive call
-                        // UI already updated by handleStopGeneration
+                if (needsSearchMarkerFoundAndHandled && originalUserMessageForRetry) {
+                     if (isStoppingGenerationRef.current) {
                         return;
                     }
                     await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry);
                     return;
                 }
 
-                // If not stopped and not a NEEDS_SEARCH that recursed, finalize the message normally
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
+                         if (isStoppingGenerationRef.current) {
+                             let stopText = "*Generation stopped by user.*";
+                             if (displayedAiText.trim() && !displayedAiText.includes(stopText)) {
+                                 const isInCodeBlock = (displayedAiText.match(/```/g) || []).length % 2 !== 0;
+                                 if (isInCodeBlock) displayedAiText += "\n```";
+                                 stopText = displayedAiText + (displayedAiText.trim() ? "\n\n---\n" : "") + stopText;
+                             }
+                             return { ...m, text: stopText, isLoading: false, isError: false };
+                        }
                         let finalText = displayedAiText;
                         let isFinalError = false;
-                        // No need to check isStoppingGenerationRef here again, as handleStopGeneration and earlier checks cover it.
-                        // Final text formatting based on actual content.
                         if (!finalText.trim() && accumulatedCitationSources.length === 0 ) {
                             finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
                             isFinalError = true;
@@ -1075,30 +1103,25 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }));
 
             } catch (err) {
-                if (!isStoppingGenerationRef.current) { // Only process error if not stopped
+                if (!isStoppingGenerationRef.current) {
                     console.error("AI stream error in _streamAiResponse:", err);
                     const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
                     setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
                 }
             } finally {
-                // This finally block runs regardless of how the try block exits (normal, error, or return from stop check).
-                // We only want to change global loading/avatar if this is the "final" operation instance.
-                if (!needsSearchMarkerFound || isStoppingGenerationRef.current ) {
+                if (!needsSearchMarkerFoundAndHandled || isStoppingGenerationRef.current ) {
                     setIsChatLoading(false);
-                    // Avatar state should be 'idle' if stopped, otherwise 'speaking' then 'idle'.
-                    // handleStopGeneration already sets it to 'idle'.
                     if (!isStoppingGenerationRef.current) {
                         setAvatarHeaderState('speaking');
                         setTimeout(() => setAvatarHeaderState('idle'), 1500);
                     }
-                    // If it was stopped, avatar is already idle from handleStopGeneration.
                 }
             }
         };
 
         const handleSendChatMessage = useCallback(async (messageText, filesToSend) => {
             if (!messageText.trim() && filesToSend.length === 0) return;
-            isStoppingGenerationRef.current = false; // Reset for new message
+            isStoppingGenerationRef.current = false;
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
                 setChatError("API Key is not configured.");
@@ -1148,48 +1171,28 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages, isSearchEnabled]);
+        }, [chatMessages, isSearchEnabled, API_KEY, setChatError]);
 
         const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
-            isStoppingGenerationRef.current = false; // Reset for new regeneration
+            isStoppingGenerationRef.current = false;
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
                 setChatError("API Key is not configured for regeneration.");
                 return;
             }
 
-            let userPromptMsg = null;
-            let historyForGeminiInit = [];
-            let chatHistoryForUiUpdate = [];
-            let originalAiMessage = null;
+            const currentMessagesSnapshot = [...chatMessages];
+            const originalAiMsgIndex = currentMessagesSnapshot.findIndex(m => m.id === aiMessageIdToRegenerate);
 
+            if (originalAiMsgIndex <= 0 || currentMessagesSnapshot[originalAiMsgIndex-1].role !== 'user') {
+                setChatError("Cannot regenerate: Preceding user prompt not found.");
+                return;
+            }
 
-            setChatMessages(prevMessages => {
-                const originalAiMsgIndex = prevMessages.findIndex(m => m.id === aiMessageIdToRegenerate);
-                if (originalAiMsgIndex <= 0 || prevMessages[originalAiMsgIndex-1].role !== 'user') {
-                    setChatError("Cannot regenerate: Preceding user prompt not found.");
-                    return prevMessages;
-                }
-                userPromptMsg = prevMessages[originalAiMsgIndex-1];
-                originalAiMessage = prevMessages[originalAiMsgIndex];
-
-                const historyBeforeUserPromptInternal = prevMessages.slice(0, originalAiMsgIndex - 1);
-                historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
-                chatHistoryForUiUpdate = prevMessages.slice(0, originalAiMsgIndex);
-                return chatHistoryForUiUpdate;
-            });
-
-            if (!userPromptMsg) return;
+            const userPromptMsg = currentMessagesSnapshot[originalAiMsgIndex-1];
 
             if (userPromptMsg.attachedFiles?.some(f => f.type?.startsWith('image/'))) {
                 setChatError("Regeneration for prompts with images is not yet available.");
-                 setChatMessages(prev => {
-                    const currentMessages = [...prev];
-                    if (originalAiMessage && !currentMessages.find(m => m.id === originalAiMessage.id) ) {
-                         currentMessages.push(originalAiMessage);
-                    }
-                    return currentMessages;
-                });
                 return;
             }
 
@@ -1218,15 +1221,21 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 searchUsed: shouldUseSearchForThisRegen
             };
 
-            setChatMessages(prev => [...prev, aiPlaceholder]);
+            setChatMessages(prevMessages => {
+                const historyUpToJustBeforeOldAiMessage = prevMessages.slice(0, originalAiMsgIndex);
+                return [...historyUpToJustBeforeOldAiMessage, aiPlaceholder];
+            });
 
             if (promptPartsForRegen.length > 0) {
+                const historyBeforeUserPromptInternal = currentMessagesSnapshot.slice(0, originalAiMsgIndex - 1);
+                const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
                 await _streamAiResponse(promptPartsForRegen, newAiPlaceholderId, historyForGeminiInit, shouldUseSearchForThisRegen, false, originalUserMessageForRetry);
             } else {
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
+                setIsChatLoading(false);
                 setAvatarHeaderState('idle');
             }
-        }, [isSearchEnabled, chatMessages]);
+        }, [chatMessages, isSearchEnabled, API_KEY, setChatError]);
 
         return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} isSearchEnabled={isSearchEnabled} onToggleSearch={handleToggleSearch}/></div>);
       };
