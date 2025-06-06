@@ -141,7 +141,7 @@
         }
 
         .markdown-content pre {
-          @apply bg-[#F9F9FA] text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative; /* MODIFIED: bg-gray-100 changed to bg-[#F9F9FA] */
+          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative;
         }
         .markdown-content pre code {
           @apply block bg-transparent text-inherit text-sm p-0 shadow-none border-none px-4 pb-4 pt-8 !whitespace-pre;
@@ -710,7 +710,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md';
                 contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>);
             } else {
-                bubbleRoleClasses = 'bg-gray-100 text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]'; // MODIFIED: bg-[#F9F9FA] changed to bg-gray-100
+                bubbleRoleClasses = 'bg-[#F9F9FA] text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]';
                 if (!isAiStillJustThinking && message.text) {
                     contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />);
                 } else {
