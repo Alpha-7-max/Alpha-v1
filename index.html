@@ -612,11 +612,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               button.innerHTML = COPY_ICON_SVG;
               button.classList.add(
                 'code-copy-button', 'absolute', 'p-1',
-                'bg-transparent', // Removed background color
-                'text-gray-600', // Initial icon color
-                'border', 'border-gray-300', // Keep border
+                'bg-transparent', 
+                'text-gray-600', 
+                'border', 'border-gray-300', 
                 'rounded-md', 'transition-colors', 'duration-150',
-                'opacity-70', 'hover:opacity-100', 'hover:text-gray-800' // No bg change on hover, just icon opacity/color
+                'opacity-70', 'hover:opacity-100', 'hover:text-gray-800' 
               );
               button.style.top = '0.25rem';
               button.style.right = '0.5rem';
@@ -628,11 +628,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
                     button.innerHTML = CHECK_ICON_SVG;
                     button.classList.add('text-emerald-600'); 
-                    button.classList.remove('text-gray-600', 'text-gray-800'); // remove initial/hover text colors
+                    button.classList.remove('text-gray-600', 'text-gray-800'); 
                     setTimeout(() => {
                       button.innerHTML = COPY_ICON_SVG;
                       button.classList.remove('text-emerald-600'); 
-                      button.classList.add('text-gray-600'); // revert to initial icon color
+                      button.classList.add('text-gray-600'); 
                     }, 2000);
                   }).catch(err => console.error('Failed to copy: ', err));
                 }
@@ -956,31 +956,48 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
                 for await (const chunk of result.stream) { 
                     if (isStoppingGenerationRef.current) break;
-                    const chunkText = chunk.text();
+                    
+                    const rawChunkText = chunk.text();
+                    let chunkTextForDisplay = "";
 
-                    if (!firstChunkProcessed && !isRetryingWithSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
+                    if (typeof rawChunkText === 'string') {
+                        const lines = rawChunkText.split('\n');
+                        const filteredLines = lines.filter(line =>
+                            !line.trim().startsWith("tool_code") &&
+                            !line.trim().startsWith("print(google_search.search") &&
+                            line.trim() !== "```"
+                        );
+                        const potentiallyFilteredText = filteredLines.join('\n');
+                        if (filteredLines.length > 0 && filteredLines.some(line => line.trim() !== "")) {
+                           chunkTextForDisplay = potentiallyFilteredText;
+                        } else {
+                           chunkTextForDisplay = ""; 
+                        }
+                    }
+
+
+                    if (!firstChunkProcessed && !isRetryingWithSearch && chunkTextForDisplay && chunkTextForDisplay.trim() === "[NEEDS_SEARCH]") {
                         needsSearchMarkerFound = true;
                         setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m));
                         break; 
                     }
                     firstChunkProcessed = true;
 
-                    if (typeof chunkText === 'string') {
-                        displayedAiText += chunkText;
-                        if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
+                    if (chunkTextForDisplay.trim().length > 0) {
+                        displayedAiText += chunkTextForDisplay;
+                         if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
                             accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
                         }
-                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) { 
+                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                         }
-                    } else { 
-                        if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
-                            accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                             if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
-                                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
-                            }
+                    } else if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
+                        accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
+                        if (!needsSearchMarkerFound && !isStoppingGenerationRef.current) {
+                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
                         }
                     }
+                    
                     if (isStoppingGenerationRef.current) break;
                 }
 
@@ -998,34 +1015,48 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = displayedAiText;
-                        let isFinalError = false;
+                        let isMessageError = false; 
                         const stopNoticeStr = "*Generation stopped by user.*";
 
                         if (isStoppingGenerationRef.current) {
                             let baseText = (m.text && m.text.includes(stopNoticeStr)) ? m.text : displayedAiText;
-                            
                             if (!baseText.includes(stopNoticeStr)) {
                                 const isInCodeBlock = (baseText.match(/```/g) || []).length % 2 !== 0;
                                 if (isInCodeBlock) baseText += "\n```";
                                 baseText += (baseText.trim() ? "\n\n---\n" : "") + stopNoticeStr;
                             }
                             finalText = baseText;
-
                         } else if (!finalText.trim() && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
-                            finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
-                            isFinalError = true;
+                            if (useSearch) {
+                                finalText = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar poochein. Shukriya! 🙏";
+                                isMessageError = false; 
+                            } else {
+                                finalText = "Mera khayal hai ke mujhe samajhne mein kuch dushwari hui. Kya aap apna sawal wazeh kar sakte hain? 🤔";
+                                isMessageError = false; 
+                            }
                         } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { 
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
+                            isMessageError = false; 
                         }
-                        return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch || m.searchUsed };
+                        return { ...m, text: finalText, isLoading: false, isError: isMessageError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch || m.searchUsed };
                     }
                     return m;
                 }));
 
             } catch (err) {
                 console.error("AI stream error in _streamAiResponse:", err);
-                const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
-                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
+                let errorTextForUser = "Jawab dene mein kuch takneeki dushwari pesh aa rahi hai. Barah-e-karam thori dair baad dobara koshish karein."; 
+                
+                if (err.message?.toLowerCase().includes("api key not valid")) {
+                    errorTextForUser = "Lagta hai API key mein koi masla hai. Barah-e-karam isay check kar lein.";
+                } else if (err.message?.toLowerCase().includes("candidate was blocked")) {
+                    errorTextForUser = "Meri hifazati policies ki wajah se main yeh jawab nahi de sakta. Kya aap apna sawal wazeh kar ke dobara pooch sakte hain?";
+                } else if (err.message?.toLowerCase().includes("quota")) {
+                    errorTextForUser = "Lagta hai API istemal ki had poori ho gayi hai. Barah-e-karam settings check karein.";
+                } else if (err.message) {
+                     errorTextForUser = `Jawab dene mein kuch takneeki dushwari pesh aa rahi hai. Barah-e-karam thori dair baad dobara koshish karein.`;
+                }
+                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearch } : m));
             } finally {
                 if (!needsSearchMarkerFound || isStoppingGenerationRef.current ) { 
                     setIsChatLoading(false);
