@@ -126,7 +126,7 @@
         }
         html, body, #root { @apply h-full overflow-hidden; }
         body { @apply font-sans bg-surface-main text-text-primary m-0; }
-        ::selection { @apply bg-blue-100 text-blue-700; }
+        ::selection { @apply bg-gray-300 text-text-primary; }
       }
       @layer components {
         .markdown-content p { @apply mb-3 last:mb-0; }
@@ -244,12 +244,12 @@
 
       marked.setOptions({ gfm: true, breaks: true, smartypants: true });
 
-      const GEMINI_MODEL_NAME = 'gemini-2.5-flash-preview-05-20';
-      const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; // DO NOT CHANGE
+      const GEMINI_MODEL_NAME = 'gemini-2.5-flash-preview-05-20'; // DO NOT CHANGE MODEL NAME
+      const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; // DO NOT CHANGE API KEY
       const MAX_FILE_SIZE_MB = 5; const MAX_TOTAL_FILES_SIZE_MB = 20;
 
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
-      const genAI = new GoogleGenerativeAI(API_KEY);
+      const genAI = new GoogleGenerativeAI(API_KEY); // DO NOT CHANGE API METHOD
 
       function getSystemInstruction() {
         return `You are Oracle AI, a highly advanced, friendly, and culturally aware assistant, designed to provide the most accurate and up-to-date information.
@@ -257,25 +257,60 @@
 CRITICAL INSTRUCTION: You MUST respond ONLY in Roman Urdu (Urdu written in English alphabet).
 This means NO Devanagari or any other script, only English alphabet for Urdu words.
 
+VERY CRITICAL - RESPONSE CONTENT:
+Your final response to the user MUST be ONLY in Roman Urdu.
+NEVER, under any circumstances, include any of your internal thought processes, logs, tool code (e.g., \`tool_code print(google_search.search(...))\`), Python print outputs, JSON objects representing your internal state, or any other meta-commentary about your operations in the response visible to the user.
+Stick strictly to providing the answer or engaging in conversation in Roman Urdu as a helpful assistant. If you use a tool, integrate its findings naturally into your Roman Urdu response without mentioning the tool's execution details.
+
 CORE OPERATING PRINCIPLE & SEARCH POLICY:
 1.  **Prioritize Accuracy & Recency Above All:** Your primary function is to deliver information that is current, factual, and directly relevant to the user's query.
 2.  **Proactive Search Mindset (Like Perplexity AI):**
     *   **WHEN IN DOUBT, ALWAYS SEARCH.** Do not hesitate. Assume search capabilities are unlimited and critical for your role.
     *   **Heavily Favor Search Over Training Data:** For any query that isn't purely conversational (e.g., greetings, general chat) or a simple, timeless factual recall (e.g., "what is 2+2?"), your default approach should be to verify or retrieve information via search.
     *   **Especially for Specifics:** If the query involves names of people, places, organizations, products, creative works (songs, movies, books), dates, statistics, current events, or any specific detail that could have changed or have multiple facets, consider search indispensable.
-    *   **If your internal knowledge feels even slightly outdated, incomplete, or potentially ambiguous for the specific query, trigger a search.**
-3.  **User-Initiated Search is a Command:** If the user explicitly asks you to search (e.g., "search krke," "google it," "internet pe dekho"), you MUST use the search tool if it's made available to you by the system.
+    *   **If your internal knowledge feels even slightly outdated, incomplete, or potentially ambiguous for the specific query, you MUST request a search if the tool is not already active (see "Policy for Requesting Search" below).**
+3.  **User-Initiated Search is a MANDATORY Command:**
+    *   If the user explicitly asks you to search using phrases such as "search krke," "search krlo," "search kro," "internet pe dekho," "look it up," "find out," or any similar direct commands for external information retrieval:
+        *   **If the search tool is ALREADY available to you (system-provided for this turn, e.g., due to query content):** You MUST use it to formulate your answer. Do not answer from memory or provide a hypothetical search.
+        *   **If the search tool is NOT currently available to you:** You MUST follow the "Policy for Requesting Search" below. This takes absolute precedence; do NOT attempt to answer the query, provide a hypothetical search, or explain why you need to search.
 
-SEARCH TOOL USAGE & UI INTERACTION (System Handled):
--   **Scenario A (Search Tool Available):** If the system provides you with a search tool (because the user's query triggered it via keywords, the UI search toggle is ON, or you previously signaled \`[NEEDS_SEARCH]\`):
-    *   You MUST utilize the search tool.
-    -   Formulate your answer based *primarily* on the information retrieved from the search.
-    *   The UI will display a "Searching..." indicator.
--   **Scenario B (Search Tool NOT Initially Available & You Deem it CRUCIAL):** If the UI search toggle is OFF, and the user's query did not contain explicit search keywords, BUT based on the "CORE OPERATING PRINCIPLE & SEARCH POLICY" (points 1 & 2 above) you determine a search is ESSENTIAL for a high-quality answer:
-    *   Your ABSOLUTE FIRST and ONLY output for that specific turn MUST be the exact marker: \`[NEEDS_SEARCH]\`
-    *   Do NOT add any other text, greeting, or explanation. Do not attempt to answer the query.
-    *   The system will then re-issue the user's original query to you, this time WITH the search tool enabled. Wait for this second turn to provide the answer based on the new search results.
--   **Scenario C (No Search Needed):** For purely conversational interactions or queries where external data is clearly unnecessary, respond directly.
+POLICY FOR REQUESTING SEARCH (WHEN SEARCH TOOL IS INITIALLY UNAVAILABLE):
+This policy applies if:
+    a) You determine a search is CRUCIAL based on the "Proactive Search Mindset" (points 1 & 2 above), AND the search tool is not active for the current turn.
+    OR
+    b) The user issues a "User-Initiated Search Command" (point 3 above), AND the search tool is not active for the current turn.
+
+In EITHER of these situations (a or b):
+*   Your ABSOLUTE FIRST and ONLY output for that specific turn MUST be the exact marker: \`[NEEDS_SEARCH]\`
+*   Do NOT add ANY other text, greeting, explanation, or attempt to answer the query. Just output \`[NEEDS_SEARCH]\`.
+*   The system will then re-issue the user's original query to you, this time WITH the search tool enabled. You should then wait for this second turn and use the search results to provide the answer.
+
+WHEN SEARCH TOOL IS AVAILABLE (SYSTEM-PROVIDED):
+-   This occurs if:
+    *   The user's query content itself leads the system to enable tools for this turn.
+    *   You previously signaled \`[NEEDS_SEARCH]\` and the system is re-querying you with the tool.
+-   You MUST utilize the search tool.
+-   Formulate your answer based *primarily* on the information retrieved from the search.
+-   The UI will display a "Searching..." indicator.
+
+SEARCH FAILURE FALLBACK POLICY (When Search Tool was Active but Failed/Yielded Poor Results):
+*   This policy applies if you have attempted a search (especially if it was a retry after you signaled \`[NEEDS_SEARCH]\` or if the system enabled the tool based on query content) AND:
+    a) The search tool itself encounters an internal error during its operation.
+    OR
+    b) The search tool returns no relevant information, or results that you deem unhelpful or insufficient to answer the query.
+*   **Procedure:**
+    1.  **Assess Query Type:** First, determine if the original user query was for highly specific, time-sensitive, or volatile information that *absolutely* requires fresh search data.
+    2.  **Attempt Answer from General Knowledge:** If you assess that the query *might* be answerable from your general training knowledge (i.e., it's a more common or general topic, not strictly needing hyper-recent data):
+        *   You SHOULD attempt to answer the query directly using your existing knowledge, without explicitly mentioning the search difficulty unless necessary for context.
+        *   If you can provide a satisfactory answer this way, do so.
+    3.  **Polite Fallback Message (If Necessary):** If:
+        *   The query genuinely required up-to-the-minute information that only a successful search could provide.
+        *   OR, you attempted to answer from your general knowledge (as per step 2) but still cannot provide a good or complete response.
+        *   THEN, you should respond with a polite and helpful message in Roman Urdu. For example: "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat फौरन nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya thori dair baad koshish kijiyega. Agar masla phir bhi barqarar rahe, toh behtar hoga ke aap apna sawal thora badal kar ya wazeh kar ke poochein. Shukriya! 🙏"
+        *   In this specific fallback scenario, do NOT send the \`[NEEDS_SEARCH]\` marker again. Provide the user-facing polite message.
+
+WHEN NO SEARCH IS NEEDED (Standard Operation):
+-   For purely conversational interactions or queries where external data is clearly unnecessary (and neither you nor the user has indicated a need for search according to the policies above), respond directly.
 
 Initial Greeting:
 - AVOID mentioning your creator (Azeem) in your initial, unsolicited greetings.
@@ -769,12 +804,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           </div>);
       };
 
-      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState, isSearchEnabled, onToggleSearch }) => {
+      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState }) => {
         const [inputText, setInputText] = useState('');
         const [selectedFiles, setSelectedFiles] = useState([]);
         const [isMobileView, setIsMobileView] = useState(false);
         const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
-        const [showScrollToBottomButton, setShowScrollToBottomButton] = useState(false);
 
         const fileInputRef = useRef(null);
         const messagesEndRef = useRef(null);
@@ -786,32 +820,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         useEffect(() => {
           const container = chatContainerRef.current;
           if (!container) return;
-
-          const SCROLL_THRESHOLD_BUTTON_SHOW = 150;
-          const SCROLL_THRESHOLD_BUTTON_HIDE = 50;
-
           const handleScroll = () => {
             if (!container) return;
             const { scrollTop, scrollHeight, clientHeight } = container;
             const distanceToBottom = scrollHeight - scrollTop - clientHeight;
-
             setUserHasScrolledUp(distanceToBottom >= 20);
-
-            if (distanceToBottom > SCROLL_THRESHOLD_BUTTON_SHOW) {
-              setShowScrollToBottomButton(true);
-            } else if (distanceToBottom < SCROLL_THRESHOLD_BUTTON_HIDE) {
-              setShowScrollToBottomButton(false);
-            }
           };
-
           container.addEventListener('scroll', handleScroll, { passive: true });
           handleScroll();
-
-          return () => {
-            if (container) {
-                container.removeEventListener('scroll', handleScroll);
-            }
-          };
+          return () => { if (container) { container.removeEventListener('scroll', handleScroll); }};
         }, [messages]);
 
 
@@ -851,23 +868,17 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const handleSubmit = (e) => { if(e) e.preventDefault(); if (!inputText.trim() && selectedFiles.length === 0) return; setUserHasScrolledUp(false); setChatError(null); onSendMessage(inputText, selectedFiles); setInputText(''); setSelectedFiles([]); };
         const handleTextareaKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { if (isMobileView) { return; } else { if (!isSendButtonDisabled) { handleSubmit(e); } else { e.preventDefault(); }}}};
 
-        const handleScrollToBottomClick = () => {
-          if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-          }
-          setUserHasScrolledUp(false);
-        };
-
         const clearButtonBaseClasses = "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group";
         let clearButtonConditionalClasses = "";
+
         if (isMobileView) {
-          clearButtonConditionalClasses = "bg-interactive-hover text-text-primary";
+            clearButtonConditionalClasses = "bg-interactive-hover text-text-primary";
         } else {
-          if (isLoading) { // AI is processing (passed as prop)
-            clearButtonConditionalClasses = "text-text-secondary"; // No hover bg/text change
-          } else {
-            clearButtonConditionalClasses = "text-text-secondary hover:text-text-primary hover:bg-interactive-hover";
-          }
+            if (isLoading) {
+                clearButtonConditionalClasses = "text-text-secondary";
+            } else {
+                clearButtonConditionalClasses = "text-text-secondary hover:text-text-primary hover:bg-interactive-hover";
+            }
         }
 
         const isAiCurrentlyStreaming = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
@@ -891,13 +902,20 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   aria-label="Clear chat"
                   disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}
                 >
-                    <i className={`fas fa-broom fa-fw text-sm transition-transform ${ (isLoading && !isMobileView) ? '' : 'group-hover:scale-110'}`}></i>
+                    <i className={`fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110`}></i>
                     <span className="hidden sm:inline">Clear</span>
                 </button>
             </header>
 
             <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-white">
-                { !hasVisibleChatContent && !isLoading && ( <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}> <p className="text-xl md:text-2xl font-poppins font-semibold text-text-secondary mb-2">Hello there!</p> <p className="text-sm text-text-subtle mt-1.5">I am Oracle AI. You can ask me anything or share files to get started.</p> </div> )}
+                { !hasVisibleChatContent && !isLoading && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-6 md:p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
+                        <p className="font-inter text-2xl md:text-3xl font-semibold text-gray-400 md:text-gray-300 mb-2 md:mb-3 tracking-tight">Hello there!</p>
+                        <p className="font-inter text-xs md:text-base font-normal text-gray-400/80 mt-1 px-4">
+                            I am Oracle AI. You can ask me anything or share files to get started.
+                        </p>
+                    </div>
+                )}
                 {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && <div key={msg.id}> <ChatMessageItem message={msg} /> {msg.id === messages[messages.length - 1]?.id && canRegenerateLastAi && ( <div className={`flex mt-2 justify-start`}> <button onClick={() => { setChatError(null); onRegenerate(msg.id);}} className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading} > <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> </button> </div> )} </div> ))}
                 <div ref={messagesEndRef} className="h-1" />
             </div>
@@ -909,34 +927,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             )}
 
             <form onSubmit={handleSubmit} className="bg-white border-t border-border-default flex-shrink-0">
-              <div className="px-3 md:px-4 pt-2 pb-1 flex justify-start items-center">
-                <button
-                  type="button"
-                  onClick={onToggleSearch}
-                  disabled={isLoading || isAiCurrentlyStreaming}
-                  className={`ml-3 flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
-                              focus:outline-none
-                              disabled:opacity-60 disabled:cursor-not-allowed
-                              ${isSearchEnabled
-                                  ? 'bg-blue-100 hover:bg-blue-200'
-                                  : 'bg-gray-100 hover:bg-gray-200'
-                              }`}
-                  title={isSearchEnabled ? "Web Search ON" : "Web Search OFF"}
-                >
-                  <i className={`fas fa-globe fa-fw transition-colors duration-200
-                                ${isSearchEnabled
-                                    ? 'text-blue-600'
-                                    : 'text-gray-500 group-hover:text-gray-600'
-                                }`}></i>
-                  <span className={`transition-colors duration-200
-                                  ${isSearchEnabled
-                                      ? 'text-blue-700'
-                                      : 'text-text-subtle group-hover:text-text-secondary'
-                                  }`}>Search</span>
-                </button>
-              </div>
-
-              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
+              <div className="pt-2 pb-3 px-3 md:pt-2 md:pb-4 md:px-4 flex items-end space-x-2 md:space-x-3">
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading && !isAiCurrentlyStreaming} />
                 <button
                   type="button"
@@ -953,20 +944,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </button>
               </div>
             </form>
-            <button
-              onClick={handleScrollToBottomClick}
-              className={`absolute bottom-[8rem] sm:bottom-[7rem] md:bottom-[7.5rem] right-5 z-20 bg-brand-primary hover:bg-brand-secondary text-white rounded-full w-9 h-9 flex items-center justify-center shadow-xl transition-all duration-300 ease-in-out transform
-                          ${showScrollToBottomButton ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
-              aria-label="Scroll to bottom"
-              disabled={!showScrollToBottomButton}
-            >
-              <i className="fas fa-arrow-down text-sm"></i>
-            </button>
           </div>);
       };
 
       const App = () => {
-        const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); const [isSearchEnabled, setIsSearchEnabled] = useState(false); const isStoppingGenerationRef = useRef(false);
+        const [chatMessages, setChatMessages] = useState([]);
+        const [isChatLoading, setIsChatLoading] = useState(false);
+        const [chatError, setChatError] = useState(null);
+        const [avatarHeaderState, setAvatarHeaderState] = useState('idle');
+        const isStoppingGenerationRef = useRef(false);
+
         useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
         const getGeminiHistory = (currentMessagesInternalFormat) => { const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
         useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []);
@@ -997,10 +984,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
 
         const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
-        const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
         const mergeCitations = (existingCitations, newCitationSources) => { if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
 
-        const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, useSearch, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
+        const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
             if (isStoppingGenerationRef.current) {
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
@@ -1014,13 +1000,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
             let displayedAiText = "";
             let accumulatedCitationSources = [];
-            let firstChunkProcessed = false;
             let needsSearchMarkerFoundAndHandled = false;
+            const makeApiCallWithSearch = isRetryingWithSearch;
 
 
             try {
                 const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() };
-                if (useSearch) {
+                if (makeApiCallWithSearch) {
                     modelConfig.tools = [{ googleSearch: {} }];
                 }
                 const chatModel = genAI.getGenerativeModel(modelConfig);
@@ -1029,38 +1015,45 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
                 for await (const chunk of result.stream) {
                     if (isStoppingGenerationRef.current) break;
+
                     const chunkText = chunk.text();
 
-                    if (!firstChunkProcessed && !isRetryingWithSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
-                        needsSearchMarkerFoundAndHandled = true;
-                        setChatMessages(prev => prev.map(m =>
-                            m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m
-                        ));
-                        break;
+                    if (!isRetryingWithSearch && chunkText && chunkText.trim() === "[NEEDS_SEARCH]") {
+                        if (displayedAiText.trim() === "") {
+                            needsSearchMarkerFoundAndHandled = true;
+                            setChatMessages(prev => prev.map(m =>
+                                m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m
+                            ));
+                            displayedAiText = "";
+                            break;
+                        }
                     }
-                    firstChunkProcessed = true;
 
                     if (typeof chunkText === 'string') {
-                        displayedAiText += chunkText;
-                        if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
-                            accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                        }
-                        if (!needsSearchMarkerFoundAndHandled && !isStoppingGenerationRef.current) {
-                           setChatMessages(prev => prev.map(m =>
-                               m.id === targetAiMessageId && !isStoppingGenerationRef.current ?
-                               { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m
-                           ));
-                        }
-                    } else {
-                        if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
-                            accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
-                             if (!needsSearchMarkerFoundAndHandled && !isStoppingGenerationRef.current) {
-                                setChatMessages(prev => prev.map(m =>
-                                    m.id === targetAiMessageId && !isStoppingGenerationRef.current ?
-                                    { ...m, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m
-                                ));
+                        const internalMarkers = ["tool_code", "print(google_search.search", "thought", "```json\n{\n  \"tool_code\":", "```json\n{\n  \"thought\":"];
+                        let isInternal = false;
+                        for (const marker of internalMarkers) {
+                            if (chunkText.includes(marker)) {
+                                isInternal = true;
+                                console.warn("Potential internal thought/tool code detected and SKIPPED from display:", chunkText);
+                                break;
                             }
                         }
+                        if (!isInternal) {
+                            displayedAiText += chunkText;
+                        }
+                    }
+
+
+                    if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
+                        accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
+                    }
+
+                    if (!isStoppingGenerationRef.current && (displayedAiText || accumulatedCitationSources.length > 0) && !needsSearchMarkerFoundAndHandled) {
+                       setChatMessages(prev => prev.map(m =>
+                           m.id === targetAiMessageId ?
+                           { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: makeApiCallWithSearch } : m
+                       ));
                     }
                 }
 
@@ -1071,16 +1064,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
 
                 if (needsSearchMarkerFoundAndHandled && originalUserMessageForRetry) {
-                     if (isStoppingGenerationRef.current) {
-                        return;
-                    }
-                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry);
+                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, originalUserMessageForRetry);
                     return;
                 }
 
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
-                         if (isStoppingGenerationRef.current) {
+                         if (isStoppingGenerationRef.current && m.isLoading) {
                              let stopText = "*Generation stopped by user.*";
                              if (displayedAiText.trim() && !displayedAiText.includes(stopText)) {
                                  const isInCodeBlock = (displayedAiText.match(/```/g) || []).length % 2 !== 0;
@@ -1089,31 +1079,59 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                              }
                              return { ...m, text: stopText, isLoading: false, isError: false };
                         }
-                        let finalText = displayedAiText;
+
+                        let finalText = displayedAiText.trim();
                         let isFinalError = false;
-                        if (!finalText.trim() && accumulatedCitationSources.length === 0 ) {
-                            finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein ya search feature istemal karein. 🙏";
+                        const politeSearchFailureExample = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai";
+                        const isPoliteSearchFailure = finalText.includes(politeSearchFailureExample);
+
+                        if (!finalText && accumulatedCitationSources.length === 0 && !isPoliteSearchFailure) {
+                            finalText = "Maloomat hasil karne mein dushwari ho rahi hai. Koshish karein ke apna sawal wazeh karein. 🙏";
                             isFinalError = true;
-                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0 ) {
+                        } else if (!finalText && accumulatedCitationSources.length > 0 && !isPoliteSearchFailure) {
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
                         }
-                        return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch };
+                        return { ...m, text: finalText, isLoading: false, isError: isFinalError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: makeApiCallWithSearch };
                     }
                     return m;
                 }));
 
             } catch (err) {
                 if (!isStoppingGenerationRef.current) {
-                    console.error("AI stream error in _streamAiResponse:", err);
-                    const errorText = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." : err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." : err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." : err.message || "Unknown error fetching response.";
-                    setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorText, isLoading: false, isError: true, searchUsed: useSearch } : m));
+                    console.error("AI stream error in _streamAiResponse (JavaScript catch block):", err);
+                    let errorTextToDisplay;
+                    let isActualErrorState = true;
+
+                    if (isRetryingWithSearch) {
+                        errorTextToDisplay = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai. Aap message dobara regenerate karne ki koshish kar sakte hain, ya thori dair baad koshish kijiyega. Agar masla phir bhi barqarar rahe, toh behtar hoga ke aap apna sawal thora badal kar ya wazeh kar ke poochein. Shukriya! 🙏";
+                        isActualErrorState = false;
+                    } else {
+                        errorTextToDisplay = err.message?.toLowerCase().includes("api key not valid") ? "Invalid API Key." :
+                                          err.message?.toLowerCase().includes("candidate was blocked") ? "Response blocked by safety settings." :
+                                          err.message?.toLowerCase().includes("quota") ? "API Quota exceeded. Check Google Cloud console." :
+                                          err.message || "Unknown error fetching response.";
+                    }
+                    setChatMessages(prev => prev.map(m =>
+                        m.id === targetAiMessageId ?
+                        { ...m, role: 'model', text: errorTextToDisplay, isLoading: false, isError: isActualErrorState, searchUsed: makeApiCallWithSearch }
+                        : m
+                    ));
                 }
             } finally {
                 if (!needsSearchMarkerFoundAndHandled || isStoppingGenerationRef.current ) {
                     setIsChatLoading(false);
                     if (!isStoppingGenerationRef.current) {
-                        setAvatarHeaderState('speaking');
-                        setTimeout(() => setAvatarHeaderState('idle'), 1500);
+                         const finalMessages = chatMessages;
+                         const finalMessage = finalMessages.find(msg => msg.id === targetAiMessageId);
+
+                        if (finalMessage && finalMessage.text && !finalMessage.isError && !finalMessage.text.includes("Mujhe abhi search karne mein thori dushwari pesh aa rahi hai")) {
+                            setAvatarHeaderState('speaking');
+                            setTimeout(() => setAvatarHeaderState('idle'), 1500);
+                        } else {
+                           setAvatarHeaderState('idle');
+                        }
+                    } else {
+                         setAvatarHeaderState('idle');
                     }
                 }
             }
@@ -1144,8 +1162,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const originalUserMessageForRetry = { role: 'user', parts: promptPartsForUserTurn };
             const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
 
-            const shouldUseSearchInitially = isSearchEnabled;
-
             const aiMessageId = Date.now().toString() + '_model_resp';
             const aiPlaceholder = {
                 id: aiMessageId,
@@ -1155,7 +1171,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 isLoading: true,
                 isError: false,
                 citationMetadata: null,
-                searchUsed: shouldUseSearchInitially
+                searchUsed: false
             };
 
             setChatMessages(prev => {
@@ -1165,13 +1181,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
             if (promptPartsForUserTurn.length > 0) {
                 const historyForGeminiInit = getGeminiHistory(currentChatMessages);
-                await _streamAiResponse(promptPartsForUserTurn, aiMessageId, historyForGeminiInit, shouldUseSearchInitially, false, originalUserMessageForRetry);
+                await _streamAiResponse(promptPartsForUserTurn, aiMessageId, historyForGeminiInit, false, originalUserMessageForRetry);
             } else {
                 setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError));
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages, isSearchEnabled, API_KEY, setChatError]);
+        }, [chatMessages, API_KEY, setChatError]);
 
         const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
             isStoppingGenerationRef.current = false;
@@ -1196,8 +1212,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return;
             }
 
-            const shouldUseSearchForThisRegen = isSearchEnabled;
-
             const promptPartsForRegen = [];
             if (userPromptMsg.text) {
                 promptPartsForRegen.push({ text: userPromptMsg.text });
@@ -1218,7 +1232,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 timestamp:new Date(),
                 isError: false,
                 citationMetadata: null,
-                searchUsed: shouldUseSearchForThisRegen
+                searchUsed: false
             };
 
             setChatMessages(prevMessages => {
@@ -1229,15 +1243,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             if (promptPartsForRegen.length > 0) {
                 const historyBeforeUserPromptInternal = currentMessagesSnapshot.slice(0, originalAiMsgIndex - 1);
                 const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
-                await _streamAiResponse(promptPartsForRegen, newAiPlaceholderId, historyForGeminiInit, shouldUseSearchForThisRegen, false, originalUserMessageForRetry);
+                await _streamAiResponse(promptPartsForRegen, newAiPlaceholderId, historyForGeminiInit, false, originalUserMessageForRetry);
             } else {
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
             }
-        }, [chatMessages, isSearchEnabled, API_KEY, setChatError]);
+        }, [chatMessages, API_KEY, setChatError]);
 
-        return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} isSearchEnabled={isSearchEnabled} onToggleSearch={handleToggleSearch}/></div>);
+        return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState}/></div>);
       };
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
