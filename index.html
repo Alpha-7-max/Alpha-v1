@@ -141,7 +141,7 @@
         }
 
         .markdown-content pre {
-          @apply bg-gray-100 text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative;
+          @apply bg-[#F9F9FA] text-gray-800 text-base rounded-lg overflow-x-auto my-4 font-mono relative; /* MODIFIED: bg-gray-100 changed to bg-[#F9F9FA] */
         }
         .markdown-content pre code {
           @apply block bg-transparent text-inherit text-sm p-0 shadow-none border-none px-4 pb-4 pt-8 !whitespace-pre;
@@ -587,7 +587,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
-      const ChatMessageItem = React.memo(({ message }) => {
+      const ChatMessageItem = ({ message }) => {
         const isUser = message.role === 'user';
         const isModel = message.role === 'model';
         const isError = message.isError === true;
@@ -710,7 +710,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl rounded-bl-md';
                 contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>);
             } else {
-                bubbleRoleClasses = 'bg-[#F9F9FA] text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]';
+                bubbleRoleClasses = 'bg-gray-100 text-text-primary rounded-2xl rounded-bl-md border border-[#E5E8EB]'; // MODIFIED: bg-[#F9F9FA] changed to bg-gray-100
                 if (!isAiStillJustThinking && message.text) {
                     contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />);
                 } else {
@@ -802,7 +802,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               )}
             </div>
           </div>);
-      });
+      };
 
       const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerate, onClearChat, setChatError, avatarHeaderState }) => {
         const [inputText, setInputText] = useState('');
@@ -910,8 +910,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-white">
                 { !hasVisibleChatContent && !isLoading && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-6 md:p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
-                        <p className="font-inter text-2xl md:text-3xl font-semibold text-gray-400 md:text-gray-300 opacity-80 mb-2 md:mb-3 tracking-tight">Hello there!</p>
-                        <p className="font-inter text-xs md:text-base font-normal text-gray-500/70 mt-1 px-4">
+                        <p className="font-inter text-2xl md:text-3xl font-semibold text-gray-400 md:text-gray-300 mb-2 md:mb-3 tracking-tight">Hello there!</p>
+                        <p className="font-inter text-xs md:text-base font-normal text-gray-400/80 mt-1 px-4">
                             I am Oracle AI. You can ask me anything or share files to get started.
                         </p>
                     </div>
@@ -932,7 +932,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-surface-accent hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0 border border-gray-200 hover:border-gray-300"
+                  className="w-10 h-10 flex items-center justify-center rounded-full text-text-subtle bg-surface-accent hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
                   aria-label="Attach files"
                   disabled={isLoading && !isAiCurrentlyStreaming}
                 >
