@@ -56,7 +56,7 @@
               'blink': 'blink 4s infinite ease-in-out',
               'happy-bounce': 'happyBounce 0.5s ease-out',
               'empty-state-glow': 'emptyStateGlow 3.5s infinite alternate ease-in-out',
-              'shiny-text': 'shinyText 2s linear infinite', // Kept for other uses if any
+              'shiny-text': 'shinyText 2s linear infinite', 
               'dot-pulse': 'dotPulse 1.4s infinite ease-in-out',
             },
             keyframes: {
@@ -71,7 +71,7 @@
               thinkGlance: { '0%, 100%': { transform: 'translateX(0px)' }, '25%': { transform: 'translateX(-1px)' }, '75%': { transform: 'translateX(1px)' }, },
               blink: { '0%, 90%, 100%': { transform: 'scaleY(1)' }, '95%': { transform: 'scaleY(0.1)' }, },
               happyBounce: { '0%, 100%': { transform: 'translateY(0) rotate(0deg) scale(1)' }, '50%': { transform: 'translateY(-3px) rotate(3deg) scale(1.03)' }, },
-              shinyText: { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' }, }, // Kept for other uses if any
+              shinyText: { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' }, },
               dotPulse: {
                 '0%, 80%, 100%': { transform: 'scale(0)', opacity: '0' },
                 '40%': { transform: 'scale(1.0)', opacity: '1' }
@@ -196,7 +196,7 @@
         .avatar-wrapper { transition: transform 0.3s ease-in-out; } .avatar-speaking .avatar-svg-element { animation: speakBob 0.7s ease-in-out; }
         .avatar-thinking .avatar-svg-element #eye-left-header-oracle, .avatar-thinking .avatar-svg-element #eye-right-header-oracle { animation: thinkGlance 2s infinite ease-in-out; }
         .avatar-svg-element #eye-left-header-oracle, .avatar-svg-element #eye-right-header-oracle { animation: blink 4s infinite ease-in-out; transform-origin: center center; }
-        .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; } /* Kept for other uses if any */
+        .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; }
       
         .hljs { 
             @apply !bg-transparent !text-inherit; 
@@ -643,7 +643,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                    </svg>
-                  <span className="text-xs font-medium text-text-subtle">Searching...</span> {/* UPDATED: Removed animated-shiny-text and set color to text-text-subtle */}
+                  <span className="text-xs font-medium text-text-subtle">Searching...</span>
                 </div>
               )}
               {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (
@@ -781,8 +781,27 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       };
       
       const App = () => { 
-        const [chatMessages, setChatMessages] = useState([]); const [isChatLoading, setIsChatLoading] = useState(false); const [chatError, setChatError] = useState(null); const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); const [isSearchEnabled, setIsSearchEnabled] = useState(false); const isStoppingGenerationRef = useRef(false);
-        useEffect(() => { if (chatError) { const errorId = Date.now() + '_sys_validation_err'; setChatMessages(prev => { const lastMessage = prev[prev.length -1]; if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; }); setAvatarHeaderState('idle');}}, [chatError]);
+        const [chatMessages, setChatMessages] = useState([]); 
+        const [isChatLoading, setIsChatLoading] = useState(false); 
+        const [chatError, setChatError] = useState(null); 
+        const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); 
+        const [isSearchEnabled, setIsSearchEnabled] = useState(false); 
+        const isStoppingGenerationRef = useRef(false);
+        const searchWasActiveForLastUserTurnRef = useRef(false); // To track if user explicitly enabled search for the current/last turn
+
+        useEffect(() => { 
+            // console.log("App.js: isSearchEnabled state changed to:", isSearchEnabled); // Optional: for debugging
+            if (chatError) { 
+                const errorId = Date.now() + '_sys_validation_err'; 
+                setChatMessages(prev => { 
+                    const lastMessage = prev[prev.length -1]; 
+                    if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; 
+                    return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; 
+                }); 
+                setAvatarHeaderState('idle');
+            }
+        }, [chatError]); // Removed isSearchEnabled from here as it caused infinite loops with console.log
+
         const getGeminiHistory = (currentMessagesInternalFormat) => { const geminiMessages = currentMessagesInternalFormat.filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError)).map(msg => { const parts = []; if (msg.text) parts.push({ text: msg.text }); if (msg.role === 'user' && msg.attachedFiles) { msg.attachedFiles.forEach(file => { if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) { parts.push({ inlineData: { mimeType: file.apiData.mimeType, data: file.apiData.data } }); } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) { parts.push({ text: `\n[Attached Text File: ${file.name}]\n${file.apiData.textContent}\n` }); } }); } return { role: msg.role, parts }; }).filter(entry => entry.parts.length > 0); if (geminiMessages.length > 0 && geminiMessages[0].role === 'model') { const firstUserIndex = geminiMessages.findIndex(m => m.role === 'user'); if (firstUserIndex === -1) return []; const slicedHistory = geminiMessages.slice(firstUserIndex); if (slicedHistory.length > 1 && slicedHistory[0].role === slicedHistory[1].role) return [slicedHistory[0]]; return slicedHistory; } return geminiMessages; };
         useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
         
@@ -823,13 +842,25 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 });
                 return messageUpdated ? updatedMessages : prevMessages;
             });
+             // If generation was stopped, and the user had initially turned on search for this query, turn it off.
+            if (searchWasActiveForLastUserTurnRef.current) {
+                setIsSearchEnabled(false);
+                searchWasActiveForLastUserTurnRef.current = false; // Reset the ref
+            }
         }, []); 
 
-        const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); }, []);
+        const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); setIsSearchEnabled(false); searchWasActiveForLastUserTurnRef.current = false; }, []);
         const handleToggleSearch = useCallback(() => { setIsSearchEnabled(prev => !prev); }, []);
         const mergeCitations = (existingCitations, newCitationSources) => { if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
         
-        const _streamAiResponse = async (originalPromptParts, targetAiMessageId, historyForGeminiInit, useSearch, isRetryingWithSearch = false, originalUserMessageForRetry = null) => {
+        const _streamAiResponse = async (
+            originalPromptParts, 
+            targetAiMessageId, 
+            historyForGeminiInit, 
+            useSearchInitially, // Whether the AI should use search for its first attempt
+            isRetryingWithSearch = false, 
+            originalUserMessageForRetry = null
+        ) => {
             setIsChatLoading(true);
             if (!isRetryingWithSearch) { 
                 setAvatarHeaderState('thinking');
@@ -841,46 +872,19 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             let needsSearchMarkerFound = false;
 
             if (isStoppingGenerationRef.current) {
-                setChatMessages(prev => prev.map(m => {
-                    if (m.id === targetAiMessageId) {
-                        let finalText = m.text || ""; 
-                        const stopNotice = "*Generation stopped by user.*";
-                        if (!finalText.includes(stopNotice)) { 
-                             finalText = (finalText.trim() ? finalText + "\n\n---\n" : "") + stopNotice;
-                        }
-                        return { ...m, text: finalText, isLoading: false, isError: false, searchUsed: useSearch || m.searchUsed };
-                    }
-                    return m;
-                }));
-                setIsChatLoading(false);
-                setAvatarHeaderState('idle');
+                // Already handled by handleStopGeneration, but ensure this path is clean
                 return; 
             }
 
             try {
                 const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() };
-                if (useSearch) {
+                if (useSearchInitially || isRetryingWithSearch) { // AI uses search if initially told OR if it's a retry
                     modelConfig.tools = [{ googleSearch: {} }];
                 }
                 const chatModel = genAI.getGenerativeModel(modelConfig);
                 const chatSession = chatModel.startChat({ history: historyForGeminiInit });
                 
-                if (isStoppingGenerationRef.current) {
-                     setChatMessages(prev => prev.map(m => {
-                        if (m.id === targetAiMessageId) {
-                            let finalText = m.text || "";
-                            const stopNotice = "*Generation stopped by user.*";
-                            if (!finalText.includes(stopNotice)) {
-                                finalText = (finalText.trim() ? finalText + "\n\n---\n" : "") + stopNotice;
-                            }
-                            return { ...m, text: finalText, isLoading: false, isError: false, searchUsed: useSearch || m.searchUsed };
-                        }
-                        return m;
-                    }));
-                    setIsChatLoading(false);
-                    setAvatarHeaderState('idle');
-                    return;
-                }
+                if (isStoppingGenerationRef.current) return;
 
                 const result = await chatSession.sendMessageStream(originalPromptParts);
 
@@ -905,7 +909,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         }
                     }
 
-
                     if (!firstChunkProcessed && !isRetryingWithSearch && chunkTextForDisplay && chunkTextForDisplay.trim() === "[NEEDS_SEARCH]") {
                         needsSearchMarkerFound = true;
                         setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m));
@@ -922,20 +925,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     }
 
                     if ((displayedAiText.trim().length > 0 || accumulatedCitationSources.length > 0) && !needsSearchMarkerFound && !isStoppingGenerationRef.current) {
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch } : m));
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearchInitially || isRetryingWithSearch } : m));
                     }
                     
                     if (isStoppingGenerationRef.current) break;
                 }
 
-                if (needsSearchMarkerFound && originalUserMessageForRetry) {
-                     if (isStoppingGenerationRef.current) {
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: (m.text && m.text.includes("*Generation stopped by user.*") ? m.text : "*Generation stopped by user.*"), isLoading: false, isError: false, searchUsed: true } : m ));
-                        setIsChatLoading(false);
-                        setAvatarHeaderState('idle');
-                        return;
-                    }
-                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry);
+                if (needsSearchMarkerFound && originalUserMessageForRetry && !isRetryingWithSearch) {
+                    if (isStoppingGenerationRef.current) return;
+                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry); // Force useSearch=true for retry
                     return; 
                 }
                 
@@ -945,27 +943,24 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         let isMessageError = false; 
                         const stopNoticeStr = "*Generation stopped by user.*";
 
-                        if (isStoppingGenerationRef.current) {
-                            let baseText = (m.text && m.text.includes(stopNoticeStr)) ? m.text : displayedAiText;
-                            if (!baseText.includes(stopNoticeStr)) {
-                                const isInCodeBlock = (baseText.match(/```/g) || []).length % 2 !== 0;
-                                if (isInCodeBlock) baseText += "\n```";
-                                baseText += (baseText.trim() ? "\n\n---\n" : "") + stopNoticeStr;
-                            }
+                        if (isStoppingGenerationRef.current && !(m.text && m.text.includes(stopNoticeStr)) ) { // Make sure stop notice isn't already there
+                            let baseText = displayedAiText;
+                            const isInCodeBlock = (baseText.match(/```/g) || []).length % 2 !== 0;
+                            if (isInCodeBlock) baseText += "\n```";
+                            baseText += (baseText.trim() ? "\n\n---\n" : "") + stopNoticeStr;
                             finalText = baseText;
+                        } else if (isStoppingGenerationRef.current) {
+                             finalText = m.text || stopNoticeStr; // Use existing text if it already has the notice
                         } else if (!finalText.trim() && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound) {
-                            if (useSearch) {
+                            if (useSearchInitially || isRetryingWithSearch) {
                                 finalText = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar poochein. Shukriya! 🙏";
-                                isMessageError = false; 
                             } else {
                                 finalText = "Mera khayal hai ke mujhe samajhne mein kuch dushwari hui. Kya aap apna sawal wazeh kar sakte hain? 🤔";
-                                isMessageError = false; 
                             }
                         } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { 
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
-                            isMessageError = false; 
                         }
-                        return { ...m, text: finalText, isLoading: false, isError: isMessageError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearch || m.searchUsed };
+                        return { ...m, text: finalText, isLoading: false, isError: isMessageError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearchInitially || isRetryingWithSearch || m.searchUsed };
                     }
                     return m;
                 }));
@@ -973,25 +968,29 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             } catch (err) {
                 console.error("AI stream error in _streamAiResponse:", err);
                 let errorTextForUser = "Jawab dene mein kuch takneeki dushwari pesh aa rahi hai. Barah-e-karam thori dair baad dobara koshish karein."; 
+                if (err.message?.toLowerCase().includes("api key not valid")) errorTextForUser = "Lagta hai API key mein koi masla hai.";
+                else if (err.message?.toLowerCase().includes("candidate was blocked")) errorTextForUser = "Meri hifazati policies ki wajah se main yeh jawab nahi de sakta.";
+                else if (err.message?.toLowerCase().includes("quota")) errorTextForUser = "API istemal ki had poori ho gayi hai.";
                 
-                if (err.message?.toLowerCase().includes("api key not valid")) {
-                    errorTextForUser = "Lagta hai API key mein koi masla hai. Barah-e-karam isay check kar lein.";
-                } else if (err.message?.toLowerCase().includes("candidate was blocked")) {
-                    errorTextForUser = "Meri hifazati policies ki wajah se main yeh jawab nahi de sakta. Kya aap apna sawal wazeh kar ke dobara pooch sakte hain?";
-                } else if (err.message?.toLowerCase().includes("quota")) {
-                    errorTextForUser = "Lagta hai API istemal ki had poori ho gayi hai. Barah-e-karam settings check karein.";
-                } else if (err.message) {
-                     errorTextForUser = `Jawab dene mein kuch takneeki dushwari pesh aa rahi hai. Barah-e-karam thori dair baad dobara koshish karein.`;
-                }
-                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearch } : m));
+                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearchInitially || isRetryingWithSearch } : m));
             } finally {
-                if (!needsSearchMarkerFound || isStoppingGenerationRef.current ) { 
+                const isFinalResolution = !(needsSearchMarkerFound && !isRetryingWithSearch && !isStoppingGenerationRef.current);
+
+                if (isFinalResolution) {
                     setIsChatLoading(false);
                     if (!isStoppingGenerationRef.current) { 
                         setAvatarHeaderState('speaking');
                         setTimeout(() => setAvatarHeaderState('idle'), 1500);
-                    } else { 
+                    } else {
                         setAvatarHeaderState('idle'); 
+                    }
+                    
+                    if (searchWasActiveForLastUserTurnRef.current) {
+                        // console.log("Finally: Turning off search toggle. Ref was:", searchWasActiveForLastUserTurnRef.current); // DEBUG
+                        setIsSearchEnabled(false);
+                        searchWasActiveForLastUserTurnRef.current = false; // Reset the ref
+                    } else {
+                        // console.log("Finally: Not turning off search toggle. Ref was:", searchWasActiveForLastUserTurnRef.current); // DEBUG
                     }
                 }
             }
@@ -1005,6 +1004,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setChatError("API Key is not configured.");
                 return;
             }
+            
+            searchWasActiveForLastUserTurnRef.current = isSearchEnabled; // Capture user's explicit search setting for THIS message
+            // console.log("handleSendChatMessage: searchWasActiveForLastUserTurnRef set to", searchWasActiveForLastUserTurnRef.current); // DEBUG
 
             const currentChatMessages = chatMessages; 
             const userMessageFiles = filesToSend.map(f => ({ id: f.id, name: f.name, type: f.type, apiData: f.apiData }));
@@ -1022,7 +1024,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const originalUserMessageForRetry = { role: 'user', parts: promptPartsForUserTurn };
             const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
             
-            const shouldUseSearchInitially = isSearchEnabled; 
+            const shouldUseSearchInitiallyForAI = isSearchEnabled; 
 
             const aiMessageId = Date.now().toString() + '_model_resp';
             const aiPlaceholder = { 
@@ -1033,7 +1035,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 isLoading: true, 
                 isError: false, 
                 citationMetadata: null, 
-                searchUsed: shouldUseSearchInitially 
+                searchUsed: shouldUseSearchInitiallyForAI 
             }; 
             
             setChatMessages(prev => {
@@ -1043,13 +1045,24 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
             if (promptPartsForUserTurn.length > 0) {
                 const historyForGeminiInit = getGeminiHistory(currentChatMessages);
-                await _streamAiResponse(promptPartsForUserTurn, aiMessageId, historyForGeminiInit, shouldUseSearchInitially, false, originalUserMessageForRetry);
-            } else {
+                await _streamAiResponse(
+                    promptPartsForUserTurn, 
+                    aiMessageId, 
+                    historyForGeminiInit, 
+                    shouldUseSearchInitiallyForAI, 
+                    false, 
+                    originalUserMessageForRetry
+                );
+            } else { // Handle empty prompt case
                 setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError));
                 setIsChatLoading(false);
                 setAvatarHeaderState('idle');
+                if (searchWasActiveForLastUserTurnRef.current) { 
+                    setIsSearchEnabled(false);
+                    searchWasActiveForLastUserTurnRef.current = false; // Reset
+                }
             }
-        }, [chatMessages, isSearchEnabled]); 
+        }, [chatMessages, isSearchEnabled]); // isSearchEnabled is needed here to determine shouldUseSearchInitiallyForAI
 
         const handleRegenerateResponse = useCallback(async (aiMessageIdToRegenerate) => {
             isStoppingGenerationRef.current = false; 
@@ -1070,7 +1083,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return;
             }
 
-            const shouldUseSearchForThisRegen = isSearchEnabled; 
+            searchWasActiveForLastUserTurnRef.current = isSearchEnabled; // Capture user's explicit choice for THIS regeneration
+            // console.log("handleRegenerateResponse: searchWasActiveForLastUserTurnRef set to", searchWasActiveForLastUserTurnRef.current); // DEBUG
+
+            const shouldUseSearchForThisRegenAI = isSearchEnabled; 
             
             const promptPartsForRegen = [];
             if (userPromptMsg.text) {
@@ -1092,7 +1108,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 timestamp:new Date(), 
                 isError: false, 
                 citationMetadata: null, 
-                searchUsed: shouldUseSearchForThisRegen 
+                searchUsed: shouldUseSearchForThisRegenAI
             };
             
             const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
@@ -1101,12 +1117,23 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             if (promptPartsForRegen.length > 0) {
                 const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
                 const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
-                await _streamAiResponse(promptPartsForRegen, newAiPlaceholderId, historyForGeminiInit, shouldUseSearchForThisRegen, false, originalUserMessageForRetry);
-            } else {
+                await _streamAiResponse(
+                    promptPartsForRegen, 
+                    newAiPlaceholderId, 
+                    historyForGeminiInit, 
+                    shouldUseSearchForThisRegenAI, 
+                    false, 
+                    originalUserMessageForRetry
+                );
+            } else { // Handle empty prompt for regen case
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
                 setAvatarHeaderState('idle');
+                 if (searchWasActiveForLastUserTurnRef.current) {
+                    setIsSearchEnabled(false);
+                    searchWasActiveForLastUserTurnRef.current = false; // Reset
+                }
             }
-        }, [chatMessages, isSearchEnabled]);
+        }, [chatMessages, isSearchEnabled]); // isSearchEnabled is needed here
 
         return (<div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0"><ChatInterface messages={chatMessages} onSendMessage={handleSendChatMessage} isLoading={isChatLoading} onStopGeneration={handleStopGeneration} onRegenerate={handleRegenerateResponse} onClearChat={handleClearChat} setChatError={setChatError} avatarHeaderState={avatarHeaderState} isSearchEnabled={isSearchEnabled} onToggleSearch={handleToggleSearch}/></div>);
       };
