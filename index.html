@@ -56,7 +56,7 @@
               'blink': 'blink 4s infinite ease-in-out',
               'happy-bounce': 'happyBounce 0.5s ease-out',
               'empty-state-glow': 'emptyStateGlow 3.5s infinite alternate ease-in-out',
-              'shiny-text': 'shinyText 2s linear infinite', 
+              'shiny-text': 'shinyText 2s linear infinite', // Kept for other uses if any
               'dot-pulse': 'dotPulse 1.4s infinite ease-in-out',
             },
             keyframes: {
@@ -71,7 +71,7 @@
               thinkGlance: { '0%, 100%': { transform: 'translateX(0px)' }, '25%': { transform: 'translateX(-1px)' }, '75%': { transform: 'translateX(1px)' }, },
               blink: { '0%, 90%, 100%': { transform: 'scaleY(1)' }, '95%': { transform: 'scaleY(0.1)' }, },
               happyBounce: { '0%, 100%': { transform: 'translateY(0) rotate(0deg) scale(1)' }, '50%': { transform: 'translateY(-3px) rotate(3deg) scale(1.03)' }, },
-              shinyText: { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' }, },
+              shinyText: { '0%': { backgroundPosition: '-200% center' }, '100%': { backgroundPosition: '200% center' }, }, // Kept for other uses if any
               dotPulse: {
                 '0%, 80%, 100%': { transform: 'scale(0)', opacity: '0' },
                 '40%': { transform: 'scale(1.0)', opacity: '1' }
@@ -196,7 +196,7 @@
         .avatar-wrapper { transition: transform 0.3s ease-in-out; } .avatar-speaking .avatar-svg-element { animation: speakBob 0.7s ease-in-out; }
         .avatar-thinking .avatar-svg-element #eye-left-header-oracle, .avatar-thinking .avatar-svg-element #eye-right-header-oracle { animation: thinkGlance 2s infinite ease-in-out; }
         .avatar-svg-element #eye-left-header-oracle, .avatar-svg-element #eye-right-header-oracle { animation: blink 4s infinite ease-in-out; transform-origin: center center; }
-        .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; }
+        .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; } /* Kept for other uses if any */
       
         .hljs { 
             @apply !bg-transparent !text-inherit; 
@@ -228,7 +228,6 @@
       import ReactDOM from 'react-dom/client';
       import { GoogleGenerativeAI } from '@google/genai';
       import { marked } from 'marked';
-      // import * as THREE from 'three'; // three.js library import removed as it's no longer used
       import hljs from 'highlight.js';
 
       marked.setOptions({ gfm: true, breaks: true, smartypants: true });
@@ -504,8 +503,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           </div>
         );
       };
-
-      // const ThreeDeeGlobeSpinner = ({ size = 20, className = '' }) => { ... }; // Component removed as it's no longer used
       
       const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`;
       const CHECK_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
@@ -646,7 +643,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                    </svg>
-                  <span className="text-xs font-medium animated-shiny-text">Searching...</span>
+                  <span className="text-xs font-medium text-text-subtle">Searching...</span> {/* UPDATED: Removed animated-shiny-text and set color to text-text-subtle */}
                 </div>
               )}
               {message.role === 'model' && !isError && !isModelLoading && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (
