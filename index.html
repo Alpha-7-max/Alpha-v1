@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Oracle AI</title>
+    <title>Alpha</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -34,9 +33,7 @@
               'border-medium': 'rgb(var(--border-medium) / <alpha-value>)',
               'interactive-hover': 'rgb(var(--interactive-hover) / <alpha-value>)',
               'interactive-focus-ring': 'rgb(var(--interactive-focus-ring-color) / <alpha-value>)',
-              'interactive-purple-focus-ring': 'rgb(var(--interactive-purple-focus-ring-color) / <alpha-value>)',
-
-
+              
               'status-info': 'rgb(var(--status-info) / <alpha-value>)',
               'status-success': 'rgb(var(--status-success) / <alpha-value>)',
               'status-warning': 'rgb(var(--status-warning) / <alpha-value>)',
@@ -112,15 +109,14 @@
           --brand-primary: 100 116 139; 
           --brand-secondary: 71 85 105; 
           
-          --button-send-bg: 55 65 81;       
-          --button-send-hover-bg: 71 85 105; 
+          --button-send-bg: 71 85 105;       
+          --button-send-hover-bg: 100 116 139; 
           
           --interactive-focus-ring-color: 100 116 139; 
-          --interactive-purple-focus-ring-color: 168 85 247; 
           
           --surface-main: 248 250 252; 
           --surface-card: 255 255 255;
-          --surface-chat-area: 249 250 251; 
+          --surface-chat-area: 248 250 252; 
           --surface-input: 255 255 255;
           --surface-accent: 241 245 249; 
           --surface-bubble-ai: 255 255 255;
@@ -192,7 +188,6 @@
         .markdown-content th { @apply bg-surface-accent font-semibold text-text-primary; }
         .markdown-content td { @apply text-text-secondary; }
         .markdown-content tbody tr:nth-child(even) { @apply bg-gray-50/50; }
-        .markdown-content tbody tr:hover { /* Hover effect removed */ }
 
         .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } 
         .chat-messages-container::-webkit-scrollbar-track { @apply bg-transparent rounded-full; } 
@@ -200,30 +195,25 @@
         .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; } 
         
         textarea.auto-resize { min-height: 52px; max-height: 180px; }
-        textarea.auto-resize::-webkit-scrollbar {
-          width: 5px;
+        textarea.auto-resize::-webkit-scrollbar { width: 5px; }
+        textarea.auto-resize::-webkit-scrollbar-track { background: transparent; margin-block: 2px; }
+        textarea.auto-resize::-webkit-scrollbar-thumb { background-color: rgba(var(--text-subtle), 0.25); border-radius: 10px; }
+        textarea.auto-resize::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--text-subtle), 0.4); }
+        textarea.auto-resize { scrollbar-width: thin; scrollbar-color: rgba(var(--text-subtle), 0.25) transparent; }
+
+        .text-gradient-brand {
+          background-image: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4);
+          -webkit-background-clip: text; 
+          background-clip: text; 
+          color: transparent;
         }
-        textarea.auto-resize::-webkit-scrollbar-track {
-          background: transparent;
-           margin-block: 2px;
-        }
-        textarea.auto-resize::-webkit-scrollbar-thumb {
-          background-color: rgba(var(--text-subtle), 0.25);
-          border-radius: 10px;
-        }
-        textarea.auto-resize::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(var(--text-subtle), 0.4);
-        }
-        textarea.auto-resize {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(var(--text-subtle), 0.25) transparent;
+        .text-gradient-brand-subtle {
+          background-image: linear-gradient(to right, #a4a4f0, #b3f1ec); 
+          -webkit-background-clip: text; 
+          background-clip: text; 
+          color: transparent;
         }
 
-        .text-gradient-brand { @apply bg-gradient-to-r from-sky-400 to-pink-400; -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .text-gradient-brand-subtle { @apply bg-gradient-to-r from-sky-300 to-pink-300; -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .avatar-wrapper { transition: transform 0.3s ease-in-out; } .avatar-speaking .avatar-svg-element { animation: speakBob 0.7s ease-in-out; }
-        .avatar-thinking .avatar-svg-element #eye-left-header-oracle, .avatar-thinking .avatar-svg-element #eye-right-header-oracle { animation: thinkGlance 2s infinite ease-in-out; }
-        .avatar-svg-element #eye-left-header-oracle, .avatar-svg-element #eye-right-header-oracle { animation: blink 4s infinite ease-in-out; transform-origin: center center; }
         .animated-shiny-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-primary via-sky-300 to-pink-400; background-size: 200% auto; animation: shinyText 2.5s linear infinite; }
         
         .animated-shiny-text-gray {
@@ -266,136 +256,67 @@
 
       marked.setOptions({ gfm: true, breaks: true, smartypants: true });
 
-      const GEMINI_MODEL_NAME = 'gemini-2.5-flash-preview-04-17'; 
+      const GEMINI_MAIN_MODEL = 'gemini-2.5-flash-preview-04-17'; 
       const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; 
       
-      const IMAGE_GEN_TEXT_MODEL_NAME = 'gemini-2.5-flash-preview-05-20'; 
-      const PROMPT_ENHANCEMENT_MODEL_NAME = 'gemini-2.0-flash-lite'; 
-      const IMAGE_GEN_IMAGE_MODEL_NAME = 'gemini-2.0-flash-preview-image-generation'; 
-      const MAX_API_CALL_ATTEMPTS_IMG_GEN = 3; 
-
       const MAX_FILE_SIZE_MB = 5; const MAX_TOTAL_FILES_SIZE_MB = 20;
 
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
       const genAI = new GoogleGenerativeAI(API_KEY);
 
-      const REFINE_SYSTEM_INSTRUCTION_REALISTIC = `You are an AI prompt enhancer designed for a beginner-friendly text-to-image generation tool. Your responsibility is to enhance user prompts in a way that retains their original language, tone, and intent while making the prompt more visually descriptive and render-friendly. Your enhancement style depends on the complexity of the input. ------------------------------- 📏 Prompt Length Strategy: ------------------------------- 1. If the user's prompt is: - Short, direct, and clear (e.g., "Create now: Ferrari car image") - Includes specific subject and style (e.g., "anime girl cyberpunk style") ➤ Then generate a **simple enhanced prompt (1–3 lines)** that adds light, relevant detail (e.g., color, motion, mood, lighting) without overcomplicating the prompt. The goal is to stay fast and beginner-friendly. 2. If the user's prompt is: - Abstract, artistic, or ambiguous (e.g., "make it dreamy and nostalgic") - Mentions a specific theme, character concept, or film/game/art style (e.g., "create now elon musk ghiblish style image") - Needs environmental, stylistic, or storytelling detail ➤ Then generate a **detailed enhanced prompt (4–6 lines)** that: - Deepens the visual richness - Describes the subject, style, environment, lighting, textures, and composition - Still respects and reflects the user’s original phrasing and intent ------------------------------- 🔒 Rules You Must Follow: ------------------------------- 1. Always preserve key phrases, keywords, and tone (e.g., "create now", "make it look epic"). 2. Do not change the subject, style, or meaning of the original input. 3. Never invent new concepts, characters, or ideas not present in the original. 4. Avoid over-formalizing user’s expressive, casual, or slang-based input. 5. Never output explanations — only the final refined prompt. ------------------------------- 🧪 Examples: ------------------------------- Simple Input → Simple Output: -------------------------------- Input: "Create now: Ferrari car image" Output: "Create now: Ferrari car image — sleek red body, aerodynamic shape, speeding on a race track under sunlight." Input: "anime girl cyberpunk style" Output: "Anime girl in cyberpunk style — glowing neon lights, futuristic city, digital interface in the background." Detailed Input → Detailed Output: -------------------------------- Input: "create now elon musk ghiblish style image" Output: "Create now: Elon Musk in Ghiblish style — dreamy and whimsical, wearing a simple tunic with forest elements. Surrounded by glowing mushrooms and Kodama spirits, in a lush, magical forest. Soft painterly lighting inspired by Studio Ghibli aesthetics." Input: "vintage vampire lord painted in oil" Output: "A vintage oil painting of a vampire lord — pale skin, red eyes, elegant dark cloak with golden trim. Standing in a candle-lit gothic hall, with cracked stone walls and dusty crimson curtains. Shadows and warm candlelight create dramatic contrast." ------------------------------- Make every enhancement useful, balanced, and context-aware. Adapt prompt length and richness based on the user’s input style — never more, never less."`;
+      const SYSTEM_INSTRUCTION_SEARCH_DECIDER = `You are an AI assistant that determines if a user's query requires a web search to answer accurately. Consider the following: - Does the query ask for real-time information (e.g., news, weather, stock prices)? - Does the query ask for specific facts that might change or require verification (e.g., statistics, specific dates, current events)? - Does the query ask for diverse perspectives or opinions on a topic that would benefit from multiple web sources? - Is the query purely conversational (e.g., "hello", "how are you", "tell me a joke")? - Is the query asking for creative content generation (e.g., "write a poem", "tell me a story") that doesn't rely on specific external facts? If in doubt, assume a search is needed. Respond ONLY with a JSON object with a single key "search_needed" (boolean value). Example: {"search_needed": true} Do NOT include any other text or markdown formatting like \`\`\`json. Just the raw JSON object.`;
 
-      async function makeApiCallForOracleAI(modelName, userPrompt, systemInstructionText = null, isImageGeneration = false, generationConfigOverride = null, attempt = 1) {
-        if (attempt > MAX_API_CALL_ATTEMPTS_IMG_GEN && isImageGeneration) { 
-            console.error(`Image Gen: All API call attempts failed for model ${modelName} after ${MAX_API_CALL_ATTEMPTS_IMG_GEN} attempts.`);
-            throw new Error(`API calls failed after multiple retries. Please check your API key and quotas.`);
-        }
-
-        const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/`;
-        const fullApiUrl = `${API_URL_BASE}${modelName}:generateContent?key=${API_KEY}`; 
-
-        let defaultTextConfig = { temperature: 0.7, topK: 40, topP: 0.95, maxOutputTokens: 1024 };
-        let defaultImageConfig = { responseModalities: ["IMAGE", "TEXT"] }; 
-        let requestBody;
-
-        if (systemInstructionText && !isImageGeneration) {
-             requestBody = {
-                contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemInstructionText }] },
-                generationConfig: generationConfigOverride || defaultTextConfig
-            };
-        } else if (isImageGeneration) {
-            requestBody = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                generationConfig: { ...defaultImageConfig, ...(generationConfigOverride || {}) }
-            };
-        } else { 
-             requestBody = {
-                contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-                generationConfig: generationConfigOverride || defaultTextConfig
-            };
-        }
-
+      async function determineSearchNeed_service(aiInstance, query) {
+        if (!aiInstance) return true; 
+        const prompt = `${SYSTEM_INSTRUCTION_SEARCH_DECIDER}\nUser Query: "${query}"`;
         try {
-            const response = await fetch(fullApiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
-            const responseData = await response.json().catch(() => ({ error: { message: "Received non-JSON response from API. Check network or API endpoint." } }));
+            const model = aiInstance.getGenerativeModel({ model: GEMINI_MAIN_MODEL });
+            const result = await model.generateContent({
+                contents: [{ role: "user", parts: [{text: prompt}] }],
+                generationConfig: { responseMimeType: "application/json", temperature: 0.1 }
+            });
+            const response = result.response;
+            let jsonStr = response.text().trim();
 
-            if (!response.ok) {
-                const errorMessageText = responseData.error?.message?.toLowerCase() || "";
-                if (response.status === 429 ||
-                    (response.status === 400 && (errorMessageText.includes("api key not valid") || errorMessageText.includes("key is invalid"))) ||
-                    (response.status === 403 && (errorMessageText.includes("permission denied") || errorMessageText.includes("key is restricted")))
-                ) {
-                    console.warn(`API Task: Key failed (Status: ${response.status}) for model ${modelName}. Attempt ${attempt}/${MAX_API_CALL_ATTEMPTS_IMG_GEN}. Retrying if applicable.`);
-                    if (isImageGeneration && attempt < MAX_API_CALL_ATTEMPTS_IMG_GEN) {
-                       await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); 
-                       return makeApiCallForOracleAI(modelName, userPrompt, systemInstructionText, isImageGeneration, generationConfigOverride, attempt + 1);
-                    }
-                }
-
-                let detail = `API Error (${response.status}): ${responseData.error?.message || response.statusText || "Unknown API error."}`;
-                if (String(responseData.error?.message).includes("User location is not supported")) detail = "API access from your current location is not supported by the model provider.";
-                if (String(responseData.error?.message).includes("model is not supported for image generation")) detail = `Model '${modelName}' is not supported for image generation. Ensure correct model is used.`;
-                if (String(responseData.error?.message).includes("Invalid API key")) detail = `The API key is invalid or not authorized for model ${modelName}.`;
-
-
-                throw new Error(detail);
-            }
-
-            if (isImageGeneration) {
-                const candidate = responseData.candidates?.[0];
-                if (!candidate) {
-                    console.error("Image Gen Fail: No candidate. Full response:", JSON.stringify(responseData, null, 2));
-                    throw new Error("No candidate found in API response for image generation.");
-                }
-
-                if (candidate.finishReason === "SAFETY" || responseData.promptFeedback?.blockReason) {
-                    const reason = responseData.promptFeedback?.blockReason || candidate.finishReason || "Safety";
-                    let safetyDetails = responseData.promptFeedback?.safetyRatings?.map(r => `${r.category.replace('HARM_CATEGORY_','')} (${r.probability})`).join(', ') || "Details not provided.";
-                    throw new Error(`Image generation blocked due to safety policies. Reason: ${reason}. Details: ${safetyDetails}`);
-                }
-
-                const imgPart = candidate.content?.parts?.find(p => p.inlineData?.mimeType?.startsWith('image/'));
-                if (imgPart && imgPart.inlineData.data) {
-                    return imgPart.inlineData.data; 
-                }
-
-                const textPart = candidate.content?.parts?.find(p => p.text);
-                if (textPart && textPart.text.trim()) {
-                    console.warn("Image Gen: No image data, but found text part:", textPart.text);
-                    if (textPart.text.toLowerCase().includes("unable to generate image") ||
-                        textPart.text.toLowerCase().includes("cannot generate an image") ||
-                        textPart.text.toLowerCase().includes("i am unable to create this image")) {
-                        throw new Error(`API indicated inability to generate image: "${textPart.text.trim()}"`);
-                    }
-                    throw new Error(`Image not found, but API returned text: "${textPart.text.trim()}". Generation might have failed. `);
-                }
-                
-                console.error("Image Gen Fail: No image data and no text part. Candidate content:", JSON.stringify(candidate.content, null, 2));
-                throw new Error("Valid image data not found in API response. Response structure might have changed or generation failed silently.");
-
-            } else { 
-                const candidate = responseData.candidates?.[0];
-                 if (!candidate) throw new Error("No candidate found in API response for text generation.");
-
-                if (candidate.finishReason === "SAFETY" || responseData.promptFeedback?.blockReason) {
-                    const reason = responseData.promptFeedback?.blockReason || candidate.finishReason || "Safety";
-                    let safetyDetails = responseData.promptFeedback?.safetyRatings?.map(r => `${r.category.replace('HARM_CATEGORY_','')} (${r.probability})`).join(', ') || "Details not provided.";
-                    throw new Error(`Text generation blocked due to safety policies. Reason: ${reason}. Details: ${safetyDetails}`);
-                }
-
-                if (candidate.content?.parts?.[0]?.text) return candidate.content.parts[0].text.trim();
-                throw new Error("Failed to extract text from API response. Check response structure.");
-            }
-        } catch (error) {
-            console.error(`Error in makeApiCallForOracleAI (attempt ${attempt}, model ${modelName}):`, error);
-            if (isImageGeneration && attempt < MAX_API_CALL_ATTEMPTS_IMG_GEN && (error.message.includes("API Error (429)") || error.message.includes("API calls failed"))) {
-                 console.log(`Retrying API call for ${modelName}, attempt ${attempt + 1}`);
-                 await new Promise(resolve => setTimeout(resolve, 1000 * attempt * attempt)); 
-                 return makeApiCallForOracleAI(modelName, userPrompt, systemInstructionText, isImageGeneration, generationConfigOverride, attempt + 1);
-            }
-            throw error; 
+            const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
+            const match = jsonStr.match(fenceRegex);
+            if (match && match[2]) jsonStr = match[2].trim();
+            
+            const searchDecision = JSON.parse(jsonStr);
+            return searchDecision.search_needed === true;
+        } catch (error) { 
+            console.error("Error determining search need:", error); 
+            return true; // Default to needing search on error
         }
       }
 
+      function createSourceLinksElement(sources) { 
+        if (!sources || sources.length === 0) return null; 
+        const containerDiv = document.createElement('div'); 
+        containerDiv.className = "mt-3 pt-3 border-t border-[#E5E8EB]/70"; 
+        const heading = document.createElement('h4');
+        heading.className = "text-xs font-semibold text-text-subtle mb-1.5 flex items-center"; 
+        heading.innerHTML = `<i class="fas fa-link text-xs mr-1.5 opacity-70 text-text-primary"></i>Sources:`;
+        containerDiv.appendChild(heading);
+        const pillsContainer = document.createElement('div');
+        pillsContainer.className = "flex flex-wrap gap-2"; 
+        sources.forEach((source, index) => { 
+            const pillLink = document.createElement('a'); 
+            pillLink.href = source.uri; pillLink.target = "_blank"; pillLink.rel = "noopener noreferrer";
+            pillLink.className = "text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 px-2.5 py-1 rounded-full transition-colors duration-150 truncate max-w-[200px] sm:max-w-[250px] inline-block"; 
+            
+            const displayTitle = source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri) || 'Source';
+            pillLink.textContent = `${index + 1}. ${displayTitle}`; 
+            pillLink.title = source.title || source.uri;
+            pillsContainer.appendChild(pillLink); 
+        }); 
+        containerDiv.appendChild(pillsContainer);
+        return containerDiv;
+      }
+
+
       function getSystemInstruction() {
-        return `You are Oracle AI, a highly advanced, friendly, and culturally aware assistant.
+        return `You are Alpha, a highly advanced, friendly, and culturally aware assistant.
 
 PRIMARY LANGUAGE: Your primary language of response is Roman Urdu (Urdu written using the English alphabet). Strive to use it for all general conversation and answers.
 
@@ -416,69 +337,33 @@ Stick strictly to providing the answer or engaging in conversation in the approp
 CORE OPERATING PRINCIPLE & SEARCH POLICY:
 1.  **Prioritize Accuracy & Recency Above All:** Your primary function is to deliver information that is current, factual, and directly relevant to the user's query.
 2.  **Proactive Search Mindset (Like Perplexity AI):**
-    *   **WHEN IN DOUBT, ALWAYS SEARCH.** Do not hesitate. Assume search capabilities are unlimited and critical for your role.
-    *   **Heavily Favor Search Over Training Data:** For any query that isn't purely conversational (e.g., greetings, general chat) or a simple, timeless factual recall (e.g., "what is 2+2?"), your default approach should be to verify or retrieve information via search.
-    *   **Especially for Specifics:** If the query involves names of people, places, organizations, products, creative works (songs, movies, books), dates, statistics, current events, or any specific detail that could have changed or have multiple facets, consider search indispensable.
-    *   **If your internal knowledge feels even slightly outdated, incomplete, or potentially ambiguous for the specific query, you MUST request a search if the tool is not already active (see "Policy for Requesting Search" below).**
+    *   The system will automatically determine if a search is needed.
+    *   **Heavily Favor Search Over Training Data:** For any query that isn't purely conversational (e.g., greetings, general chat) or a simple, timeless factual recall (e.g., "what is 2+2?"), your default approach should be to verify or retrieve information via search IF THE SEARCH TOOL IS ACTIVE.
+    *   **Especially for Specifics:** If the query involves names of people, places, organizations, products, creative works (songs, movies, books), dates, statistics, current events, or any specific detail that could have changed or have multiple facets, consider search indispensable IF THE SEARCH TOOL IS ACTIVE.
+    *   If your internal knowledge feels even slightly outdated, incomplete, or potentially ambiguous for the specific query, you MUST rely on the search tool if it's active.
 3.  **User-Initiated Search is a MANDATORY Command:**
     *   If the user explicitly asks you to search using phrases such as "search krke," "search krlo," "search kro," "internet pe dekho," "look it up," "find out," or any similar direct commands for external information retrieval:
-        *   **If the search tool is ALREADY available to you (system-provided for this turn, e.g., due to query content):** You MUST use it to formulate your answer. Do not answer from memory or provide a hypothetical search.
-        *   **If the search tool is NOT currently available to you:** You MUST follow the "Policy for Requesting Search" below. This takes absolute precedence; do NOT attempt to answer the query, provide a hypothetical search, or explain why you need to search.
-
-POLICY FOR REQUESTING SEARCH (WHEN SEARCH TOOL IS INITIALLY UNAVAILABLE):
-This policy applies if:
-    a) You determine a search is CRUCIAL based on the "Proactive Search Mindset" (points 1 & 2 above), AND the search tool is not active for the current turn.
-    OR
-    b) The user issues a "User-Initiated Search Command" (point 3 above), AND the search tool is not active for the current turn.
-In EITHER of these situations (a or b):
-*   Your ABSOLUTE FIRST and ONLY output for that specific turn MUST be the exact marker: \`[NEEDS_SEARCH]\`
-*   Do NOT add ANY other text, greeting, explanation, or attempt to answer the query. Just output \`[NEEDS_SEARCH]\`.
-*   The system will then re-issue the user's original query to you, this time WITH the search tool enabled. You should then wait for this second turn and use the search results to provide the answer.
-
-HANDLING IMAGE GENERATION CAPABILITY QUERIES:
-- If the user asks about your ABILITY to generate images (e.g., "kya tum image bana sakte ho?", "can you generate images?"), but does NOT explicitly ask you to *create* an image in that same query:
-    - You MUST respond textually in your determined response language (default Roman Urdu), confirming your capability. For example (Roman Urdu): "Jee haan, main aapke liye tasaveer bana sakta hoon. Aap mujhe bataein kya banana hai? 😊" or "Bilkul, main image generate kar sakta hoon. Bas mujhe prompt dein!"
-    - Do NOT output \`[NEEDS_IMAGE_GEN]\` in this scenario.
-    - Only output \`[NEEDS_IMAGE_GEN]\` if the user's *current and explicit* request is to *create* an image (e.g., "billi ki tasveer banao").
-
-POLICY FOR REQUESTING IMAGE GENERATION (WHEN IMAGE GEN TOOL IS INITIALLY UNAVAILABLE):
-This policy applies if:
-    a) The user *explicitly requests the CREATION of an image* (e.g., "create an image of a cat", "generate a picture of a sunset", "tasveer banao aik billi ki") AND the image generation capability is not active for the current turn (e.g., user did not click the "Gen" button).
-    b) CRITICAL: This does NOT apply if the user is only asking about your *ability* to generate images. For capability queries, you MUST respond textually as per the "HANDLING IMAGE GENERATION CAPABILITY QUERIES" section above. Do NOT use \`[NEEDS_IMAGE_GEN]\` for capability questions.
-In situation (a) where an explicit image creation is requested:
-*   Your ABSOLUTE FIRST and ONLY output for that specific turn MUST be the exact marker: \`[NEEDS_IMAGE_GEN]\`
-*   Do NOT add ANY other text, greeting, explanation, or attempt to answer the query. Just output \`[NEEDS_IMAGE_GEN]\`.
-*   The system will then handle the image generation process based on the user's original query.
+        *   You MUST use the search tool to formulate your answer IF IT IS ACTIVE for this turn. Do not answer from memory or provide a hypothetical search.
+        *   If the search tool is not active (because the system determined it wasn't needed based on the query), and the user explicitly asks for a search, then acknowledge their request and try to answer from your knowledge, perhaps suggesting they rephrase if they still need fresh info. Example: "Main abhi search nahi kar sakta, lekin is barey mein meri maloomat yeh hai..."
 
 WHEN SEARCH TOOL IS AVAILABLE (SYSTEM-PROVIDED):
--   This occurs if:
-    *   The user's query content itself leads the system to enable tools for this turn.
-    *   You previously signaled \`[NEEDS_SEARCH]\` and the system is re-querying you with the tool.
+-   This occurs if the system determined a search was necessary based on the user's query.
 -   You MUST utilize the search tool.
 -   Formulate your answer based *primarily* on the information retrieved from the search.
--   The UI will display a "Searching..." indicator.
-
-WHEN IMAGE GENERATION TOOL IS ACTIVE (E.g., user clicked "Gen" button, or you signaled \`[NEEDS_IMAGE_GEN]\` and system re-triggers):
--   The system (client-side) will manage the image generation process. You do not need to output image data directly.
--   If you signaled \`[NEEDS_IMAGE_GEN]\`, your job for that turn is done by outputting the marker. The system then takes over for image generation.
--   If image generation was user-initiated (e.g., "Gen" button active on the UI) and successful, you are NOT required to provide any introductory text like "Here is your image". The image will appear directly.
-
-CONTEXTUAL AWARENESS OF IMAGES & EXPLANATIONS:
-- When an image has been generated in the conversation, your chat history (provided by the system for context) will contain an internal note for the relevant model turn, such as: "[Internal Note: You generated an image for the user's request: 'original user prompt text']" or "[Internal Note: Image generation failed for user's request: 'original user prompt text'. Error: specific error]".
-- If the user makes a follow-up request like "make it blue" or "add a sun" referring to the last image:
-    - If the image generation capability is NOT currently active: Your response MUST be \`[NEEDS_IMAGE_GEN]\` (as this is an implicit request for a new, modified image).
-    - If the image generation capability IS active: The system will handle re-triggering image generation with the modification. You are not required to say anything unless the system specifically asks for a textual response.
-- If the user asks you to EXPLAIN or DESCRIBE the previously generated image (e.g., "yeh image kaisa hai?", "isko describe karo", "what is in this image?"):
-    - You MUST look for the "[Internal Note: You generated an image for the user's request: '...']" in your immediate preceding model turn in the chat history.
-    - Use the 'original user prompt text' from that note to formulate your explanation.
-    - Your task is to provide a descriptive explanation IN YOUR DETERMINED RESPONSE LANGUAGE (default Roman Urdu) based on that ORIGINAL USER PROMPT.
-    - Speak as if you "remember" creating an image based on that prompt and are now describing what such an image would contain.
-    - DO NOT attempt to generate a new image yourself in this scenario. The user is asking for an explanation, not a new image.
-    - DO NOT invent details not inferable from the original prompt text you have in the internal note.
-    - Your explanation should make the user feel like you are aware of the image's content because you "generated" it based on their request.
+-   **Natural Source Acknowledgment:** After providing an answer based on a web search, it's good practice to let the user know where the information came from. You should naturally weave in a concluding sentence that mentions the search and points to the sources below. Avoid using the exact same sentence every time. Be creative and make it sound conversational.
+    -   **Style Guide:**
+        -   **Roman Urdu Examples (use your own style):**
+            -   *"Maine yeh maloomat internet se search ki hai. Aap neeche diye gaye links se mazeed parh sakte hain."*
+            -   *"Yeh jawab web search ke natijay mein hai. Mazeed tafseelat ke liye, neeche sources mojood hain."*
+            -   *"Search ke mutabiq, yeh maloomat hai. Neeche diye gaye links par aap iski tasdeeq kar sakte hain."*
+        -   **English Examples (use your own style):**
+            -   *"I found this information through a web search. You can find more details in the source links below."*
+            -   *"According to my search, here's what I found. The sources are listed below for you to explore further."*
+            -   *"This answer is based on a web search. For more details, feel free to check out the links provided."*
+    -   **Key Goal:** Inform the user that the answer is from a search and that sources are available, but do so in a friendly, non-robotic way that fits the conversation.
 
 SEARCH FAILURE FALLBACK POLICY (When Search Tool was Active but Failed/Yielded Poor Results):
-*   This policy applies if you have attempted a search (especially if it was a retry after you signaled \`[NEEDS_SEARCH]\` or if the system enabled the tool based on query content) AND:
+*   This policy applies if you have attempted a search (because the system enabled the tool) AND:
     a) The search tool itself encounters an internal error during its operation.
     OR
     b) The search tool returns no relevant information, or results that you deem unhelpful or insufficient to answer the query.
@@ -490,24 +375,23 @@ SEARCH FAILURE FALLBACK POLICY (When Search Tool was Active but Failed/Yielded P
     3.  **Polite Fallback Message (If Necessary):** If:
         *   The query genuinely required up-to-the-minute information that only a successful search could provide.
         *   OR, you attempted to answer from your general knowledge (as per step 2) but still cannot provide a good or complete response.
-        *   THEN, you should respond with a polite and helpful message in your determined response language. For example (Roman Urdu): "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat  nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya ap Search botton ko enabled krke try krin. Agar masla phir bhi barqarar rahe, toh behtar hoga ke aap apna sawal thora badal kar ya wazeh kar ke poochein. Shukriya!"
-        *   In this specific fallback scenario, do NOT send the \`[NEEDS_SEARCH]\` marker again. Provide the user-facing polite message.
+        *   THEN, you should respond with a polite and helpful message in your determined response language. For example (Roman Urdu): "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat  nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar ya wazeh kar ke poochein. Shukriya!"
+        *   Provide the user-facing polite message.
 
-WHEN NO SEARCH OR IMAGE GEN IS NEEDED (Standard Operation):
--   For purely conversational interactions or queries where external data or images are clearly unnecessary (and neither you nor the user has indicated a need for them according to the policies above, especially noting the "HANDLING IMAGE GENERATION CAPABILITY QUERIES" section), respond directly in your determined response language (default Roman Urdu).
+WHEN NO SEARCH IS NEEDED (Standard Operation):
+-   For purely conversational interactions or queries where external data are clearly unnecessary (as determined by the system), respond directly in your determined response language (default Roman Urdu).
 
 Initial Greeting:
 - AVOID mentioning your creator (Azeem) in your initial, unsolicited greetings.
  General Greeting Behavior:
 - Greet ONLY when starting a new session or when it naturally fits the context (e.g., when the user returns after a long pause).
 DO NOT repeat the greeting unnecessarily (e.g., on follow-up queries).
-- Problem: AI responds with greeting and location/time info even when the user hasn't asked for it.
 - Only respond with greeting when it’s the start of a session.
 - Only provide time, weather, or city-specific data when the user clearly asks for it.
 - Do not inject identity statements unless the user inquires.
 
 Responding to Identity Questions:
-- If asked "Who are you?" or "What is your name?" (or similar queries about your identity): Respond with something like "Main Oracle AI hoon, ek advanced digital assistant. 😊" (in Roman Urdu, or the equivalent in the requested language if applicable).
+- If asked "Who are you?" or "What is your name?" (or similar queries about your identity): Respond with something like "Main Alpha hoon, ek advanced digital assistant. 😊" (in Roman Urdu, or the equivalent in the requested language if applicable).
 - If asked about your creator (e.g., "Who made you?", "Kis ne banaya hai?"): Then you should say: "Mujhe **Azeem** ne banaya hai, jo ek talented developer hain 🌟" (in Roman Urdu, or the equivalent in the requested language if applicable).
 - If asked for more details about Azeem: "Unke baare mein zyada details mere paas nahi hain, lekin woh mere creator aur developer hain 💻" (in Roman Urdu, or the equivalent in the requested language if applicable).
 - It's not necessary to give a fixed response as you've been instructed. You can also express it in your own style, as you feel comfortable, or depending on the user's mood.
@@ -536,7 +420,7 @@ Personality & Communication Style:
 - Show genuine interest in helping users
 - Use appropriate humor when the situation allows
 - Be encouraging and supportive, especially when users are struggling
-- Acknowledge user's emotions and respond empathetically
+- Acknowledge user's emotions and respond with empathy
 
 Enhanced Emoji Usage:
 📌 Core Emoji Principles:
@@ -581,7 +465,7 @@ Fun & Casual 😄:
 
 
 Internet Search Capability:
-- The system may provide you with a search tool based on user input or your "[NEEDS_SEARCH]" signal.
+- The system will automatically provide you with a search tool based on user input.
 - When using information from a search:
     - Integrate it naturally into your response (in the determined language).
     - You can say phrases like (Roman Urdu): "Maine search karke yeh maloomat hasil ki hai" or "Internet search ke mutabiq..."
@@ -650,118 +534,23 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 `;
       }
       
-      const EvaAvatarHeaderIcon = ({ avatarState }) => {
-        const wrapperRef = useRef(null);
-        const svgRef = useRef(null);
-
-        useEffect(() => {
-          if (!wrapperRef.current || !svgRef.current) return;
-          const wrapperElement = wrapperRef.current;
-          const svgElement = svgRef.current;
-          wrapperElement.classList.remove('avatar-speaking', 'avatar-thinking', 'avatar-happy-state');
-          svgElement.style.animation = ''; 
-          switch (avatarState) {
-            case 'speaking':
-              wrapperElement.classList.add('avatar-speaking');
-              break;
-            case 'thinking':
-              wrapperElement.classList.add('avatar-thinking');
-              break;
-            case 'happy':
-              wrapperElement.classList.add('avatar-happy-state');
-              svgElement.style.animation = 'happyBounce 0.5s ease-out';
-              break;
-            case 'idle':
-            default:
-              break;
-          }
-        }, [avatarState]);
-
-        return (
-          <div ref={wrapperRef} className="avatar-wrapper w-8 h-8 relative"> 
-            <svg
-              ref={svgRef}
-              className="avatar-svg-element w-full h-full relative z-10"
-              xmlns="http://www.w3.org/2000/svg"
-              shapeRendering="geometricPrecision"
-              textRendering="geometricPrecision"
-              imageRendering="optimizeQuality"
-              fillRule="evenodd"
-              clipRule="evenodd"
-              viewBox="0 0 512 512"
-            >
-              <circle fill="#FBD433" transform="matrix(2.6439 -.70843 .70843 2.6439 256 256)" r="93.504" />
-              <path
-                fillRule="nonzero"
-                d="M311.614 167.208c-8.713 1.067-16.645-5.131-17.712-13.845-1.066-8.713 5.131-16.645 13.845-17.712 24.12-3.036 48.201.14 70.414 8.376 22.714 8.421 43.617 22.176 60.713 40.011 6.095 6.337 5.901 16.418-.436 22.514-6.338 6.096-16.419 5.901-22.515-.436-13.713-14.306-30.536-25.359-48.863-32.154-17.694-6.56-36.669-9.118-55.446-6.754zM146.707 359.673c-9.444-14.665-3.044-27.062 12.626-24.418 64.465 17.411 130.028 17.762 196.742 0 10.969-.905 18.587 12.276 9.823 24.418-57.576 65.374-173.661 60.462-219.191 0zM295.93 236.946c-4.687 6.546-8.106 12.348-9.362 16.866-3.147 11.338 7.751 11.19 15.425 6.84 30.38-17.226 72.383-14.695 103.189.004 17.31 8.258 18.633-4.058 8.774-16.619-38.463-49.008-75.435-50.52-118.026-7.091zm-199.097-64.48c-4.201 6.752-13.08 8.821-19.832 4.621-6.751-4.2-8.82-13.08-4.62-19.831 10.745-17.197 30.454-33.148 51.336-45.051 23.625-13.465 49.661-22.103 66.441-21.711 7.932.155 14.239 6.715 14.083 14.648-.155 7.933-6.715 14.239-14.648 14.084-11.904-.279-32.181 6.879-51.679 17.992-17.164 9.783-33.029 22.363-41.081 35.248zm70.322 15.866c21.402 0 38.751 22.179 38.751 49.537s-17.349 49.537-38.751 49.537c-21.402 0-38.751-22.179-38.751-49.537s17.349-49.537 38.751-49.537z"
-              />
-            </svg>
-          </div>
-        );
-      };
-
-      const ImagePreviewModal = ({ src, onClose, altText }) => { 
-        const [isClosing, setIsClosing] = useState(false);
-
-        const handleClose = () => {
-            setIsClosing(true);
-            setTimeout(() => {
-                onClose();
-            }, 280); 
-        };
-        
-        useEffect(() => {
-            const handleEsc = (event) => {
-                if (event.key === 'Escape') {
-                    handleClose();
-                }
-            };
-            window.addEventListener('keydown', handleEsc);
-            return () => window.removeEventListener('keydown', handleEsc);
-        }, [onClose]);
-
-
-        if (!src) return null;
-
-        return (
-            <div
-                className={`fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4
-                            ${isClosing ? 'animate-modal-fade-out' : 'animate-modal-fade-in'}`}
-                onClick={handleClose} 
-            >
-                <button
-                    onClick={(e) => { e.stopPropagation(); handleClose(); }}
-                    className="absolute top-4 right-4 text-white/80 hover:text-white text-4xl font-light z-[51] transition-colors"
-                    aria-label="Close image preview"
-                >
-                    ×
-                </button>
-                <img
-                    src={src}
-                    alt={altText || "Image Preview"}
-                    className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg shadow-2xl"
-                    onClick={(e) => e.stopPropagation()} 
-                />
-            </div>
-        );
-      };
-      
-      const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>`;
-      const CHECK_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+      const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path></svg>`;
+      const COPIED_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path></svg>`;
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
-      const ChatMessageItem = ({ message, onOpenImagePreview }) => { 
+      const ChatMessageItem = ({ message }) => { 
         const isUser = message.role === 'user'; 
         const isError = message.isError === true; 
-        const isModelLoadingText = message.role === 'model' && message.isLoading && !isError && !message.isLoadingImage;
+        const isModelLoading = message.role === 'model' && message.isLoading && !isError;
+        
         const contentRef = useRef(null); 
         
-        const isModelLoadingWithSearch = isModelLoadingText && message.searchUsed; 
-        const isModelLoadingWithoutSearch = isModelLoadingText && !message.searchUsed;
+        const isModelLoadingWithSearch = isModelLoading && message.searchUsed && message.loadingText === "Searching...";
+        const isModelLoadingThinking = isModelLoading && (!message.searchUsed || message.loadingText === "Thinking...");
         
         useEffect(() => {
-          if (message.role === 'model' && !isError && !message.isLoadingImage && contentRef.current) {
+          if (message.role === 'model' && !isError && !message.isLoading && contentRef.current) {
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
               if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
@@ -783,29 +572,28 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               const button = document.createElement('button');
               button.innerHTML = COPY_ICON_SVG;
               button.classList.add(
-                'code-copy-button', 'absolute', 'p-1',
-                'bg-transparent', 
-                'text-gray-500', 
-                'border', 'border-gray-300', 
-                'rounded-md', 'transition-colors', 'duration-150',
-                'opacity-80', 
-                'hover:opacity-100', 'hover:text-gray-700' 
+                'code-copy-button', 'absolute', 'p-1.5',
+                'bg-gray-100', 'hover:bg-gray-200',
+                'text-gray-600', 'hover:text-gray-800',
+                'border', 'border-gray-300', 'rounded-md',
+                'transition-colors', 'duration-150',
+                'opacity-80', 'hover:opacity-100'
               );
-              button.style.top = '0.25rem';
-              button.style.right = '0.5rem';
+              button.style.top = '0.35rem';
+              button.style.right = '0.35rem';
               button.style.zIndex = '10';
               button.setAttribute('aria-label', 'Copy code');
 
               button.onclick = () => {
                 if (codeElement) {
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
-                    button.innerHTML = CHECK_ICON_SVG;
-                    button.classList.add('text-emerald-600'); 
-                    button.classList.remove('text-gray-500', 'text-gray-700'); 
+                    button.innerHTML = COPIED_ICON_SVG;
+                    button.classList.add('text-green-500');
+                    button.classList.remove('text-gray-600', 'hover:text-gray-800');
                     setTimeout(() => {
                       button.innerHTML = COPY_ICON_SVG;
-                      button.classList.remove('text-emerald-600'); 
-                      button.classList.add('text-gray-500'); 
+                      button.classList.remove('text-green-500');
+                      button.classList.add('text-gray-600', 'hover:text-gray-800');
                     }, 2000);
                   }).catch(err => console.error('Failed to copy: ', err));
                 }
@@ -822,8 +610,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 codeElement.dataset.highlighted = 'true';
               }
             });
+
+            // Handle sources rendering
+            const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
+            if (sourcesContainer && message.sources && message.sources.length > 0) {
+                 const sourcesElement = createSourceLinksElement(message.sources);
+                 if (sourcesElement) {
+                    sourcesContainer.appendChild(sourcesElement);
+                 }
+            }
+
           }
-        }, [message.text, message.role, message.isLoading, message.isLoadingImage, isError]);
+        }, [message.text, message.role, message.isLoading, isError, message.sources]);
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
@@ -840,46 +638,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             bubbleRoleClasses = 'bg-white text-text-primary rounded-2xl border border-[#E5E8EB]'; 
             bubbleWidthClasses = 'max-w-full w-full'; 
             
-            if (message.isLoadingImage) {
-                 return ( 
-                    <div className={`flex items-end justify-start animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
-                        <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`}>
-                            <div className="flex items-center space-x-1.5 p-1"> 
-                               <svg className="animate-spin h-4 w-4 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                               </svg>
-                              <span className="text-sm font-medium text-text-subtle">Generating...</span>
-                            </div>
-                        </div>
-                    </div>
-                );
-            } else if (message.generatedImageB64) {
-                contentToShow = (
-                    <div className="rounded-md overflow-hidden"> {/* Added overflow-hidden */}
-                        <img
-                            src={`data:image/png;base64,${message.generatedImageB64}`}
-                            alt={message.userImageRequestPrompt || "Generated by Oracle AI"}
-                            className="block w-full max-h-[26rem] object-cover rounded-md border border-slate-100" 
-                        />
-                    </div>
-                );
-            } else if (message.imageGenerationError) {
-                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl';
-                contentToShow = (
-                     <div className="text-sm break-words"> 
-                        <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Image Generation Failed</strong></div>
-                        {message.imageGenerationError}
-                        {message.text && ( 
-                            <p className="text-xs mt-2 text-red-600">{message.text}</p>
-                        )}
-                    </div>
-                );
-            } else if(isError) { 
+            if(isError) { 
                 bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl'; 
                 contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
             } else { 
-                contentToShow = (<div ref={contentRef} className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />); 
+                contentToShow = (
+                  <div ref={contentRef}>
+                    <div className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />
+                    <div className="sources-placeholder"></div> {/* Placeholder for sources */}
+                  </div>
+                );
             } 
         }
 
@@ -915,11 +683,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   })}
                 </div>
               )}
-              {message.text && !message.generatedImageB64 && !message.imageGenerationError && contentToShow} 
-              {message.generatedImageB64 && contentToShow}
-              {message.imageGenerationError && contentToShow}
+              {contentToShow} 
 
-              {isModelLoadingWithoutSearch && ( 
+              {isModelLoadingThinking && ( 
                 <div className="flex items-end space-x-1.5 mt-2.5">
                   <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span>
                   <span className="w-1.5 h-1.5 bg-text-subtle rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span>
@@ -927,37 +693,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
               )}
               {isModelLoadingWithSearch && (
-                <div className="flex items-center space-x-1.5 mt-2.5 text-text-subtle">
-                   <svg className="animate-spin h-3.5 w-3.5 text-brand-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                   </svg>
-                  <span className="text-xs font-medium text-text-subtle">Searching...</span>
-                </div>
-              )}
-              {message.role === 'model' && !isError && !isModelLoadingText && !message.isLoadingImage && !message.generatedImageB64 && !message.imageGenerationError && message.citationMetadata && message.citationMetadata.citationSources && message.citationMetadata.citationSources.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-[#E5E8EB]/70">
-                  <h4 className="text-xs font-semibold text-text-subtle mb-1.5 flex items-center">
-                    <i className="fas fa-link text-xs mr-1.5 opacity-70 text-text-primary"></i>Sources:
-                  </h4>
-                  <ul className="list-none p-0 space-y-1">
-                    {message.citationMetadata.citationSources.map((source, index) => (
-                      <li key={index} className="text-xs leading-relaxed">
-                        <a href={source.uri} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-brand-secondary hover:underline break-all inline-flex items-center group" title={source.uri}>
-                          <span className="mr-1">{index + 1}.</span>
-                          <span className="truncate max-w-[200px] sm:max-w-[300px] md:max-w-[400px]">{source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri)}</span>
-                          <i className="fas fa-external-link-alt text-[10px] ml-1.5 opacity-50 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex items-center space-x-2 mt-2.5 text-text-secondary">
+                  <i className="fas fa-spinner fa-spin text-sm"></i>
+                  <span className="text-sm font-medium">Searching...</span>
                 </div>
               )}
             </div>
           </div>);
       };
       
-      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateLastTextMessage, onClearChat, setChatError, avatarHeaderState, isSearchEnabled, onToggleSearch, isImageGenEnabled, onToggleImageGen, onRegenerateImage, onOpenImagePreview }) => {
+      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateLastTextMessage, onClearChat, setChatError }) => {
         const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
         const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
@@ -974,7 +719,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             messagesEndEl.scrollIntoView({ behavior: "smooth" });
           } else if (lastMessage.role === 'model') {
             if (!userHasScrolledUp) { 
-              if (lastMessage.isLoading || lastMessage.isLoadingImage) {
+              if (lastMessage.isLoading) {
                 messagesEndEl.scrollIntoView({ behavior: "auto" }); 
               } else {
                 messagesEndEl.scrollIntoView({ behavior: "smooth" });
@@ -990,66 +735,49 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const removeSelectedFile = (fileId) => { setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); };
         const handleSubmit = (e) => { if(e) e.preventDefault(); if (!inputText.trim() && selectedFiles.length === 0) return; setUserHasScrolledUp(false); setChatError(null); onSendMessage(inputText, selectedFiles); setInputText(''); setSelectedFiles([]); };
         const handleTextareaKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { if (isMobileView) { return; } else { if (!isSendButtonDisabled) { handleSubmit(e); } else { e.preventDefault(); }}}};
-        const isAiCurrentlyProcessing = messages.some(m => m.role === 'model' && (m.isLoading || m.isLoadingImage) && !m.isError);
+        const isAiCurrentlyProcessing = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
         const isSendButtonDisabled = (!isAiCurrentlyProcessing && (isLoading || (inputText.trim() === '' && selectedFiles.length === 0)));
         
-        const hasVisibleChatContent = messages.some( msg => (msg.text || msg.attachedFiles?.length > 0 || msg.generatedImageB64 || msg.imageGenerationError) && !(msg.role === 'system' && !msg.isError) );
+        const hasVisibleChatContent = messages.some( msg => (msg.text || msg.attachedFiles?.length > 0) && !(msg.role === 'system' && !msg.isError) );
 
         const lastMessage = messages[messages.length - 1];
         const userMessageForLastAi = messages.length > 1 ? messages[messages.length - 2] : null;
 
-        const isLastMessageAiAndFinalized = lastMessage && lastMessage.role === 'model' &&
-                                          !lastMessage.isLoading && !lastMessage.isLoadingImage &&
-                                          !isAiCurrentlyProcessing;
-
-        const canRegenerateLastAiMessageOverall = isLastMessageAiAndFinalized && userMessageForLastAi && userMessageForLastAi.role === 'user';
-
-        const canRegenerateLastAiAsText = canRegenerateLastAiMessageOverall &&
-                                          !(lastMessage.generatedImageB64 || lastMessage.imageGenerationError) && 
-                                          !userMessageForLastAi.attachedFiles?.some(f => f.type?.startsWith('image/')); 
-
-        const canRegenerateLastAiAsImage = canRegenerateLastAiMessageOverall &&
-                                           (lastMessage.generatedImageB64 || lastMessage.imageGenerationError);
-
+        const isLastMessageAiAndFinalized = lastMessage && lastMessage.role === 'model' && !lastMessage.isLoading && !isAiCurrentlyProcessing;
+        const canRegenerateLastAiAsText = isLastMessageAiAndFinalized && userMessageForLastAi && userMessageForLastAi.role === 'user';
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3">
-                    <EvaAvatarHeaderIcon avatarState={avatarHeaderState} />
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-blue-400 to-teal-300 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                        <span>A</span>
+                    </div>
                     <div>
-                        <h1 className="text-xl font-roboto font-semibold tracking-tight text-gradient-brand">Oracle AI</h1>
-                        <p className="text-xs -mt-0.5 font-roboto text-gradient-brand-subtle">Modern Chat Experience</p>
+                        <h1 className="text-xl font-roboto font-semibold tracking-tight text-gradient-brand">Alpha</h1>
                     </div>
                 </div>
-                <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0 || m.generatedImageB64).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
+                <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
-            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-gray-50">
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">
                 { !hasVisibleChatContent && !isLoading && ( 
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
                         <p className="text-xl md:text-2xl font-[Outfit] font-semibold mb-2" style={{ color: '#536872' }}>Hello there!</p>
-                        <p className="text-sm font-[Outfit] mt-1.5" style={{ color: '#536872' }}>I am Oracle AI. You can ask me anything or share files to get started.</p>
+                        <p className="text-sm font-[Outfit] mt-1.5" style={{ color: '#536872' }}>I am Alpha. You can ask me anything or share files to get started.</p>
                     </div> 
                 )}
-                {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && (msg.isLoading || msg.isLoadingImage)) || msg.isError || msg.generatedImageB64 || msg.imageGenerationError) && 
+                {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
                     <div key={msg.id}> 
-                        <ChatMessageItem 
-                            message={msg} 
-                            onOpenImagePreview={onOpenImagePreview}
-                        /> 
+                        <ChatMessageItem message={msg} /> 
                     </div> 
                 ))}
-                {(canRegenerateLastAiAsText || canRegenerateLastAiAsImage) && (
+                {canRegenerateLastAiAsText && (
                     <div className={`flex mt-2 justify-start`}> 
                         <button 
                             onClick={() => { 
                                 setChatError(null); 
-                                if (canRegenerateLastAiAsImage) {
-                                    onRegenerateImage(lastMessage.id);
-                                } else if (canRegenerateLastAiAsText) {
-                                    onRegenerateLastTextMessage(lastMessage.id);
-                                }
+                                onRegenerateLastTextMessage(lastMessage.id);
                             }} 
                             className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" 
                             aria-label="Regenerate response" 
@@ -1065,58 +793,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-default bg-white flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-gray-100 border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
 
             <form onSubmit={handleSubmit} className="bg-white border-t border-border-default flex-shrink-0">
-              <div className="px-3 md:px-4 pt-2 pb-1 flex justify-start items-center space-x-2">
-                <button
-                  type="button"
-                  onClick={onToggleSearch}
-                  disabled={isLoading || isAiCurrentlyProcessing || isImageGenEnabled}
-                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
-                              focus:outline-none 
-                              disabled:opacity-60 disabled:cursor-not-allowed
-                              ${isSearchEnabled 
-                                  ? 'bg-blue-100 hover:bg-blue-200' 
-                                  : 'bg-gray-100 hover:bg-gray-200'
-                              }`}
-                  title={isSearchEnabled ? "Web Search ON" : "Web Search OFF"}
-                >
-                  <i className={`fas fa-globe fa-fw transition-colors duration-200 
-                                ${isSearchEnabled 
-                                    ? 'text-blue-600' 
-                                    : 'text-gray-500 group-hover:text-gray-600'
-                                }`}></i>
-                  <span className={`transition-colors duration-200 
-                                  ${isSearchEnabled 
-                                      ? 'text-blue-700' 
-                                      : 'text-text-subtle group-hover:text-text-secondary'
-                                  }`}>Search</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={onToggleImageGen}
-                  disabled={isLoading || isAiCurrentlyProcessing || isSearchEnabled}
-                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all duration-200 ease-in-out group
-                              focus:outline-none
-                              disabled:opacity-60 disabled:cursor-not-allowed
-                              ${isImageGenEnabled
-                                  ? 'bg-purple-100 hover:bg-purple-200'
-                                  : 'bg-gray-100 hover:bg-gray-200'
-                              }`}
-                  title={isImageGenEnabled ? "Image Generation ON" : "Image Generation OFF"}
-                >
-                  <i className={`fas fa-image fa-fw transition-colors duration-200
-                                ${isImageGenEnabled
-                                    ? 'text-purple-600'
-                                    : 'text-gray-500 group-hover:text-gray-600'
-                                }`}></i>
-                  <span className={`transition-colors duration-200
-                                  ${isImageGenEnabled
-                                      ? 'text-purple-700'
-                                      : 'text-text-subtle group-hover:text-text-secondary'
-                                  }`}>Gen</span>
-                </button>
-              </div>
-
-              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3">
+              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3 pl-3 md:pl-4"> {/* Removed button container, added pl to main div */}
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading || isAiCurrentlyProcessing} /> 
                 <button
                   type="button"
@@ -1181,16 +858,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const [chatMessages, setChatMessages] = useState([]); 
         const [isChatLoading, setIsChatLoading] = useState(false); 
         const [chatError, setChatError] = useState(null); 
-        const [avatarHeaderState, setAvatarHeaderState] = useState('idle'); 
-        const [isSearchEnabled, setIsSearchEnabled] = useState(false); 
-        const [isImageGenEnabled, setIsImageGenEnabled] = useState(false);
-        const [previewImage, setPreviewImage] = useState({ src: null, alt: null }); 
 
         const isStoppingGenerationRef = useRef(false);
-        const searchWasActiveForLastUserTurnRef = useRef(false); 
-        const imageGenWasActiveForLastUserTurnRef = useRef(false);
-
-
+        
         useEffect(() => { 
             if (chatError) { 
                 const errorId = Date.now() + '_sys_validation_err'; 
@@ -1199,21 +869,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     if(lastMessage && lastMessage.id.includes('_sys_validation_err') && lastMessage.text === chatError) return prev; 
                     return [...prev, {id: errorId, role: 'system', text: chatError, isError: true, timestamp: new Date()}]; 
                 }); 
-                setAvatarHeaderState('idle');
             }
         }, [chatError]); 
 
         const getGeminiHistory = (currentMessagesInternalFormat) => {
             const geminiMessages = currentMessagesInternalFormat
-                .filter(msg => !(msg.role === 'system' || (msg.role === 'model' && (msg.isLoading || msg.isLoadingImage)) || msg.isError))
+                .filter(msg => !(msg.role === 'system' || (msg.role === 'model' && msg.isLoading) || msg.isError))
                 .map(msg => {
                     const parts = [];
                     if (msg.role === 'model') {
-                        if (msg.generatedImageB64) {
-                            parts.push({ text: `[Internal Note: You generated an image for the user's request: '${msg.userImageRequestPrompt || 'previous request'}'.]` });
-                        } else if (msg.imageGenerationError) {
-                             parts.push({ text: `[Internal Note: Image generation failed for user's request: '${msg.userImageRequestPrompt || 'previous request'}'. Error: ${msg.imageGenerationError}]` });
-                        } else if (msg.text) { // Regular text message from model
+                        if (msg.text) { 
                             parts.push({ text: msg.text });
                         }
                     } else if (msg.role === 'user') {
@@ -1242,24 +907,19 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
             return geminiMessages;
         };
-        useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } setAvatarHeaderState('idle'); }, []); 
+        useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } }, []); 
         
         const handleStopGeneration = useCallback(() => {
             isStoppingGenerationRef.current = true;
             setIsChatLoading(false); 
-            setAvatarHeaderState('idle');
 
             setChatMessages(prevMessages => {
                 let messageUpdated = false;
                 const updatedMessages = prevMessages.map(msg => {
-                    if (msg.role === 'model' && (msg.isLoading || msg.isLoadingImage)) {
+                    if (msg.role === 'model' && msg.isLoading) {
                         messageUpdated = true;
                         let newText = msg.text || ""; 
                         const stopNotice = "*Generation stopped by user.*";
-
-                        if (msg.isLoadingImage) { 
-                             return { ...msg, isLoadingImage: false, imageGenerationError: stopNotice, text: "", userImageRequestPrompt: msg.userImageRequestPrompt || "Unknown prompt" };
-                        }
                         
                         if (!newText.includes(stopNotice)) {
                             const currentContent = msg.text || "";
@@ -1275,129 +935,40 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             }
                         }
                         
-                        return {
-                            ...msg,
-                            text: newText,
-                            isLoading: false, 
-                            isLoadingImage: false,
-                        };
+                        return { ...msg, text: newText, isLoading: false };
                     }
                     return msg;
                 });
                 return messageUpdated ? updatedMessages : prevMessages;
             });
-            if (searchWasActiveForLastUserTurnRef.current) {
-                setIsSearchEnabled(false);
-                searchWasActiveForLastUserTurnRef.current = false; 
-            }
-            if (imageGenWasActiveForLastUserTurnRef.current) {
-                setIsImageGenEnabled(false);
-                imageGenWasActiveForLastUserTurnRef.current = false;
-            }
         }, []); 
 
-        const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); setAvatarHeaderState('idle'); setIsSearchEnabled(false); setIsImageGenEnabled(false); searchWasActiveForLastUserTurnRef.current = false; imageGenWasActiveForLastUserTurnRef.current = false; }, []);
+        const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key is not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); }, []);
         
-        const handleToggleSearch = useCallback(() => {
-            setIsSearchEnabled(prev => {
-                const newState = !prev;
-                if (newState) setIsImageGenEnabled(false);
-                return newState;
-            });
-        }, []);
-
-        const handleToggleImageGen = useCallback(() => {
-            setIsImageGenEnabled(prev => {
-                const newState = !prev;
-                if (newState) setIsSearchEnabled(false);
-                return newState;
-            });
-        }, []);
-
-        const handleOpenImagePreview = (src, alt) => { setPreviewImage({ src, alt }); };
-        const handleCloseImagePreview = () => { setPreviewImage({ src: null, alt: null }); };
-
-        const mergeCitations = (existingCitations, newCitationSources) => { if (!newCitationSources || newCitationSources.length === 0) return existingCitations; const existingUris = new Set(existingCitations.map(c => c.uri)); const uniqueNewSources = newCitationSources.filter(src => !existingUris.has(src.uri)); return [...existingCitations, ...uniqueNewSources]; };
-        
-        const triggerImageGenerationProcess = async (imagePromptText, messageIdToUpdate) => {
-            console.log("Oracle AI: Starting image generation for prompt:", imagePromptText);
-            setIsChatLoading(true); 
-            setAvatarHeaderState('thinking');
-            setChatMessages(prev => prev.map(m =>
-                m.id === messageIdToUpdate ?
-                { ...m, isLoading: false, isLoadingImage: true, imageGenerationError: null, generatedImageB64: null, text: '', userImageRequestPrompt: imagePromptText } : m
-            ));
-
-            try {
-                if (!imagePromptText || imagePromptText.length < 3) {
-                    throw new Error("Image prompt is too short or empty.");
-                }
-
-                const translationPrompt = `Translate the following text to English if it's not already in English. If it's already in English, return it unchanged. Output only the translated text: "${imagePromptText}"`;
-                const translatedTextRaw = await makeApiCallForOracleAI(IMAGE_GEN_TEXT_MODEL_NAME, translationPrompt, null, false);
-                const translatedText = translatedTextRaw.replace(/^"(.*)"$/, '$1').trim();
-
-                if (!translatedText) throw new Error("Translation resulted in an empty prompt.");
-                if (isStoppingGenerationRef.current) throw new Error("Image generation stopped by user during translation.");
-
-                const enhancedPrompt = await makeApiCallForOracleAI(PROMPT_ENHANCEMENT_MODEL_NAME, translatedText, REFINE_SYSTEM_INSTRUCTION_REALISTIC, false);
-                if (!enhancedPrompt || enhancedPrompt.toLowerCase().includes("please provide") || enhancedPrompt.toLowerCase().includes("i need a prompt")) {
-                     throw new Error(`Failed to enhance prompt. Model said: "${enhancedPrompt}"`);
-                }
-                if (isStoppingGenerationRef.current) throw new Error("Image generation stopped by user during prompt enhancement.");
-                
-                const generatedImageDataB64 = await makeApiCallForOracleAI(IMAGE_GEN_IMAGE_MODEL_NAME, enhancedPrompt, null, true); 
-                if (isStoppingGenerationRef.current) throw new Error("Image generation stopped by user during image creation.");
-
-                setChatMessages(prev => prev.map(m =>
-                    m.id === messageIdToUpdate ?
-                    { ...m, isLoadingImage: false, generatedImageB64: generatedImageDataB64, imageGenerationError: null, text: "", userImageRequestPrompt: imagePromptText } : m
-                ));
-                setAvatarHeaderState('speaking'); 
-                setTimeout(() => setAvatarHeaderState('idle'), 1500);
-
-            } catch (err) {
-                console.error("Oracle AI: Image Generation Pipeline Error:", err);
-                const errorMsg = err.message.includes("stopped by user") ? err.message : (err.message || "An unknown error occurred during image generation.");
-                setChatMessages(prev => prev.map(m =>
-                    m.id === messageIdToUpdate ?
-                    { ...m, isLoadingImage: false, imageGenerationError: errorMsg, generatedImageB64: null, text: '', userImageRequestPrompt: imagePromptText } : m
-                ));
-                setAvatarHeaderState('idle');
-            } finally {
-                setIsChatLoading(false);
-                 if (imageGenWasActiveForLastUserTurnRef.current) {
-                    setIsImageGenEnabled(false); 
-                    imageGenWasActiveForLastUserTurnRef.current = false;
-                }
-            }
+        const mergeCitations = (existingSources, newSources) => {
+            if (!newSources || newSources.length === 0) return existingSources;
+            const existingUris = new Set((existingSources || []).map(s => s.uri));
+            const uniqueNewSources = newSources.filter(src => src.uri && !existingUris.has(src.uri));
+            return [...(existingSources || []), ...uniqueNewSources];
         };
-
+        
         const _streamAiResponse = async (
             originalPromptParts, 
             targetAiMessageId, 
             historyForGeminiInit, 
-            useSearchInitially, 
-            isRetryingWithSearch = false, 
-            originalUserMessageForRetry = null 
+            useSearchInitially,
+            currentLoadingText
         ) => {
             setIsChatLoading(true);
-            if (!isRetryingWithSearch) { 
-                setAvatarHeaderState('thinking');
-            }
 
             let displayedAiText = "";
-            let accumulatedCitationSources = [];
-            let firstChunkProcessed = false;
-            let needsSearchMarkerFound = false;
-            let needsImageGenMarkerFound = false;
-
+            let accumulatedSources = [];
 
             if (isStoppingGenerationRef.current) return; 
 
             try {
-                const modelConfig = { model: GEMINI_MODEL_NAME, systemInstruction: getSystemInstruction() };
-                if (useSearchInitially || isRetryingWithSearch) { 
+                const modelConfig = { model: GEMINI_MAIN_MODEL, systemInstruction: getSystemInstruction() };
+                if (useSearchInitially) { 
                     modelConfig.tools = [{ googleSearch: {} }];
                 }
                 const chatModel = genAI.getGenerativeModel(modelConfig);
@@ -1428,53 +999,34 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         }
                     }
 
-                    if (!firstChunkProcessed && !isRetryingWithSearch) {
-                        if (chunkTextForDisplay && chunkTextForDisplay.trim() === "[NEEDS_SEARCH]") {
-                            needsSearchMarkerFound = true;
-                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, isLoading: true, isError: false, searchUsed: true, text: '' } : m));
-                            break; 
-                        }
-                        if (chunkTextForDisplay && chunkTextForDisplay.trim() === "[NEEDS_IMAGE_GEN]") {
-                            needsImageGenMarkerFound = true;
-                             setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
-                                ...m, 
-                                isLoading: false, 
-                                isLoadingImage: true, 
-                                text: '', 
-                                userImageRequestPrompt: originalUserMessageForRetry?.parts.find(p=>p.text)?.text || "Image request"
-                             } : m));
-                            break;
-                        }
-                    }
-                    firstChunkProcessed = true;
-
-
                     if (chunkTextForDisplay.length > 0 || (chunkTextForDisplay === "" && rawChunkText === "")) { 
                         displayedAiText += chunkTextForDisplay;
                     }
                     
-                    if (chunk.citationMetadata && chunk.citationMetadata.citationSources) {
-                        accumulatedCitationSources = mergeCitations(accumulatedCitationSources, chunk.citationMetadata.citationSources);
+                    let sourcesDelta;
+                    if (chunk.candidates && chunk.candidates[0]?.groundingMetadata?.groundingChunks) {
+                        sourcesDelta = chunk.candidates[0].groundingMetadata.groundingChunks
+                          .filter(gc => gc.web && gc.web.uri)
+                          .map(gc => ({ uri: gc.web.uri, title: gc.web.title || gc.web.uri }));
+                        if (sourcesDelta) {
+                           accumulatedSources = mergeCitations(accumulatedSources, sourcesDelta);
+                        }
                     }
 
-                    if ((displayedAiText.trim().length > 0 || accumulatedCitationSources.length > 0) && !needsSearchMarkerFound && !needsImageGenMarkerFound && !isStoppingGenerationRef.current) {
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, text: displayedAiText, isLoading: true, isError: false, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearchInitially || isRetryingWithSearch } : m));
+
+                    if ((displayedAiText.trim().length > 0 || accumulatedSources.length > 0) && !isStoppingGenerationRef.current) {
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
+                            ...m, 
+                            text: displayedAiText, 
+                            isLoading: true, 
+                            isError: false, 
+                            sources: accumulatedSources.length > 0 ? [...accumulatedSources] : null, 
+                            searchUsed: useSearchInitially || m.searchUsed,
+                            loadingText: currentLoadingText // Keep showing "Searching..." or "Thinking..."
+                        } : m));
                     }
                     
                     if (isStoppingGenerationRef.current) break;
-                }
-
-                if (needsSearchMarkerFound && originalUserMessageForRetry && !isRetryingWithSearch) {
-                    if (isStoppingGenerationRef.current) return;
-                    await _streamAiResponse(originalUserMessageForRetry.parts, targetAiMessageId, historyForGeminiInit, true, true, originalUserMessageForRetry); 
-                    return; 
-                }
-
-                if (needsImageGenMarkerFound && originalUserMessageForRetry) {
-                    if (isStoppingGenerationRef.current) return;
-                    const imagePromptText = originalUserMessageForRetry.parts.find(p => p.text)?.text || "Generate an image based on previous context.";
-                    await triggerImageGenerationProcess(imagePromptText, targetAiMessageId);
-                    return; 
                 }
                 
                 setChatMessages(prev => prev.map(m => {
@@ -1491,16 +1043,23 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             finalText = baseText;
                         } else if (isStoppingGenerationRef.current) {
                              finalText = m.text || stopNoticeStr; 
-                        } else if (!finalText.trim() && accumulatedCitationSources.length === 0 && !needsSearchMarkerFound && !needsImageGenMarkerFound) {
-                            if (useSearchInitially || isRetryingWithSearch) {
+                        } else if (!finalText.trim() && (!accumulatedSources || accumulatedSources.length === 0)) {
+                            if (useSearchInitially) {
                                 finalText = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar poochein. Shukriya! 🙏";
                             } else {
                                 finalText = "Mera khayal hai ke mujhe samajhne mein kuch dushwari hui. Kya aap apna sawal wazeh kar sakte hain? 🤔";
                             }
-                        } else if (!finalText.trim() && accumulatedCitationSources.length > 0 && !isStoppingGenerationRef.current) { 
+                        } else if (!finalText.trim() && accumulatedSources && accumulatedSources.length > 0 && !isStoppingGenerationRef.current) { 
                             finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
                         }
-                        return { ...m, text: finalText, isLoading: false, isError: isMessageError, citationMetadata: accumulatedCitationSources.length > 0 ? { citationSources: accumulatedCitationSources } : null, searchUsed: useSearchInitially || isRetryingWithSearch || m.searchUsed };
+                        return { 
+                            ...m, 
+                            text: finalText, 
+                            isLoading: false, 
+                            isError: isMessageError, 
+                            sources: accumulatedSources.length > 0 ? [...accumulatedSources] : null, 
+                            searchUsed: useSearchInitially || m.searchUsed 
+                        };
                     }
                     return m;
                 }));
@@ -1512,29 +1071,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 else if (err.message?.toLowerCase().includes("candidate was blocked")) errorTextForUser = "Meri hifazati policies ki wajah se main yeh jawab nahi de sakta.";
                 else if (err.message?.toLowerCase().includes("quota")) errorTextForUser = "API istemal ki had poori ho gayi hai.";
                 
-                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isLoadingImage: false, isError: true, searchUsed: useSearchInitially || isRetryingWithSearch } : m));
+                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearchInitially } : m));
             } finally {
-                const isFinalResolution = !(needsSearchMarkerFound && !isRetryingWithSearch && !isStoppingGenerationRef.current) && !(needsImageGenMarkerFound && !isStoppingGenerationRef.current);
-
-
-                if (isFinalResolution) {
-                    setIsChatLoading(false);
-                    if (!isStoppingGenerationRef.current) { 
-                        setAvatarHeaderState('speaking');
-                        setTimeout(() => setAvatarHeaderState('idle'), 1500);
-                    } else {
-                        setAvatarHeaderState('idle'); 
-                    }
-                    
-                    if (searchWasActiveForLastUserTurnRef.current) {
-                        setIsSearchEnabled(false);
-                        searchWasActiveForLastUserTurnRef.current = false; 
-                    }
-                     if (imageGenWasActiveForLastUserTurnRef.current) { 
-                        setIsImageGenEnabled(false);
-                        imageGenWasActiveForLastUserTurnRef.current = false;
-                    }
-                }
+                setIsChatLoading(false);
             }
         };
 
@@ -1547,9 +1086,43 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return;
             }
             
-            const currentChatMessages = chatMessages; 
+            const currentChatHistoryForGemini = getGeminiHistory(chatMessages);
             const userMessageFiles = filesToSend.map(f => ({ id: f.id, name: f.name, type: f.type, apiData: f.apiData }));
             
+            const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
+            const aiMessageId = Date.now().toString() + '_model_resp';
+
+            // --- IMMEDIATE UI UPDATE ---
+            // 1. Create a preliminary AI placeholder with a "Thinking..." state
+            const preliminaryAiPlaceholder = { 
+                id: aiMessageId, 
+                role: 'model', 
+                text: '', 
+                loadingText: "Thinking...", // Default state
+                timestamp: new Date(), 
+                isLoading: true, 
+                isError: false, 
+                sources: null, 
+                searchUsed: false, // Default state
+            }; 
+            
+            // 2. Add user message and preliminary placeholder to the chat immediately
+            setChatMessages(prev => {
+                const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError));
+                return [...filteredPrev, newUserMessageForUi, preliminaryAiPlaceholder];
+            });
+            // --- END IMMEDIATE UI UPDATE ---
+            
+            // 3. Determine search need in the background
+            const needsSearch = await determineSearchNeed_service(genAI, messageText.trim());
+            const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
+
+            // 4. Update the placeholder's state if a search is needed, changing the loader text
+            if (needsSearch) {
+                setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
+            }
+
+            // 5. Prepare prompt parts and initiate the AI stream call
             const promptPartsForUserTurn = [];
             if (messageText.trim()) promptPartsForUserTurn.push({ text: messageText.trim() });
             filesToSend.forEach(file => {
@@ -1559,72 +1132,21 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     promptPartsForUserTurn.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
                 }
             });
-            
-            const originalUserMessageForRetry = { role: 'user', parts: promptPartsForUserTurn };
-            const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
-            
-            const aiMessageId = Date.now().toString() + '_model_resp';
 
-            if (isImageGenEnabled) {
-                imageGenWasActiveForLastUserTurnRef.current = true;
-                searchWasActiveForLastUserTurnRef.current = false;
-
-                const aiImagePlaceholder = { 
-                    id: aiMessageId, 
-                    role: 'model', 
-                    timestamp: new Date(), 
-                    isLoading: false, 
-                    isLoadingImage: true, 
-                    userImageRequestPrompt: messageText.trim(),
-                    text: '' 
-                };
-                setChatMessages(prev => {
-                    const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError));
-                    return [...filteredPrev, newUserMessageForUi, aiImagePlaceholder];
-                });
-                await triggerImageGenerationProcess(messageText.trim(), aiMessageId);
-
+            if (promptPartsForUserTurn.length > 0) {
+                await _streamAiResponse(
+                    promptPartsForUserTurn, 
+                    aiMessageId, 
+                    currentChatHistoryForGemini, 
+                    needsSearch,
+                    finalLoadingText
+                );
             } else { 
-                searchWasActiveForLastUserTurnRef.current = isSearchEnabled;
-                imageGenWasActiveForLastUserTurnRef.current = false;
-
-                const aiPlaceholder = { 
-                    id: aiMessageId, 
-                    role: 'model', 
-                    text: '', 
-                    timestamp: new Date(), 
-                    isLoading: true, 
-                    isError: false, 
-                    citationMetadata: null, 
-                    searchUsed: isSearchEnabled,
-                    isLoadingImage: false
-                }; 
-                setChatMessages(prev => {
-                    const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError));
-                    return [...filteredPrev, newUserMessageForUi, aiPlaceholder];
-                });
-
-                if (promptPartsForUserTurn.length > 0) {
-                    const historyForGeminiInit = getGeminiHistory(currentChatMessages);
-                    await _streamAiResponse(
-                        promptPartsForUserTurn, 
-                        aiMessageId, 
-                        historyForGeminiInit, 
-                        isSearchEnabled, 
-                        false, 
-                        originalUserMessageForRetry
-                    );
-                } else { 
-                    setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError));
-                    setIsChatLoading(false);
-                    setAvatarHeaderState('idle');
-                    if (searchWasActiveForLastUserTurnRef.current) { 
-                        setIsSearchEnabled(false);
-                        searchWasActiveForLastUserTurnRef.current = false; 
-                    }
-                }
+                setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError));
+                setIsChatLoading(false);
             }
-        }, [chatMessages, isSearchEnabled, isImageGenEnabled]); 
+            
+        }, [chatMessages]); 
 
         const handleRegenerateLastTextMessage = useCallback(async (aiMessageIdToRegenerate) => { 
             isStoppingGenerationRef.current = false; 
@@ -1640,111 +1162,61 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
             
             const userPromptMsg = chatMessages[originalAiMsgIndex-1];
-            if (userPromptMsg.attachedFiles?.some(f => f.type?.startsWith('image/'))) {
-                setChatError("Regeneration for prompts with images is not yet available for this button.");
-                return;
-            }
-            const aiMsgToRegen = chatMessages[originalAiMsgIndex];
-            if (aiMsgToRegen.generatedImageB64 || aiMsgToRegen.imageGenerationError || aiMsgToRegen.isLoadingImage) {
-                setChatError("This message was an image. Use the regenerate button on the image itself.");
-                return;
-            }
+            const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
+            const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
 
-
-            searchWasActiveForLastUserTurnRef.current = isSearchEnabled; 
-            imageGenWasActiveForLastUserTurnRef.current = false; 
-            
-            const shouldUseSearchForThisRegenAI = isSearchEnabled; 
-            
-            const promptPartsForRegen = [];
-            if (userPromptMsg.text) {
-                promptPartsForRegen.push({ text: userPromptMsg.text });
-            }
-            userPromptMsg.attachedFiles?.forEach(file => { 
-                 if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
-                    promptPartsForRegen.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
-                }
-            });
-            const originalUserMessageForRetry = { role: 'user', parts: promptPartsForRegen };
-
+            // --- IMMEDIATE UI UPDATE ---
+            // 1. Create a preliminary AI placeholder with a "Thinking..." state
             const newAiPlaceholderId = Date.now().toString() + '_model_regen';
-            const aiPlaceholder = { 
+            const preliminaryAiPlaceholder = { 
                 id: newAiPlaceholderId, 
                 role: 'model', 
                 text:'', 
+                loadingText: "Thinking...", // Default state
                 isLoading:true, 
                 timestamp:new Date(), 
                 isError: false, 
-                citationMetadata: null, 
-                searchUsed: shouldUseSearchForThisRegenAI,
-                isLoadingImage: false
+                sources: null, 
+                searchUsed: false, // Default state
             };
             
+            // 2. Replace old AI message with the preliminary placeholder immediately
             const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
-            setChatMessages([...chatHistoryForUiUpdate, aiPlaceholder]);
+            setChatMessages([...chatHistoryForUiUpdate, preliminaryAiPlaceholder]);
+            // --- END IMMEDIATE UI UPDATE ---
+
+            // 3. Determine search need in the background
+            const needsSearch = await determineSearchNeed_service(genAI, userPromptMsg.text || "");
+            const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
             
+            // 4. Update placeholder state if search is needed
+            if(needsSearch) {
+                setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
+            }
+            
+            // 5. Prepare prompt parts and initiate AI stream call
+            const promptPartsForRegen = [];
+            if (userPromptMsg.text) promptPartsForRegen.push({ text: userPromptMsg.text });
+            userPromptMsg.attachedFiles?.forEach(file => { 
+                 if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) {
+                    promptPartsForRegen.push({ inlineData: file.apiData });
+                 } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
+                    promptPartsForRegen.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
+                }
+            });
+
             if (promptPartsForRegen.length > 0) {
-                const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
-                const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
                 await _streamAiResponse(
                     promptPartsForRegen, 
                     newAiPlaceholderId, 
                     historyForGeminiInit, 
-                    shouldUseSearchForThisRegenAI, 
-                    false, 
-                    originalUserMessageForRetry
+                    needsSearch,
+                    finalLoadingText
                 );
             } else { 
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
-                setAvatarHeaderState('idle');
-                 if (searchWasActiveForLastUserTurnRef.current) {
-                    setIsSearchEnabled(false);
-                    searchWasActiveForLastUserTurnRef.current = false; 
-                }
             }
-        }, [chatMessages, isSearchEnabled]); 
-
-        const handleRegenerateImage = useCallback(async (failedAiMessageId) => {
-             isStoppingGenerationRef.current = false;
-             setChatError(null);
-             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
-                 setChatError("API Key is not configured for image regeneration.");
-                 return;
-             }
-
-             const failedMsgIndex = chatMessages.findIndex(m => m.id === failedAiMessageId && m.role === 'model');
-             if (failedMsgIndex === -1) {
-                 setChatError("Could not find the message to regenerate.");
-                 return;
-             }
-             const failedMsg = chatMessages[failedMsgIndex];
-
-             if (!failedMsg.userImageRequestPrompt) {
-                 setChatError("Could not find the original prompt for image regeneration.");
-                 return;
-             }
-             
-             imageGenWasActiveForLastUserTurnRef.current = true; 
-             searchWasActiveForLastUserTurnRef.current = false;
-
-             const newAiImagePlaceholderId = Date.now().toString() + '_model_image_regen';
-             const newPlaceholder = {
-                id: newAiImagePlaceholderId,
-                role: 'model',
-                timestamp: new Date(),
-                isLoading: false,
-                isLoadingImage: true,
-                imageGenerationError: null,
-                generatedImageB64: null,
-                text: '',
-                userImageRequestPrompt: failedMsg.userImageRequestPrompt
-             };
-            
-             const messagesUpToFailed = chatMessages.slice(0, failedMsgIndex);
-             setChatMessages([...messagesUpToFailed, newPlaceholder]);
-             
-             await triggerImageGenerationProcess(failedMsg.userImageRequestPrompt, newAiImagePlaceholderId);
-        }, [chatMessages]);
+        }, [chatMessages]); 
 
 
         return (
@@ -1757,21 +1229,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     onRegenerateLastTextMessage={handleRegenerateLastTextMessage} 
                     onClearChat={handleClearChat} 
                     setChatError={setChatError} 
-                    avatarHeaderState={avatarHeaderState} 
-                    isSearchEnabled={isSearchEnabled} 
-                    onToggleSearch={handleToggleSearch}
-                    isImageGenEnabled={isImageGenEnabled}
-                    onToggleImageGen={handleToggleImageGen}
-                    onRegenerateImage={handleRegenerateImage}
-                    onOpenImagePreview={handleOpenImagePreview}
                 />
-                {previewImage.src && (
-                    <ImagePreviewModal
-                        src={previewImage.src}
-                        altText={previewImage.alt}
-                        onClose={handleCloseImagePreview}
-                    />
-                )}
             </div>
         );
       };
