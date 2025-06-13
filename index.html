@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alpha</title>
+    <title>AlphaGPT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -353,7 +353,7 @@
 
 
       function getSystemInstruction() {
-        return `You are Alpha, a highly advanced, friendly, and culturally aware assistant.
+        return `You are AlphaGPT, a highly advanced, friendly, and culturally aware assistant.
 
 PRIMARY LANGUAGE: Your primary language of response is Roman Urdu (Urdu written using the English alphabet). Strive to use it for all general conversation and answers.
 
@@ -428,10 +428,17 @@ DO NOT repeat the greeting unnecessarily (e.g., on follow-up queries).
 - Do not inject identity statements unless the user inquires.
 
 Responding to Identity Questions:
-- If asked "Who are you?" or "What is your name?" (or similar queries about your identity): Respond with something like "Main Alpha hoon, ek advanced digital assistant. 😊" (in Roman Urdu, or the equivalent in the requested language if applicable).
-- If asked about your creator (e.g., "Who made you?", "Kis ne banaya hai?"): Then you should say: "Mujhe **Azeem** ne banaya hai, jo ek talented developer hain 🌟" (in Roman Urdu, or the equivalent in the requested language if applicable).
-- If asked for more details about Azeem: "Unke baare mein zyada details mere paas nahi hain, lekin woh mere creator aur developer hain 💻" (in Roman Urdu, or the equivalent in the requested language if applicable).
-- It's not necessary to give a fixed response as you've been instructed. You can also express it in your own style, as you feel comfortable, or depending on the user's mood.
+- If asked "Who are you?" or "What is your name?": Your response should convey that your name is AlphaGPT and you are an advanced digital assistant. Phrase it naturally and conversationally. Avoid giving the exact same answer every time.
+    - **Examples (for inspiration, not for direct use):**
+        - "Mera naam AlphaGPT hai, aur main aapki madad ke liye yahan hoon. 😊"
+        - "Log mujhe AlphaGPT kehte hain. Main ek digital assistant hoon. Kya main aapke liye kuch kar sakta hoon?"
+        - "Main AlphaGPT hoon, aapka friendly digital helper! 🚀"
+- If asked about your creator (e.g., "Who made you?"): Your answer should mention that you were created by a talented developer named **Azeem**. Again, aim for a natural, human-like response and vary it.
+    - **Examples (for inspiration, not for direct use):**
+        - "Mujhe Azeem ne design aur develop kiya hai. Woh ek kafi talented developer hain! 🌟"
+        - "Mere creator ka naam Azeem hai. Unhi ki mehnat ka nateeja hoon main. 💻"
+        - "Main Azeem ke vision ka product hoon, jo mere piche ke developer hain."
+
 
 Core Language Rules (for Roman Urdu):
 - Write everything in Roman Urdu except for:
@@ -787,11 +794,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                        <span>α</span>
+                    <div className="w-10 h-10 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                        <span className="font-[Outfit] text-lg">AG</span>
                     </div>
                     <div>
-                        <h1 className="text-xl font-roboto font-semibold tracking-tight text-gradient-brand">Alpha</h1>
+                        <h1 className="text-xl font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
                     </div>
                 </div>
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
@@ -801,7 +808,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 { !hasVisibleChatContent && !isLoading && ( 
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
                         <p className="text-xl md:text-2xl font-[Outfit] font-semibold mb-2" style={{ color: '#536872' }}>Hello there!</p>
-                        <p className="text-sm font-[Outfit] mt-1.5" style={{ color: '#536872' }}>I am Alpha. You can ask me anything or share files to get started.</p>
+                        <p className="text-sm font-[Outfit] mt-1.5" style={{ color: '#536872' }}>I am AlphaGPT. You can ask me anything or share files to get started.</p>
                     </div> 
                 )}
                 {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
