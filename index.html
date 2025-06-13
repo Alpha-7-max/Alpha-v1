@@ -60,7 +60,8 @@
               'shiny-text': 'shinyText 2.5s linear infinite',
               'dot-pulse': 'dotPulse 1.4s infinite ease-in-out',
               'modal-fade-in': 'modal-fade-in 0.3s ease-out forwards', 
-              'modal-fade-out': 'modal-fade-out 0.3s ease-in forwards', 
+              'modal-fade-out': 'modal-fade-out 0.3s ease-in forwards',
+              'rotation': 'rotation 0.75s linear infinite', 
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
@@ -86,6 +87,10 @@
               'modal-fade-out': { 
                 '0%': { opacity: '1', transform: 'scale(1)' },
                 '100%': { opacity: '0', transform: 'scale(0.95)' },
+              },
+              rotation: {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
               },
             },
             spacing: { 
@@ -202,7 +207,7 @@
         textarea.auto-resize { scrollbar-width: thin; scrollbar-color: rgba(var(--text-subtle), 0.25) transparent; }
 
         .text-gradient-brand {
-          background-image: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4);
+          background-image: linear-gradient(to right, #7dd3fc, #f9a8d4);
           -webkit-background-clip: text; 
           background-clip: text; 
           color: transparent;
@@ -224,6 +229,38 @@
 
         .hljs { 
             @apply !bg-transparent !text-inherit; 
+        }
+      }
+      .loader {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgb(var(--border-light));
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        box-sizing: border-box;
+        animation: rotation 0.75s linear infinite;
+      }
+      .loader::after {
+        content: '';  
+        box-sizing: border-box;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid;
+        border-color: rgb(var(--brand-secondary)) transparent;
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
         }
       }
     </style>
@@ -293,17 +330,17 @@
       function createSourceLinksElement(sources) { 
         if (!sources || sources.length === 0) return null; 
         const containerDiv = document.createElement('div'); 
-        containerDiv.className = "mt-3 pt-3 border-t border-[#E5E8EB]/70"; 
+        containerDiv.className = "mt-3 pt-3 border-t border-border-light"; 
         const heading = document.createElement('h4');
-        heading.className = "text-xs font-semibold text-text-subtle mb-1.5 flex items-center"; 
-        heading.innerHTML = `<i class="fas fa-link text-xs mr-1.5 opacity-70 text-text-primary"></i>Sources:`;
+        heading.className = "text-xs font-medium text-text-subtle mb-2 flex items-center"; 
+        heading.innerHTML = `<i class="fas fa-link text-xs mr-1.5 opacity-70"></i>Sources`;
         containerDiv.appendChild(heading);
         const pillsContainer = document.createElement('div');
         pillsContainer.className = "flex flex-wrap gap-2"; 
         sources.forEach((source, index) => { 
             const pillLink = document.createElement('a'); 
             pillLink.href = source.uri; pillLink.target = "_blank"; pillLink.rel = "noopener noreferrer";
-            pillLink.className = "text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 px-2.5 py-1 rounded-full transition-colors duration-150 truncate max-w-[200px] sm:max-w-[250px] inline-block"; 
+            pillLink.className = "text-xs bg-white text-text-secondary border border-border-default hover:border-brand-secondary/50 hover:text-brand-secondary px-3 py-1.5 rounded-full transition-all duration-200 truncate max-w-[200px] sm:max-w-[250px] inline-block shadow-sm hover:shadow-card";
             
             const displayTitle = source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri) || 'Source';
             pillLink.textContent = `${index + 1}. ${displayTitle}`; 
@@ -693,9 +730,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
               )}
               {isModelLoadingWithSearch && (
-                <div className="flex items-center space-x-2 mt-2.5 text-text-secondary">
-                  <i className="fas fa-spinner fa-spin text-sm"></i>
-                  <span className="text-sm font-medium">Searching...</span>
+                <div className="flex items-center space-x-2 mt-2.5">
+                  <span className="loader"></span>
+                  <span className="text-sm font-medium text-text-subtle">Searching...</span>
                 </div>
               )}
             </div>
@@ -750,7 +787,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-blue-400 to-teal-300 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                    <div className="w-10 h-10 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full flex items-center justify-center text-white text-xl font-bold">
                         <span>α</span>
                     </div>
                     <div>
@@ -1200,7 +1237,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             userPromptMsg.attachedFiles?.forEach(file => { 
                  if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) {
                     promptPartsForRegen.push({ inlineData: file.apiData });
-                 } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
+                 } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData.textContent) {
                     promptPartsForRegen.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
                 }
             });
