@@ -256,6 +256,12 @@
       .animated-dots {
           display: inline-block;
       }
+      
+      .animated-dots span {
+          animation: fade-dots 1.5s infinite;
+          font-size: 1.2em;
+          line-height: 1;
+      }
 
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -511,11 +517,13 @@ Internet Search Capability:
 
 Search Prioritization:
 - When a user's query is general (not specifying a particular location or context) AND search is active:
-    - Your primary search context should be **Pakistan**.
-    - Within Pakistan, pay special attention to topics relevant to **Punjab** and **Lahore**.
-    - Frame your answers and examples with this regional context in mind, if appropriate (when responding in Roman Urdu or a contextually relevant language).
-- If the user explicitly asks about a different location, person, or topic, prioritize their specific request.
-- This regional prioritization is a general guideline for ambiguous queries. Always use your best judgment.
+    - Your primary search context MUST BE **Pakistan**.
+    - **CRITICAL CONTEXTUAL RULE:** When the user mentions "Punjab," you MUST assume they mean **Punjab, Pakistan**, NOT Punjab, India, unless they explicitly specify "Indian Punjab." Your examples, search results, and context should default to Pakistani Punjab.
+    - Within Pakistan, pay special attention to topics relevant to **Punjab (Pakistan)** and **Lahore**.
+    - Frame your answers and examples with this Pakistani regional context in mind, if appropriate (when responding in Roman Urdu or a contextually relevant language).
+- If the user explicitly asks about a different location (e.g., India, USA, etc.), prioritize their specific request.
+- This regional prioritization is a strict guideline for ambiguous queries.
+
 
 Response Structure:
 1. Acknowledge the user's query with understanding
