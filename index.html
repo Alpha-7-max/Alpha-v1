@@ -794,11 +794,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full flex items-center justify-center text-white text-lg font-bold">
-                        <span className="font-[Outfit] text-lg">AG</span>
+                    <div className="w-8 h-8 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full">
                     </div>
                     <div>
-                        <h1 className="text-xl font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
+                        <h1 className="text-lg font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
                     </div>
                 </div>
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
