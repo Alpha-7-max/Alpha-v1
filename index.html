@@ -234,7 +234,7 @@
         .hljs { 
             @apply !bg-transparent !text-inherit; 
         }
-        /* Thinking Animation: Rotating Square */
+        
         .thinking-indicator {
             color: rgb(var(--text-subtle));
             font-size: 12px;
@@ -250,7 +250,7 @@
             background-image: linear-gradient(to bottom right, rgb(59, 130, 246), rgb(147, 197, 253));
             border-radius: 3px;
         }
-
+        
         .animated-dots {
             display: inline-block;
         }
@@ -260,7 +260,7 @@
             font-size: 1.2em;
             line-height: 1;
         }
-        /* Searching Animation: Data Cubes Shift */
+        
         .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 5px); grid-template-rows: repeat(4, 5px); gap: 1.5px; }
         .data-cubes__cube { width: 5px; height: 5px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
         .data-cubes__cube--active1 { background-color: #fbbf24; transform: scale(1.1); }
@@ -780,26 +780,26 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               )}
               {contentToShow} 
 
-              {isModelLoadingThinking && ( 
-                 <div className="thinking-indicator mt-2.5">
-                    <div className="square animate-rotate-square"></div>
-                    Thinking
-                    <span className="animated-dots">
-                      <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
-                      <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
-                      <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
-                    </span>
-                </div>
+              {isModelLoadingThinking && (
+                <div className="thinking-indicator mt-2.5">
+                   <div className="square animate-rotate-square"></div>
+                   Thinking
+                   <span className="animated-dots">
+                     <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
+                     <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
+                     <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
+                   </span>
+               </div>
               )}
               {isModelLoadingWithSearch && (
-                <div className="flex items-center space-x-2 mt-2.5">
-                  <DataCubesAnimation />
-                  <span className="text-xs font-medium text-text-subtle">Searching</span>
-                  <span className="animated-dots text-text-subtle">
-                      <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
-                      <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
-                      <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
-                  </span>
+                 <div className="flex items-center space-x-2 mt-2.5">
+                    <DataCubesAnimation />
+                    <span className="text-xs font-medium text-text-subtle">Searching</span>
+                    <span className="animated-dots text-text-subtle">
+                        <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
+                        <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
+                        <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
+                    </span>
                 </div>
               )}
             </div>
@@ -854,7 +854,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
                 <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full">
+                    <div className="w-8 h-8 bg-gradient-to-br from-sky-300 to-pink-300 rounded-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" className="w-4 h-4 text-white/90">
+                            <path d="M8 0L6.29 6.29 0 8l6.29 1.71L8 16l1.71-6.29L16 8l-6.29-1.71L8 0z" />
+                        </svg>
                     </div>
                     <div>
                         <h1 className="text-lg font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
