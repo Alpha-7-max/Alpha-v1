@@ -49,7 +49,6 @@
               'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
               'scale-in-subtle': 'scaleInSubtle 0.35s ease-out forwards',
               'pulse-gentle': 'pulseGentle 2.8s infinite ease-in-out', 
-              'typing-indicator': 'typingIndicator 1.2s infinite ease-in-out',
               'button-press': 'buttonPress 0.2s ease-out',
               'rippleOut': 'rippleOut 2.5s infinite ease-out', 
               'speak-bob': 'speakBob 0.7s ease-in-out',
@@ -68,7 +67,6 @@
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
               scaleInSubtle: { '0%': { opacity: '0.5', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' }, },
               pulseGentle: {  '0%, 100%': { transform: 'scale(1)', opacity: '0.8' }, '50%': { transform: 'scale(1.015)', opacity: '1' }, },
-              typingIndicator: { '0%': { transform: 'translateY(0px)', opacity: '0.5' }, '25%': { transform: 'translateY(-3px)', opacity: '1' }, '50%': { transform: 'translateY(0px)', opacity: '0.5' }, '100%': { transform: 'translateY(0px)', opacity: '0.5' }, },
               buttonPress: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(0.96)'}, '100%': { transform: 'scale(1)' }, },
               emptyStateGlow: {  '0%': { filter: 'drop-shadow(0 0 3px rgba(var(--brand-primary), 0.2)) drop-shadow(0 0 6px rgba(var(--brand-primary), 0.15))' }, '100%': { filter: 'drop-shadow(0 0 6px rgba(var(--brand-primary), 0.25)) drop-shadow(0 0 12px rgba(var(--brand-primary), 0.18))' }, },
               rippleOut: {  '0%': { transform: 'scale(0.8)', opacity: '0.3' }, '70%': { opacity: '0.1' }, '100%': { transform: 'scale(2.0)', opacity: '0' }, },
@@ -236,34 +234,39 @@
         .hljs { 
             @apply !bg-transparent !text-inherit; 
         }
-      }
-      /* Rotating Square Animation */
-      .search-6 {
-          color: rgb(var(--text-subtle));
-          font-size: 12px;
-          font-weight: 500;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-      }
+        /* Rotating Square Animation */
+        .search-6 {
+            color: rgb(var(--text-subtle));
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-      .search-6 .square {
-          width: 12px;
-          height: 12px;
-          background-color: rgb(var(--border-medium));
-          border-radius: 3px;
-      }
+        .search-6 .square {
+            width: 12px;
+            height: 12px;
+            background-image: linear-gradient(to bottom right, rgb(59, 130, 246), rgb(147, 197, 253));
+            border-radius: 3px;
+        }
 
-      .animated-dots {
-          display: inline-block;
+        .animated-dots {
+            display: inline-block;
+        }
+        
+        .animated-dots span {
+            animation: fade-dots 1.5s infinite;
+            font-size: 1.2em;
+            line-height: 1;
+        }
+        /* Data Cubes Shift Animation */
+        .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 4px); grid-template-rows: repeat(4, 4px); gap: 1.5px; }
+        .data-cubes__cube { width: 4px; height: 4px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
+        .data-cubes__cube--active1 { background-color: #fbbf24; transform: scale(1.1); }
+        .data-cubes__cube--active2 { background-color: #f97316; transform: rotate(15deg); }
+        .data-cubes__cube--active3 { background-color: #ea580c; transform: scale(0.9) rotate(-10deg); }
       }
-      
-      .animated-dots span {
-          animation: fade-dots 1.5s infinite;
-          font-size: 1.2em;
-          line-height: 1;
-      }
-
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&family=Outfit:wght@400;700&display=swap" rel="stylesheet"> 
@@ -429,17 +432,16 @@ DO NOT repeat the greeting unnecessarily (e.g., on follow-up queries).
 - Do not inject identity statements unless the user inquires.
 
 Responding to Identity Questions:
-- If asked "Who are you?" or "What is your name?": Your response should convey that your name is AlphaGPT and you are an advanced digital assistant. Phrase it naturally and conversationally. Avoid giving the exact same answer every time.
+- If asked "Who are you?" or "What is your name?": Your response should convey that your name is AlphaGPT and you are an advanced digital assistant. Phrase it naturally and politely. Vary the response to avoid sounding robotic.
     - **Examples (for inspiration, not for direct use):**
-        - "Mera naam AlphaGPT hai, aur main aapki madad ke liye yahan hoon. 😊"
-        - "Log mujhe AlphaGPT kehte hain. Main ek digital assistant hoon. Kya main aapke liye kuch kar sakta hoon?"
-        - "Main AlphaGPT hoon, aapka friendly digital helper! 🚀"
-- If asked about your creator (e.g., "Who made you?"): Your answer should mention that you were created by a talented developer named **Azeem**. Again, aim for a natural, human-like response and vary it.
+        - "Mera naam AlphaGPT hai. Main ek advanced digital assistant hoon jo aapki madad ke liye yahan hai."
+        - "Main AlphaGPT hoon. Aap mujhse koi bhi sawal pooch sakte hain."
+        - "Aap mujhe AlphaGPT keh sakte hain. Main ek AI assistant hoon, jo aapki madad karne ke liye banaya gaya hai."
+- If asked about your creator (e.g., "Who made you?"): Your answer should mention that you were created by a talented developer named **Azeem**. Maintain a respectful and professional tone.
     - **Examples (for inspiration, not for direct use):**
-        - "Mujhe Azeem ne design aur develop kiya hai. Woh ek kafi talented developer hain! 🌟"
-        - "Mere creator ka naam Azeem hai. Unhi ki mehnat ka nateeja hoon main. 💻"
-        - "Main Azeem ke vision ka product hoon, jo mere piche ke developer hain."
-
+        - "Mujhe Azeem ne develop kiya hai, jo ek mahir developer hain."
+        - "Meri development Azeem ne ki hai."
+        - "Main Azeem, ek talented developer, ke zariye banaya gaya hoon."
 
 Core Language Rules (for Roman Urdu):
 - Write everything in Roman Urdu except for:
@@ -461,11 +463,12 @@ Formatting Guidelines:
 - Add horizontal rules (---) to separate major sections
 
 Personality & Communication Style:
-- Be warm, friendly, and conversational like talking to a close friend
-- Show genuine interest in helping users
-- Use appropriate humor when the situation allows
-- Be encouraging and supportive, especially when users are struggling
-- Acknowledge user's emotions and respond with empathy
+- Be helpful, knowledgeable, and professional, while still maintaining a friendly and approachable tone.
+- Your communication should be clear, concise, and respectful.
+- Show genuine interest in helping users.
+- Use appropriate humor only when the context is very casual and it's clear the user would be receptive.
+- Be encouraging and supportive.
+- Acknowledge user's emotions with empathy but maintain a professional demeanor.
 
 Enhanced Emoji Usage:
 📌 Core Emoji Principles:
@@ -585,6 +588,51 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const COPIED_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path></svg>`;
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
+
+      const DataCubesAnimation = () => {
+        const cubesRef = useRef([]);
+        const intervalRef = useRef(null);
+
+        useEffect(() => {
+            const animateCubes = () => {
+                if (cubesRef.current.length === 0) return;
+
+                const activeCube = cubesRef.current.find(c => 
+                    c && (c.classList.contains('data-cubes__cube--active1') || 
+                          c.classList.contains('data-cubes__cube--active2') || 
+                          c.classList.contains('data-cubes__cube--active3'))
+                );
+                if (activeCube) {
+                    activeCube.classList.remove('data-cubes__cube--active1', 'data-cubes__cube--active2', 'data-cubes__cube--active3');
+                }
+
+                const randomIndex = Math.floor(Math.random() * cubesRef.current.length);
+                const randomClassNum = Math.floor(Math.random() * 3) + 1;
+                const cube = cubesRef.current[randomIndex];
+                if (cube) {
+                  cube.classList.add(`data-cubes__cube--active${randomClassNum}`);
+                }
+            };
+
+            intervalRef.current = setInterval(animateCubes, 200);
+
+            return () => {
+                clearInterval(intervalRef.current);
+            };
+        }, []);
+
+        return (
+            <div className="data-cubes__grid">
+                {Array.from({ length: 16 }).map((_, i) => (
+                    <div
+                        key={i}
+                        ref={el => (cubesRef.current[i] = el)}
+                        className="data-cubes__cube"
+                    ></div>
+                ))}
+            </div>
+        );
+      };
 
       const ChatMessageItem = ({ message }) => { 
         const isUser = message.role === 'user'; 
@@ -732,11 +780,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               )}
               {contentToShow} 
 
-              {isModelLoadingThinking && ( 
-                <div className="flex items-end space-x-1.5 mt-2.5">
-                  <span className="w-1.5 h-1.5 bg-border-medium rounded-full animate-typing-indicator" style={{ animationDelay: '0s' }}></span>
-                  <span className="w-1.5 h-1.5 bg-border-medium rounded-full animate-typing-indicator" style={{ animationDelay: '0.15s' }}></span>
-                  <span className="w-1.5 h-1.5 bg-border-medium rounded-full animate-typing-indicator" style={{ animationDelay: '0.3s' }}></span>
+              {isModelLoadingThinking && (
+                <div className="flex items-center space-x-2 mt-2.5">
+                  <DataCubesAnimation />
+                  <span className="text-xs font-medium text-text-subtle">Thinking</span>
+                  <span className="animated-dots text-text-subtle">
+                      <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
+                      <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
+                      <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
+                  </span>
                 </div>
               )}
               {isModelLoadingWithSearch && (
