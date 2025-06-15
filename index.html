@@ -640,9 +640,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         );
       };
 
-      const ChatMessageItem = ({ message, isLoading, onRegenerateMessage }) => { 
-        const [copied, setCopied] = useState(false);
-        const [showUserActions, setShowUserActions] = useState(false);
+      const ChatMessageItem = ({ message }) => { 
         const isUser = message.role === 'user'; 
         const isError = message.isError === true; 
         const isModelLoading = message.role === 'model' && message.isLoading && !isError;
@@ -652,19 +650,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const isModelLoadingWithSearch = isModelLoading && message.searchUsed && message.loadingText === "Searching...";
         const isModelLoadingThinking = isModelLoading && (!message.searchUsed || message.loadingText === "Thinking...");
         
-        const isTouchDevice = 'ontouchstart' in window;
-        
-        const handleCopy = () => {
-          if (message.text) {
-            navigator.clipboard.writeText(message.text).then(() => {
-              setCopied(true);
-              setTimeout(() => setCopied(false), 2000);
-            }).catch(err => {
-              console.error("Failed to copy text: ", err);
-            });
-          }
-        };
-
         useEffect(() => {
           if (message.role === 'model' && !isError && !message.isLoading && contentRef.current) {
             const preElements = contentRef.current.querySelectorAll('pre');
@@ -768,11 +753,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         }
 
         return (
-          <div 
-            className={`group relative flex flex-col ${isUser ? 'items-end' : 'items-start'} animate-fade-in-up opacity-0`} 
-            style={{animationFillMode: 'forwards'}}
-            onClick={isUser && isTouchDevice ? () => setShowUserActions(prev => !prev) : undefined}
-          >
+          <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
             <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} style={{animationFillMode: 'forwards'}}>
               {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (
                 <div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
@@ -828,37 +809,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
               )}
             </div>
-             {!message.isLoading && (
-                <>
-                  {/* Model Buttons */}
-                  {message.role === 'model' && (
-                    <div className="flex items-center space-x-2 mt-1.5 ml-1">
-                      {!message.isError && message.text && (
-                        <button onClick={handleCopy} className="p-1.5 rounded-full text-gray-400 hover:text-brand-primary hover:bg-gray-200/50 transition-all duration-150" aria-label="Copy message">
-                           {copied ? <i className="fas fa-check text-green-500 text-xs"></i> : <i className="fas fa-copy text-xs"></i>}
-                        </button>
-                      )}
-                      <button onClick={() => onRegenerateMessage(message.id)} className="p-1.5 rounded-full text-gray-400 hover:text-brand-primary hover:bg-gray-200/50 transition-all duration-150 group" aria-label="Regenerate response" disabled={isLoading}>
-                         <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i>
-                      </button>
-                    </div>
-                  )}
-
-                  {/* User Buttons */}
-                  {isUser && message.text && (
-                    <div className={`flex items-center mt-1.5 mr-1 transition-opacity duration-200 ${isTouchDevice ? (showUserActions ? 'opacity-100' : 'opacity-0') : 'opacity-0 group-hover:opacity-100'}`}>
-                       <button onClick={handleCopy} className="p-1.5 rounded-full text-gray-400 hover:text-brand-primary hover:bg-gray-200/50 transition-all duration-150" aria-label="Copy message">
-                           {copied ? <i className="fas fa-check text-green-500 text-xs"></i> : <i className="fas fa-copy text-xs"></i>}
-                       </button>
-                    </div>
-                  )}
-                </>
-            )}
-          </div>
-        );
+          </div>);
       };
       
-      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateMessage, onClearChat, setChatError }) => {
+      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateLastTextMessage, onClearChat, setChatError }) => {
         const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
         const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
@@ -884,11 +838,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           }
         }, [messages, userHasScrolledUp]);
 
-        const handleRegenerateClick = (messageId) => {
-            setUserHasScrolledUp(false);
-            onRegenerateMessage(messageId);
-        };
-
         useEffect(() => { const ta = textareaRef.current; if (ta) { ta.style.height = 'auto'; const scrollHeight = ta.scrollHeight; const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180; ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`; }}, [inputText]);
         const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
         const handlePaste = async (event) => { const pastedFiles = Array.from(event.clipboardData.files); if (pastedFiles.length > 0) { const processedSomething = await processAndSetFiles(pastedFiles, true); if (processedSomething) event.preventDefault(); }};
@@ -900,6 +849,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const isSendButtonDisabled = (!isAiCurrentlyProcessing && (isLoading || (inputText.trim() === '' && selectedFiles.length === 0)));
         
         const hasVisibleChatContent = messages.some( msg => (msg.text || msg.attachedFiles?.length > 0) && !(msg.role === 'system' && !msg.isError) );
+
+        const lastMessage = messages[messages.length - 1];
+        const userMessageForLastAi = messages.length > 1 ? messages[messages.length - 2] : null;
+
+        const isLastMessageAiAndFinalized = lastMessage && lastMessage.role === 'model' && !lastMessage.isLoading && !isAiCurrentlyProcessing;
+        const canRegenerateLastAiAsText = isLastMessageAiAndFinalized && userMessageForLastAi && userMessageForLastAi.role === 'user';
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
@@ -929,14 +884,25 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     </div> 
                 )}
                 {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
-                    <ChatMessageItem 
-                      key={msg.id} 
-                      message={msg} 
-                      isLoading={isLoading}
-                      onRegenerateMessage={handleRegenerateClick}
-                    /> 
+                    <div key={msg.id}> 
+                        <ChatMessageItem message={msg} /> 
+                    </div> 
                 ))}
-               
+                {canRegenerateLastAiAsText && (
+                    <div className={`flex mt-2 justify-start`}> 
+                        <button 
+                            onClick={() => { 
+                                setChatError(null); 
+                                onRegenerateLastTextMessage(lastMessage.id);
+                            }} 
+                            className="p-1.5 rounded-full text-text-subtle hover:text-brand-primary hover:bg-interactive-hover transition-all duration-150 group" 
+                            aria-label="Regenerate response" 
+                            disabled={isLoading || isAiCurrentlyProcessing} 
+                        > 
+                            <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 group-hover:rotate-[75deg]"></i> 
+                        </button> 
+                    </div> 
+                )}
                 <div ref={messagesEndRef} className="h-1" />
             </div>
             
@@ -1298,7 +1264,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             
         }, [chatMessages]); 
 
-        const handleRegenerateMessage = useCallback(async (aiMessageIdToRegenerate) => { 
+        const handleRegenerateLastTextMessage = useCallback(async (aiMessageIdToRegenerate) => { 
             isStoppingGenerationRef.current = false; 
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
@@ -1306,18 +1272,67 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return;
             }
             const originalAiMsgIndex = chatMessages.findIndex(m => m.id === aiMessageIdToRegenerate);
-            if (originalAiMsgIndex <= 0 || chatMessages[originalAiMsgIndex-1]?.role !== 'user') {
+            if (originalAiMsgIndex <= 0 || chatMessages[originalAiMsgIndex-1].role !== 'user') {
                 setChatError("Cannot regenerate: Preceding user prompt not found.");
                 return;
             }
             
             const userPromptMsg = chatMessages[originalAiMsgIndex-1];
-            const historyForGeminiInit = getGeminiHistory(chatMessages.slice(0, originalAiMsgIndex - 1));
+            const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
+            const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
 
-            // Re-submit the user's prompt as a new message
-            await handleSendChatMessage(userPromptMsg.text, userPromptMsg.attachedFiles || []);
+            // --- IMMEDIATE UI UPDATE ---
+            // 1. Create a preliminary AI placeholder with a "Thinking..." state
+            const newAiPlaceholderId = Date.now().toString() + '_model_regen';
+            const preliminaryAiPlaceholder = { 
+                id: newAiPlaceholderId, 
+                role: 'model', 
+                text:'', 
+                loadingText: "Thinking...", // Default state
+                isLoading:true, 
+                timestamp:new Date(), 
+                isError: false, 
+                sources: null, 
+                searchUsed: false, // Default state
+            };
+            
+            // 2. Replace old AI message with the preliminary placeholder immediately
+            const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
+            setChatMessages([...chatHistoryForUiUpdate, preliminaryAiPlaceholder]);
+            // --- END IMMEDIATE UI UPDATE ---
 
-        }, [chatMessages, handleSendChatMessage]); 
+            // 3. Determine search need in the background
+            const needsSearch = await determineSearchNeed_service(genAI, userPromptMsg.text || "");
+            const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
+            
+            // 4. Update placeholder state if search is needed
+            if(needsSearch) {
+                setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
+            }
+            
+            // 5. Prepare prompt parts and initiate AI stream call
+            const promptPartsForRegen = [];
+            if (userPromptMsg.text) promptPartsForRegen.push({ text: userPromptMsg.text });
+            userPromptMsg.attachedFiles?.forEach(file => { 
+                 if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) {
+                    promptPartsForRegen.push({ inlineData: file.apiData });
+                 } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData.textContent) {
+                    promptPartsForRegen.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
+                }
+            });
+
+            if (promptPartsForRegen.length > 0) {
+                await _streamAiResponse(
+                    promptPartsForRegen, 
+                    newAiPlaceholderId, 
+                    historyForGeminiInit, 
+                    needsSearch,
+                    finalLoadingText
+                );
+            } else { 
+                setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
+            }
+        }, [chatMessages]); 
 
 
         return (
@@ -1327,7 +1342,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     onSendMessage={handleSendChatMessage} 
                     isLoading={isChatLoading} 
                     onStopGeneration={handleStopGeneration} 
-                    onRegenerateMessage={handleRegenerateMessage} 
+                    onRegenerateLastTextMessage={handleRegenerateLastTextMessage} 
                     onClearChat={handleClearChat} 
                     setChatError={setChatError} 
                 />
