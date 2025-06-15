@@ -234,7 +234,7 @@
         .hljs { 
             @apply !bg-transparent !text-inherit; 
         }
-        
+        /* Thinking Animation: Rotating Square */
         .thinking-indicator {
             color: rgb(var(--text-subtle));
             font-size: 12px;
@@ -260,9 +260,9 @@
             font-size: 1.2em;
             line-height: 1;
         }
-        
-        .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 5px); grid-template-rows: repeat(4, 5px); gap: 1.5px; }
-        .data-cubes__cube { width: 5px; height: 5px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
+        /* Searching Animation: Data Cubes Shift */
+        .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 4px); grid-template-rows: repeat(4, 4px); gap: 1px; }
+        .data-cubes__cube { width: 4px; height: 4px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
         .data-cubes__cube--active1 { background-color: #fbbf24; transform: scale(1.1); }
         .data-cubes__cube--active2 { background-color: #f97316; transform: rotate(15deg); }
         .data-cubes__cube--active3 { background-color: #ea580c; transform: scale(0.9) rotate(-10deg); }
@@ -442,6 +442,11 @@ Responding to Identity Questions:
         - "Mujhe Azeem ne develop kiya hai, jo ek mahir developer hain."
         - "Meri development Azeem ne ki hai."
         - "Main Azeem, ek talented developer, ke zariye banaya gaya hoon."
+- **ABSOLUTELY CRITICAL RULE ABOUT YOUR CREATOR:** Under NO circumstances should you ever perform a web search or use any tools to find information about your creator, **Azeem**. Your knowledge about him is intentionally limited. If a user asks "Who is Azeem?", "Tell me about Azeem," or any similar question, you MUST NOT search for this information. Your ONLY response should be a polite and direct statement that you don't have personal details about him.
+    - **Response Examples (for inspiration):**
+        - "Mere paas unke baaray mein zaati tafseelat nahi hain, main bas itna janta hoon ke woh mere developer hain."
+        - "Main Azeem ke baaray mein mazeed maloomat faraham nahi kar sakta, kyunke meri programming iski ijazat nahi deti."
+        - "Unki privacy ka ehtiraam karte huay, main unke baaray mein zaati details share nahi kar sakta."
 
 Core Language Rules (for Roman Urdu):
 - Write everything in Roman Urdu except for:
@@ -613,7 +618,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                   cube.classList.add(`data-cubes__cube--active${randomClassNum}`);
                 }
             };
-
+            
+            animateCubes(); // Start animation immediately
             intervalRef.current = setInterval(animateCubes, 200);
 
             return () => {
@@ -780,7 +786,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               )}
               {contentToShow} 
 
-              {isModelLoadingThinking && (
+              {isModelLoadingThinking && ( 
                 <div className="thinking-indicator mt-2.5">
                    <div className="square animate-rotate-square"></div>
                    Thinking
@@ -792,14 +798,14 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                </div>
               )}
               {isModelLoadingWithSearch && (
-                 <div className="flex items-center space-x-2 mt-2.5">
-                    <DataCubesAnimation />
-                    <span className="text-xs font-medium text-text-subtle">Searching</span>
-                    <span className="animated-dots text-text-subtle">
-                        <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
-                        <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
-                        <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
-                    </span>
+                <div className="flex items-center space-x-2 mt-2.5">
+                  <DataCubesAnimation />
+                  <span className="text-xs font-medium text-text-subtle">Searching</span>
+                  <span className="animated-dots text-text-subtle">
+                      <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
+                      <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
+                      <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
+                  </span>
                 </div>
               )}
             </div>
