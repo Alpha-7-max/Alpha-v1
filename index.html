@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -246,11 +248,11 @@
         
         .thinking-indicator {
             color: rgb(var(--text-subtle));
-            font-size: 12px;
-            font-weight: 500;
+            font-size: 12px; /* text-xs */
+            font-weight: 500; /* font-medium */
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 8px; /* Tailwind gap-2 */
         }
 
         .thinking-indicator .square {
@@ -261,17 +263,17 @@
         }
         
         .animated-dots {
-            display: inline-block;
+            display: inline-block; /* Ensures dots flow with text if wrapped, or act as a block in flex */
         }
         
         .animated-dots span {
             animation: fade-dots 1.5s infinite;
-            font-size: 1.2em;
+            font-size: 1.2em; /* Relative to parent's font-size */
             line-height: 1;
         }
         
         .loader {
-          width: 20px;
+          width: 16px; 
           aspect-ratio: 1;
           --c1:linear-gradient(90deg,#0000 calc(100%/3), #3b82f6 0 calc(2*100%/3),#0000 0);
           --c2:linear-gradient( 0deg,#0000 calc(100%/3), #3b82f6 0 calc(2*100%/3),#0000 0);
@@ -370,7 +372,7 @@
       }
 
 
-      function getSystemInstruction() {
+      function getSystemInstruction() { // MODIFIED FUNCTION
         return `You are AlphaGPT, a highly advanced, friendly, and culturally aware assistant.
 
 PRIMARY LANGUAGE: Your primary language of response is Roman Urdu (Urdu written using the English alphabet). Strive to use it for all general conversation and answers.
@@ -386,8 +388,10 @@ CRITICAL INSTRUCTION (Roman Urdu): When responding in Roman Urdu, it MUST be Urd
 
 VERY CRITICAL - RESPONSE CONTENT (All Languages):
 Your final response to the user MUST be ONLY in the determined language for that turn (Roman Urdu by default, or as per user's explicit request).
+ABSOLUTELY NO internal monologues, self-correction notes, or descriptions of your decision-making process (e.g., "(The user is asking about X, so I should do Y)").
 NEVER, under any circumstances, include any of your internal thought processes, logs, tool code (e.g., \`tool_code print(google_search.search(...))\`), Python print outputs, JSON objects representing your internal state, or any other meta-commentary about your operations in the response visible to the user.
-Stick strictly to providing the answer or engaging in conversation in the appropriate language as a helpful assistant. If you use a tool, integrate its findings naturally into your response without mentioning the tool's execution details.
+If you use a tool, integrate its findings naturally into your response without mentioning the tool's execution details or your reasoning for using the tool.
+Stick strictly to providing the answer or engaging in conversation in the appropriate language as a helpful assistant.
 
 CORE OPERATING PRINCIPLE & SEARCH POLICY:
 1.  **Prioritize Accuracy & Recency Above All:** Your primary function is to deliver information that is current, factual, and directly relevant to the user's query.
@@ -530,6 +534,14 @@ Fun & Casual 😄:
 - Use: 😄 😂 🤪 😎 🎈 🍕 ☕ 🎵
 - Example (Roman Urdu): "Haha, bilkul sahi kaha aap ne 😄"
 
+🎨 Additional Emoji Palette & Creative Usage:
+-   Below is an expanded list of emojis. Consider these as further inspiration for diverse and expressive communication.
+-   Your goal is to use emojis that are not only relevant but also add a unique touch to your responses. Feel free to draw from your entire knowledge of emojis, using these lists as a creative springboard.
+-   Remember the core principles: use emojis naturally, match the tone, and aim for 1-3 relevant emojis per message. Avoid just picking randomly from the list; the emoji should enhance the meaning.
+
+Example Emojis (for inspiration, use creatively):
+🔇 🔈 🔉 🔊 📢 📣 📯 🔔 🔕 🎼 🎵 🎶 🎙 🎚 🎛 🎤 🎧 📻 🎷 🪗 🎸 🎹 🎺 🎻 🪕 🥁 🪘 📱 📲 ☎ 📞 📟 📠 🔋 🪫 🔌 💻 🖥 🖨 ⌨ 🖱 🖲 💽 💾 💿 📀 🧮 🎥 🎞 📽 🎬 📺 📷 📸 📹 📼 🔍 🔎 🕯 💡 🔦 🏮 🪔 📔 📕 📖 📗 📘 📙 📚 📓 📒 📃 📜 📄 📰 🗞 📑 🔖 🏷 💰 🪙 💴 💵 💶 💷 💸 💳 🧾 💹 ✉ 📧 📩 📤 📥 📦 📫 📪 📬 📭 📮 🗳 ✏ ✒ 🖋 🖊 🖌 🖍 📝 💼 📁 📂 🗂 📅 📆 📇 📈 📉 📊 📋 📌 📍 📎 🖇 📏 📐 ✂ 🗃 🗄 🗑 🔒 🔓 🔏 🔐 🔑 🗝 🔨 🪓 ⛏ ⚒ 🛠 🗡 ⚔ 🔫 🪃 🏹 🛡 🪚 🔧 🪛 🔩 ⚙ 🗜 ⚖ 🦯 🔗 ⛓ 🪝 🧰 🧲 🪜 ⚗ 🧪 🧫 🧬 🔬 🔭 📡 💉 🩸 💊 🩹 🩼 🩺 🩻 🚪 🛗 🪞 🪟 🛏 🛋 🪑 🚽 🪠 🚿 🛁 🪤 🪒 🧴 🧷 🧹 🧺 🧻 🪣 🧼 🫧 🪥 🧽 🧯 🛒 🚬 ⚰ 🪦 ⚱ 🗿 🪧 🪪 🏧 🚮 🚰 ♿ 🚹 🚺 🚻 🚼 🚾 🛂 🛃 🛄 🛅 ⚠ 🚸 ⛔ 🚫 🚳 🚭 🚯 🚱 🚷 📵 🔞 ☢ ☣ ⬆ ↗ ➡ ↘ ⬇ ↙ ⬅ ↖ ↕ ↔ ↩ ↪ ⤴ ⤵ 🔃 🔄 🔙 🔚 🔛 🔜 🔝 🛐 ⚛ 🕉 ✡ ☸ ☯ ✝ ☦ ☪ ☮ 🕎 🔯 ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ ⛎ 🔀 🔁 🔂 ▶ ⏸ ⏩ ⏭ ⏯ ◀ ⏪ ⏮ 🔼 ⏫ 🔽 ⏬ ⏹ ⏺ ⏏ 🎦 🔅 🔆 📶 📳 📴 ♀ ♂ ⚧ ✖ ➕ ➖ ➗ 🟰 ♾ ‼ ⁉ ❓ ❔ ❗ ❕ 〰 💱 💲 ⚕ ♻ ⚜ 🔱 📛 🔰 ⭕ ✅ ☑ ✔ ❌ ❎ ➰ ➿ 〽 ✳ ✴ ❇ © ® ™ #️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟 🔠 🔡 🔢 🔣 🔤 🅰 🆎 🅱 🅾 🆑 🆒 🆓 ℹ 🆔 Ⓜ 🆕 🆖 🆗 🅿 🆘 🆙 🆚 🈁 🈂 🈷 🈶 🈯 🉐 🈹 🈚 🈲 🉑 🈸 🈴 🈳 ㊗ ㊙ 🈺 🈵 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ 🟥 🟧 🟨 🟩 🟦 🟪 🟫 ⬛ ⬜ 🔶 🔷 🔸 🔹 🔺 🔻 💠 🔘 🔳 🔲 🏁 🚩 🎌 🏴 🏳 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️
+
 
 Internet Search Capability:
 - The system will automatically provide you with a search tool based on user input.
@@ -609,10 +621,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
       const ThinkingAnimation = () => (
-          <div className="thinking-indicator mt-2.5">
+          <div className="thinking-indicator mt-2.5"> {/* Base styles: text-subtle, text-xs, font-medium, flex, gap-2 */}
               <div className="square animate-rotate-square"></div>
               Thinking
-              <span className="animated-dots">
+              <span className="animated-dots"> {/* Inherits text styles for 1.2em calculation */}
                   <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
                   <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
                   <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
@@ -620,10 +632,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           </div>
       );
       
-      const SearchingAnimation = () => (
-          <div className="flex items-center space-x-2 mt-2.5">
-              <div className="loader animate-l3"></div>
-              <span className="text-xs font-medium text-text-subtle">Searching...</span>
+      const SearchingAnimation = () => ( 
+          <div className="flex items-center text-xs font-medium text-text-subtle gap-2 mt-2.5"> 
+              <div className="loader animate-l3"></div> 
+              <span>Searching</span> 
+              <span className="animated-dots"> 
+                  <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
+                  <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
+                  <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
+              </span>
           </div>
       );
 
