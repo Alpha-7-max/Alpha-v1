@@ -261,8 +261,8 @@
             line-height: 1;
         }
         /* Searching Animation: Data Cubes Shift */
-        .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 4px); grid-template-rows: repeat(4, 4px); gap: 1px; }
-        .data-cubes__cube { width: 4px; height: 4px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
+        .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 3px); grid-template-rows: repeat(4, 3px); gap: 1px; }
+        .data-cubes__cube { width: 3px; height: 3px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
         .data-cubes__cube--active1 { background-color: #60a5fa; transform: scale(1.1); }
         .data-cubes__cube--active2 { background-color: #3b82f6; transform: rotate(15deg); }
         .data-cubes__cube--active3 { background-color: #2563eb; transform: scale(0.9) rotate(-10deg); }
@@ -859,7 +859,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="w-8 h-8">
                       <defs>
                         <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
