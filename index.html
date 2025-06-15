@@ -262,10 +262,10 @@
         }
         /* Searching Animation: Data Cubes Shift */
         .data-cubes__grid { display: grid; grid-template-columns: repeat(4, 4px); grid-template-rows: repeat(4, 4px); gap: 1px; }
-        .data-cubes__cube { width: 4px; height: 4px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; }
+        .data-cubes__cube { width: 4px; height: 4px; background-color: rgb(var(--border-medium)); transition: background-color 0.3s ease, transform 0.3s ease; border-radius: 1px; }
         .data-cubes__cube--active1 { background-color: #60a5fa; transform: scale(1.1); }
-        .data-cubes__cube--active2 { background-color: #3b82f6; transform: rotate(15deg); }
-        .data-cubes__cube--active3 { background-color: #2563eb; transform: scale(0.9) rotate(-10deg); }
+        .data-cubes__cube--active2 { background-color: #f97316; transform: rotate(15deg); }
+        .data-cubes__cube--active3 { background-color: #fbbf24; transform: scale(0.9) rotate(-10deg); }
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -640,7 +640,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         );
       };
 
-      const ChatMessageItem = ({ message, isLoading, onRegenerateMessage }) => { 
+      const ChatMessageItem = ({ message, isLoading, onRegenerateMessage, showToast }) => { 
         const [copied, setCopied] = useState(false);
         const [showUserActions, setShowUserActions] = useState(false);
         const isUser = message.role === 'user'; 
@@ -657,8 +657,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const handleCopy = () => {
           if (message.text) {
             navigator.clipboard.writeText(message.text).then(() => {
-              setCopied(true);
-              setTimeout(() => setCopied(false), 2000);
+              showToast("Copied");
             }).catch(err => {
               console.error("Failed to copy text: ", err);
             });
@@ -805,7 +804,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               )}
               {contentToShow} 
 
-              {isModelLoadingThinking && (
+              {isModelLoadingThinking && ( 
                 <div className="thinking-indicator mt-2.5">
                    <div className="square animate-rotate-square"></div>
                    Thinking
@@ -835,6 +834,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     ${isUser ? (isTouchDevice ? (showUserActions ? 'opacity-100' : 'opacity-0') : 'opacity-0 group-hover:opacity-100') : ''}
                     transition-opacity duration-200
                 `}>
+                    <button onClick={handleCopy} className="p-1.5 rounded-full text-gray-400 hover:text-brand-primary hover:bg-gray-200/50 transition-all duration-150" aria-label="Copy message">
+                      <i className="fas fa-copy text-xs"></i>
+                    </button>
                     {message.role === 'model' && !message.isError && (
                         <button 
                             onClick={() => onRegenerateMessage(message.id)} 
@@ -845,20 +847,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             <i className="fas fa-arrows-rotate text-xs transform transition-transform duration-200 hover:rotate-[75deg]"></i> 
                         </button> 
                     )}
-                    <button onClick={handleCopy} className="p-1.5 rounded-full text-gray-400 hover:text-brand-primary hover:bg-gray-200/50 transition-all duration-150" aria-label="Copy message">
-                        {copied ? (
-                            <i className="fas fa-check text-green-500 text-xs"></i>
-                        ) : (
-                            <i className="fas fa-copy text-xs"></i>
-                        )}
-                    </button>
                 </div>
             )}
           </div>
         );
       };
       
-      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateMessage, onClearChat, setChatError }) => {
+      const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateMessage, onClearChat, setChatError, showToast }) => {
         const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
         const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
@@ -871,15 +866,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           const messagesEndEl = messagesEndRef.current;
           if (!messagesEndEl) return;
 
-          if (lastMessage.role === 'user') {
+          if (lastMessage.role === 'user' || lastMessage.isLoading) {
             messagesEndEl.scrollIntoView({ behavior: "smooth" });
-          } else if (lastMessage.role === 'model') {
-            if (!userHasScrolledUp) { 
-              if (lastMessage.isLoading) {
-                messagesEndEl.scrollIntoView({ behavior: "auto" }); 
-              } else {
-                messagesEndEl.scrollIntoView({ behavior: "smooth" });
-              }
+          } else if (lastMessage.role === 'model' && !lastMessage.isLoading) {
+            if (!userHasScrolledUp) {
+              messagesEndEl.scrollIntoView({ behavior: "smooth" });
             }
           }
         }, [messages, userHasScrolledUp]);
@@ -917,18 +908,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             </header>
             
             <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">
-                { !hasVisibleChatContent && !isLoading && ( 
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
-                        <p className="text-xl md:text-2xl font-[Outfit] font-semibold mb-2" style={{ color: '#536872' }}>Hello there!</p>
-                        <p className="text-sm font-[Outfit] mt-1.5" style={{ color: '#536872' }}>I am AlphaGPT. You can ask me anything or share files to get started.</p>
-                    </div> 
-                )}
                 {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
                     <ChatMessageItem 
                       key={msg.id} 
                       message={msg} 
                       isLoading={isLoading}
                       onRegenerateMessage={onRegenerateMessage}
+                      showToast={showToast}
                     /> 
                 ))}
                
@@ -1003,9 +989,19 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const [chatMessages, setChatMessages] = useState([]); 
         const [isChatLoading, setIsChatLoading] = useState(false); 
         const [chatError, setChatError] = useState(null); 
+        const [toast, setToast] = useState({ show: false, message: '' });
 
         const isStoppingGenerationRef = useRef(false);
         
+        useEffect(() => {
+            if (toast.show) {
+                const timer = setTimeout(() => {
+                    setToast({ show: false, message: '' });
+                }, 2500);
+                return () => clearTimeout(timer);
+            }
+        }, [toast.show]);
+
         useEffect(() => { 
             if (chatError) { 
                 const errorId = Date.now() + '_sys_validation_err'; 
@@ -1237,37 +1233,30 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const newUserMessageForUi = { id: Date.now().toString() + '_user', role: 'user', text: messageText, timestamp: new Date(), attachedFiles: userMessageFiles };
             const aiMessageId = Date.now().toString() + '_model_resp';
 
-            // --- IMMEDIATE UI UPDATE ---
-            // 1. Create a preliminary AI placeholder with a "Thinking..." state
             const preliminaryAiPlaceholder = { 
                 id: aiMessageId, 
                 role: 'model', 
                 text: '', 
-                loadingText: "Thinking...", // Default state
+                loadingText: "Thinking...", 
                 timestamp: new Date(), 
                 isLoading: true, 
                 isError: false, 
                 sources: null, 
-                searchUsed: false, // Default state
+                searchUsed: false, 
             }; 
             
-            // 2. Add user message and preliminary placeholder to the chat immediately
             setChatMessages(prev => {
                 const filteredPrev = prev.filter(m => !(m.role === 'system' && m.isError));
                 return [...filteredPrev, newUserMessageForUi, preliminaryAiPlaceholder];
             });
-            // --- END IMMEDIATE UI UPDATE ---
             
-            // 3. Determine search need in the background
             const needsSearch = await determineSearchNeed_service(genAI, messageText.trim());
             const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
 
-            // 4. Update the placeholder's state if a search is needed, changing the loader text
             if (needsSearch) {
                 setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
             }
 
-            // 5. Prepare prompt parts and initiate the AI stream call
             const promptPartsForUserTurn = [];
             if (messageText.trim()) promptPartsForUserTurn.push({ text: messageText.trim() });
             filesToSend.forEach(file => {
@@ -1300,6 +1289,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setChatError("API Key is not configured for regeneration.");
                 return;
             }
+            
             const originalAiMsgIndex = chatMessages.findIndex(m => m.id === aiMessageIdToRegenerate);
             if (originalAiMsgIndex <= 0 || chatMessages[originalAiMsgIndex-1]?.role !== 'user') {
                 setChatError("Cannot regenerate: Preceding user prompt not found.");
@@ -1307,62 +1297,21 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
             
             const userPromptMsg = chatMessages[originalAiMsgIndex-1];
-            const historyUpToUserPrompt = chatMessages.slice(0, originalAiMsgIndex - 1);
-            const historyForGeminiInit = getGeminiHistory(historyUpToUserPrompt);
             
-            // --- IMMEDIATE UI UPDATE ---
-            const newAiPlaceholderId = Date.now().toString() + '_model_regen';
-            const preliminaryAiPlaceholder = { 
-                id: newAiPlaceholderId, 
-                role: 'model', 
-                text:'', 
-                loadingText: "Thinking...", // Default state
-                isLoading:true, 
-                timestamp:new Date(), 
-                isError: false, 
-                sources: null, 
-                searchUsed: false, // Default state
-            };
-            
-            setChatMessages(prev => [...prev, preliminaryAiPlaceholder]);
-            // --- END IMMEDIATE UI UPDATE ---
+            // Re-submit the user prompt as a new message
+            handleSendChatMessage(userPromptMsg.text, userPromptMsg.attachedFiles || []);
 
-            // 3. Determine search need in the background
-            const needsSearch = await determineSearchNeed_service(genAI, userPromptMsg.text || "");
-            const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
-            
-            // 4. Update placeholder state if search is needed
-            if(needsSearch) {
-                setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
-            }
-            
-            // 5. Prepare prompt parts and initiate AI stream call
-            const promptPartsForRegen = [];
-            if (userPromptMsg.text) promptPartsForRegen.push({ text: userPromptMsg.text });
-            userPromptMsg.attachedFiles?.forEach(file => { 
-                 if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) {
-                    promptPartsForRegen.push({ inlineData: file.apiData });
-                 } else if ((file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain') && file.apiData?.textContent) {
-                    promptPartsForRegen.push({ text: `\n[Start of Text File: ${file.name}]\n${file.apiData.textContent}\n[End of Text File: ${file.name}]\n` });
-                }
-            });
-
-            if (promptPartsForRegen.length > 0) {
-                await _streamAiResponse(
-                    promptPartsForRegen, 
-                    newAiPlaceholderId, 
-                    historyForGeminiInit, 
-                    needsSearch,
-                    finalLoadingText
-                );
-            } else { 
-                setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
-            }
-        }, [chatMessages]); 
+        }, [chatMessages, handleSendChatMessage]); 
 
 
         return (
-            <div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0">
+            <div className="h-full text-text-primary flex flex-col font-sans items-center justify-start sm:justify-center p-0 relative">
+                {toast.show && (
+                    <div className="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center space-x-2 z-50 animate-fade-in-up">
+                        <i className="fas fa-check-circle"></i>
+                        <span>{toast.message}</span>
+                    </div>
+                )}
                 <ChatInterface 
                     messages={chatMessages} 
                     onSendMessage={handleSendChatMessage} 
@@ -1371,6 +1320,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     onRegenerateMessage={handleRegenerateMessage} 
                     onClearChat={handleClearChat} 
                     setChatError={setChatError} 
+                    showToast={(message) => setToast({show: true, message: message})}
                 />
             </div>
         );
