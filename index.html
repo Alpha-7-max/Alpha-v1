@@ -210,6 +210,7 @@
         .chat-messages-container::-webkit-scrollbar { @apply w-1.5; } 
         .chat-messages-container::-webkit-scrollbar-track { @apply bg-transparent rounded-full; } 
         .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
+        .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; } 
         
         textarea.auto-resize { min-height: 52px; max-height: 180px; }
         textarea.auto-resize::-webkit-scrollbar { width: 5px; }
@@ -260,12 +261,12 @@
         }
         
         .animated-dots {
-            display: inline-block; 
+            display: inline-block; /* Ensures dots flow with text if wrapped, or act as a block in flex */
         }
         
         .animated-dots span {
             animation: fade-dots 1.5s infinite;
-            font-size: 1.2em; 
+            font-size: 1.2em; /* Relative to parent's font-size */
             line-height: 1;
         }
         
@@ -278,32 +279,6 @@
           background-size: 300% 2px,2px 300%;
           background-repeat: no-repeat;
           animation: l3 1s infinite linear;
-        }
-
-        .message-bubble-stable {
-          transition: none !important; 
-          transform: translateZ(0); 
-          backface-visibility: hidden; 
-        }
-        
-        .message-content-growing {
-          overflow: hidden; 
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-        }
-        
-        .streaming-container {
-          contain: layout style paint; 
-        }
-        
-        .chat-messages-container {
-          scroll-behavior: auto; 
-          scrollbar-width: thin; 
-          scrollbar-color: theme('colors.gray.200') transparent;
-        }
-        
-        .chat-messages-container.streaming-active {
-          scroll-behavior: auto !important; 
         }
       }
     </style>
@@ -395,7 +370,7 @@
       }
 
 
-      function getSystemInstruction() { 
+      function getSystemInstruction() { // MODIFIED FUNCTION
         return `You are AlphaGPT, a highly advanced, friendly, and culturally aware assistant.
 
 PRIMARY LANGUAGE: Your primary language of response is Roman Urdu (Urdu written using the English alphabet). Strive to use it for all general conversation and answers.
@@ -644,10 +619,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
       const ThinkingAnimation = () => (
-          <div className="thinking-indicator mt-2.5">
+          <div className="thinking-indicator mt-2.5"> {/* Base styles: text-subtle, text-xs, font-medium, flex, gap-2 */}
               <div className="square animate-rotate-square"></div>
               Thinking
-              <span className="animated-dots">
+              <span className="animated-dots"> {/* Inherits text styles for 1.2em calculation */}
                   <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
                   <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
                   <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
@@ -667,90 +642,39 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           </div>
       );
 
-      const createWebWorkerDelay = (ms) => {
-        return new Promise((resolve) => {
-          const workerCode = `
-            self.onmessage = function(e) {
-              const delay = e.data;
-              setTimeout(() => {
-                self.postMessage('done');
-              }, delay);
-            };
-          `;
-          const blob = new Blob([workerCode], { type: 'application/javascript' });
-          const worker = new Worker(URL.createObjectURL(blob));
-          
-          worker.onmessage = () => {
-            worker.terminate();
-            URL.revokeObjectURL(blob);
-            resolve();
-          };
-          worker.onerror = (e) => { 
-            console.error("Web Worker error for delay:", e);
-            worker.terminate();
-            URL.revokeObjectURL(blob);
-            resolve(); 
-          };
-          worker.postMessage(ms);
-        });
-      };
 
-      const createPageVisibilityDelay = (ms) => {
-        return new Promise((resolve) => {
-          const startTime = performance.now();
-          const checkDelay = () => {
-            const currentTime = performance.now();
-            if (document.hidden) {
-              setTimeout(checkDelay, 100); 
-            } else {
-              if ((currentTime - startTime) >= ms) {
-                resolve();
-              } else {
-                setTimeout(checkDelay, Math.min(10, ms - (currentTime - startTime)));
-              }
-            }
-          };
-          checkDelay();
-        });
-      };
-
-      const createTabResistantDelay = (ms, stopSignalRef) => {
-        if (stopSignalRef && stopSignalRef.current) {
-            return Promise.resolve();
-        }
-        // Prioritize Web Worker if available
-        if (typeof Worker !== 'undefined') {
-          return createWebWorkerDelay(ms);
-        }
-        // Fallback to Page Visibility API aware delay
-        return createPageVisibilityDelay(ms);
-      };
-
-
-      const ChatMessageItem = ({ message, isStreaming = false }) => { 
+      const ChatMessageItem = ({ message }) => { 
         const isUser = message.role === 'user'; 
         const isError = message.isError === true; 
         const isModelLoading = message.role === 'model' && message.isLoading && !isError;
         
         const contentRef = useRef(null); 
         
-        const streamingClasses = isModelLoading || isStreaming ? 'message-bubble-stable streaming-container' : '';
-        
         const isModelLoadingWithSearch = isModelLoading && message.searchUsed && message.loadingText === "Searching...";
         const isModelLoadingThinking = isModelLoading && (!message.searchUsed || message.loadingText === "Thinking...");
         
         useEffect(() => {
           if (message.role === 'model' && !isError && contentRef.current) {
+            // Apply highlighting to all code blocks, whether loading or finalized
             const codeElements = contentRef.current.querySelectorAll('pre code');
             codeElements.forEach(codeEl => {
+              // highlightElement is generally safe to call multiple times.
+              // It checks if already highlighted and updates if necessary.
               hljs.highlightElement(codeEl);
             });
 
+            // If the message is finalized (not loading), add copy buttons and render sources
             if (!message.isLoading) {
               const preElements = contentRef.current.querySelectorAll('pre');
               preElements.forEach(preEl => {
+                // Check if copy button wrapper already exists to prevent duplication
                 if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
-                  return; 
+                  // If button exists, ensure it's in the default state if it was "copied"
+                  const button = preEl.parentNode.querySelector('.code-copy-button');
+                  if (button && button.innerHTML.includes('text-green-500') && !button.dataset.copyTimeout) {
+                    // This case is unlikely if timeout always resets, but as a safeguard.
+                  }
+                  return; // Already has a wrapper and button
                 }
 
                 const codeElement = preEl.querySelector('code');
@@ -776,7 +700,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 button.setAttribute('aria-label', 'Copy code');
 
                 button.onclick = () => {
-                  if (button.dataset.copyTimeout) clearTimeout(button.dataset.copyTimeout);
+                  if (button.dataset.copyTimeout) clearTimeout(button.dataset.copyTimeout); // Clear existing timeout
 
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
                     button.innerHTML = COPIED_ICON_SVG;
@@ -789,7 +713,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                       button.classList.add('text-gray-600', 'hover:text-gray-800');
                       delete button.dataset.copyTimeout;
                     }, 2000);
-                    button.dataset.copyTimeout = timeoutId; 
+                    button.dataset.copyTimeout = timeoutId; // Store timeout ID
                   }).catch(err => console.error('Failed to copy: ', err));
                 };
 
@@ -800,9 +724,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
               });
 
+              // Handle sources rendering (clear and re-render for finalized message)
               const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
               if (sourcesContainer) {
-                sourcesContainer.innerHTML = ''; 
+                sourcesContainer.innerHTML = ''; // Clear previous sources
                 if (message.sources && message.sources.length > 0) {
                   const sourcesElement = createSourceLinksElement(message.sources);
                   if (sourcesElement) {
@@ -817,7 +742,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
-        let bubbleBaseClasses = `px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0 ${streamingClasses}`; 
+        let bubbleBaseClasses = 'px-4 py-3 md:px-4 md:py-3 shadow-card animate-fade-in-up opacity-0'; 
         let bubbleRoleClasses = ''; 
         let bubbleWidthClasses = ''; 
         let contentToShow = null;
@@ -835,20 +760,17 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 contentToShow = ( <div className="text-sm break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
             } else { 
                 contentToShow = (
-                  <div ref={contentRef} className="message-content-growing">
-                    <div className="text-base markdown-content break-words" 
-                         dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />
-                    <div className="sources-placeholder"></div>
+                  <div ref={contentRef}>
+                    <div className="text-base markdown-content break-words" dangerouslySetInnerHTML={{ __html: marked.parse(message.text || '') }} />
+                    <div className="sources-placeholder"></div> {/* Placeholder for sources */}
                   </div>
                 );
             } 
         }
 
         return (
-          <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} 
-               style={{animationFillMode: 'forwards'}}>
-            <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} 
-                 style={{animationFillMode: 'forwards'}}>
+          <div className={`flex items-end ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up opacity-0`} style={{animationFillMode: 'forwards'}}>
+            <div className={`${bubbleBaseClasses} ${bubbleWidthClasses} ${bubbleRoleClasses}`} style={{animationFillMode: 'forwards'}}>
               {isUser && message.attachedFiles && message.attachedFiles.length > 0 && (
                 <div className={`grid gap-2.5 ${message.text ? 'mb-2.5' : ''} ${message.attachedFiles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                   {message.attachedFiles.map(file => {
@@ -887,68 +809,30 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       };
       
       const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateLastTextMessage, onClearChat, setChatError }) => {
-        const [inputText, setInputText] = useState(''); 
-        const [selectedFiles, setSelectedFiles] = useState([]); 
-        const [isMobileView, setIsMobileView] = useState(false); 
-        const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
-        const [isCurrentlyStreaming, setIsCurrentlyStreaming] = useState(false);
-        
-        const fileInputRef = useRef(null); 
-        const messagesEndRef = useRef(null); 
-        const textareaRef = useRef(null); 
-        const chatContainerRef = useRef(null); 
-
+        const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
+        const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
-        
-        useEffect(() => { 
-            const container = chatContainerRef.current; 
-            if (!container) return; 
-            const handleScroll = () => { 
-                const { scrollTop, scrollHeight, clientHeight } = container; 
-                setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);
-            }; 
-            container.addEventListener('scroll', handleScroll, { passive: true }); 
-            return () => container.removeEventListener('scroll', handleScroll); 
-        }, []); 
+        useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
         
         useEffect(() => {
           const lastMessage = messages[messages.length - 1];
           if (!lastMessage) return; 
 
           const messagesEndEl = messagesEndRef.current;
-          const container = chatContainerRef.current;
-          if (!messagesEndEl || !container) return;
-
-          const isAiStreaming = lastMessage.role === 'model' && lastMessage.isLoading;
-          
-          if (isAiStreaming !== isCurrentlyStreaming) {
-             setIsCurrentlyStreaming(isAiStreaming);
-          }
-          
-          if (isAiStreaming) {
-            if (!container.classList.contains('streaming-active')) {
-                container.classList.add('streaming-active');
-            }
-          } else {
-            if (container.classList.contains('streaming-active')) {
-                container.classList.remove('streaming-active');
-            }
-          }
+          if (!messagesEndEl) return;
 
           if (lastMessage.role === 'user') {
             messagesEndEl.scrollIntoView({ behavior: "smooth" });
           } else if (lastMessage.role === 'model') {
             if (!userHasScrolledUp) { 
-              if (lastMessage.isLoading) { 
-                messagesEndEl.scrollIntoView({ behavior: "auto", block: "end" }); 
-              } else { 
-                setTimeout(() => { 
-                    messagesEndEl.scrollIntoView({ behavior: "smooth" });
-                }, 100); 
+              if (lastMessage.isLoading) {
+                messagesEndEl.scrollIntoView({ behavior: "auto" }); 
+              } else {
+                messagesEndEl.scrollIntoView({ behavior: "smooth" });
               }
             }
           }
-        }, [messages, userHasScrolledUp, isCurrentlyStreaming]);
+        }, [messages, userHasScrolledUp]);
 
         useEffect(() => { const ta = textareaRef.current; if (ta) { ta.style.height = 'auto'; const scrollHeight = ta.scrollHeight; const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180; ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`; }}, [inputText]);
         const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
@@ -988,19 +872,17 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
-            <div ref={chatContainerRef} 
-                 className={`flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area ${isCurrentlyStreaming ? 'streaming-active' : ''}`}>
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">
                 { !hasVisibleChatContent && !isLoading && ( 
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
                         <p className="text-xl md:text-2xl font-[Outfit] font-semibold mb-2" style={{ color: '#536872' }}>Hello there!</p>
                         <p className="text-sm font-[Outfit] mt-1.5" style={{ color: '#536872' }}>I am AlphaGPT. You can ask me anything or share files to get started.</p>
                     </div> 
                 )}
-                {messages.map((msg) => ( 
-                  (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
-                  <div key={msg.id}> 
-                    <ChatMessageItem message={msg} isStreaming={msg.role === 'model' && msg.isLoading} /> 
-                  </div> 
+                {messages.map((msg) => ( (msg.text || msg.attachedFiles?.length > 0 || (msg.role === 'model' && msg.isLoading) || msg.isError) && 
+                    <div key={msg.id}> 
+                        <ChatMessageItem message={msg} /> 
+                    </div> 
                 ))}
                 {canRegenerateLastAiAsText && (
                     <div className={`flex mt-2 justify-start`}> 
@@ -1023,7 +905,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-default bg-white flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-gray-100 border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
 
             <form onSubmit={handleSubmit} className="bg-white border-t border-border-default flex-shrink-0">
-              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3 pl-3 md:pl-4">
+              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3 pl-3 md:pl-4"> {/* Removed button container, added pl to main div */}
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading || isAiCurrentlyProcessing} /> 
                 <button
                   type="button"
@@ -1165,7 +1047,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             let displayedAiText = "";
             let currentMessageSources = [];
             
-            if (isStoppingGenerationRef.current) { 
+            if (isStoppingGenerationRef.current) {
                 setIsChatLoading(false);
                 return;
             }
@@ -1178,7 +1060,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const chatModel = genAI.getGenerativeModel(modelConfig);
                 const chatSession = chatModel.startChat({ history: historyForGeminiInit });
                 
-                if (isStoppingGenerationRef.current) { 
+                if (isStoppingGenerationRef.current) {
                      setIsChatLoading(false);
                      return;
                 }
@@ -1232,10 +1114,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                                 searchUsed: useSearchInitially || m.searchUsed,
                                 loadingText: currentLoadingText 
                             } : m));
-                            const delayTime = Math.min(15, Math.max(2, part.length * 2)); // MODIFIED: Faster streaming
-                            await createTabResistantDelay(delayTime, isStoppingGenerationRef); 
+                            await new Promise(resolve => setTimeout(resolve, Math.min(30, Math.max(5, part.length * 5))));
                         }
-                    } else if (sourcesDelta && sourcesDelta.length > 0) { 
+                    } else if (sourcesDelta && sourcesDelta.length > 0) {
                          setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? {
                             ...m,
                             text: displayedAiText, 
@@ -1260,7 +1141,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             let baseText = finalText;
                             if (!baseText.includes(stopNoticeStr)) {
                                 const isInCodeBlock = (baseText.match(/```/g) || []).length % 2 !== 0;
-                                if (isInCodeBlock) baseText += "\n```"; 
+                                if (isInCodeBlock) baseText += "\n```";
                                 baseText += (baseText.trim() ? "\n\n---\n" : "") + stopNoticeStr;
                             }
                             finalText = baseText;
