@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -655,26 +656,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         
         useEffect(() => {
           if (message.role === 'model' && !isError && contentRef.current) {
-            // Apply highlighting to all code blocks, whether loading or finalized
             const codeElements = contentRef.current.querySelectorAll('pre code');
             codeElements.forEach(codeEl => {
-              // highlightElement is generally safe to call multiple times.
-              // It checks if already highlighted and updates if necessary.
               hljs.highlightElement(codeEl);
             });
 
-            // If the message is finalized (not loading), add copy buttons and render sources
             if (!message.isLoading) {
               const preElements = contentRef.current.querySelectorAll('pre');
               preElements.forEach(preEl => {
-                // Check if copy button wrapper already exists to prevent duplication
                 if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
-                  // If button exists, ensure it's in the default state if it was "copied"
-                  const button = preEl.parentNode.querySelector('.code-copy-button');
-                  if (button && button.innerHTML.includes('text-green-500') && !button.dataset.copyTimeout) {
-                    // This case is unlikely if timeout always resets, but as a safeguard.
-                  }
-                  return; // Already has a wrapper and button
+                  return; 
                 }
 
                 const codeElement = preEl.querySelector('code');
@@ -700,7 +691,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 button.setAttribute('aria-label', 'Copy code');
 
                 button.onclick = () => {
-                  if (button.dataset.copyTimeout) clearTimeout(button.dataset.copyTimeout); // Clear existing timeout
+                  if (button.dataset.copyTimeout) clearTimeout(button.dataset.copyTimeout); 
 
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
                     button.innerHTML = COPIED_ICON_SVG;
@@ -713,7 +704,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                       button.classList.add('text-gray-600', 'hover:text-gray-800');
                       delete button.dataset.copyTimeout;
                     }, 2000);
-                    button.dataset.copyTimeout = timeoutId; // Store timeout ID
+                    button.dataset.copyTimeout = timeoutId; 
                   }).catch(err => console.error('Failed to copy: ', err));
                 };
 
@@ -724,10 +715,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 }
               });
 
-              // Handle sources rendering (clear and re-render for finalized message)
               const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
               if (sourcesContainer) {
-                sourcesContainer.innerHTML = ''; // Clear previous sources
+                sourcesContainer.innerHTML = ''; 
                 if (message.sources && message.sources.length > 0) {
                   const sourcesElement = createSourceLinksElement(message.sources);
                   if (sourcesElement) {
@@ -1114,7 +1104,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                                 searchUsed: useSearchInitially || m.searchUsed,
                                 loadingText: currentLoadingText 
                             } : m));
-                            await new Promise(resolve => setTimeout(resolve, Math.min(30, Math.max(5, part.length * 5))));
+                            await new Promise(resolve => setTimeout(resolve, Math.min(10, Math.max(1, part.length * 1))));
                         }
                     } else if (sourcesDelta && sourcesDelta.length > 0) {
                          setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? {
