@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -614,7 +616,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 `;
       }
       
-      const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h--4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path></svg>`;
+      const COPY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z"></path></svg>`;
       const COPIED_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path></svg>`;
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
@@ -655,80 +657,78 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const isModelLoadingThinking = isModelLoading && (!message.searchUsed || message.loadingText === "Thinking...");
         
         useEffect(() => {
-          if (message.role === 'model' && !isError && contentRef.current) {
-            const codeElements = contentRef.current.querySelectorAll('pre code');
-            codeElements.forEach(codeEl => {
-              hljs.highlightElement(codeEl);
-            });
-
-            if (!message.isLoading) {
-              const preElements = contentRef.current.querySelectorAll('pre');
-              preElements.forEach(preEl => {
-                if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
-                  return; 
+          if (message.role === 'model' && !isError && !message.isLoading && contentRef.current) {
+            const preElements = contentRef.current.querySelectorAll('pre');
+            preElements.forEach(preEl => {
+              if (preEl.parentNode && preEl.parentNode.classList.contains('code-block-wrapper')) {
+                const existingCodeElement = preEl.querySelector('code');
+                if (existingCodeElement && !existingCodeElement.dataset.highlighted) {
+                    hljs.highlightElement(existingCodeElement);
+                    existingCodeElement.dataset.highlighted = 'true';
                 }
+                return;
+              }
 
-                const codeElement = preEl.querySelector('code');
-                if (!codeElement) return;
+              const codeElement = preEl.querySelector('code');
+              if (!codeElement) return;
 
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('code-block-wrapper');
-                wrapper.style.position = 'relative';
+              const wrapper = document.createElement('div');
+              wrapper.classList.add('code-block-wrapper');
+              wrapper.style.position = 'relative';
 
-                const button = document.createElement('button');
-                button.innerHTML = COPY_ICON_SVG;
-                button.classList.add(
-                  'code-copy-button', 'absolute', 'p-1.5',
-                  'bg-gray-100', 'hover:bg-gray-200',
-                  'text-gray-600', 'hover:text-gray-800',
-                  'border', 'border-gray-300', 'rounded-md',
-                  'transition-colors', 'duration-150',
-                  'opacity-80', 'hover:opacity-100'
-                );
-                button.style.top = '0.35rem';
-                button.style.right = '0.35rem';
-                button.style.zIndex = '10';
-                button.setAttribute('aria-label', 'Copy code');
+              const button = document.createElement('button');
+              button.innerHTML = COPY_ICON_SVG;
+              button.classList.add(
+                'code-copy-button', 'absolute', 'p-1.5',
+                'bg-gray-100', 'hover:bg-gray-200',
+                'text-gray-600', 'hover:text-gray-800',
+                'border', 'border-gray-300', 'rounded-md',
+                'transition-colors', 'duration-150',
+                'opacity-80', 'hover:opacity-100'
+              );
+              button.style.top = '0.35rem';
+              button.style.right = '0.35rem';
+              button.style.zIndex = '10';
+              button.setAttribute('aria-label', 'Copy code');
 
-                button.onclick = () => {
-                  if (button.dataset.copyTimeout) clearTimeout(button.dataset.copyTimeout); 
-
+              button.onclick = () => {
+                if (codeElement) {
                   navigator.clipboard.writeText(codeElement.textContent || '').then(() => {
                     button.innerHTML = COPIED_ICON_SVG;
                     button.classList.add('text-green-500');
                     button.classList.remove('text-gray-600', 'hover:text-gray-800');
-                    
-                    const timeoutId = setTimeout(() => {
+                    setTimeout(() => {
                       button.innerHTML = COPY_ICON_SVG;
                       button.classList.remove('text-green-500');
                       button.classList.add('text-gray-600', 'hover:text-gray-800');
-                      delete button.dataset.copyTimeout;
                     }, 2000);
-                    button.dataset.copyTimeout = timeoutId; 
                   }).catch(err => console.error('Failed to copy: ', err));
-                };
-
-                if (preEl.parentNode) {
-                  preEl.parentNode.insertBefore(wrapper, preEl);
-                  wrapper.appendChild(preEl);
-                  wrapper.appendChild(button);
                 }
-              });
+              };
 
-              const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
-              if (sourcesContainer) {
-                sourcesContainer.innerHTML = ''; 
-                if (message.sources && message.sources.length > 0) {
-                  const sourcesElement = createSourceLinksElement(message.sources);
-                  if (sourcesElement) {
-                    sourcesContainer.appendChild(sourcesElement);
-                  }
-                }
+              if (preEl.parentNode) {
+                preEl.parentNode.insertBefore(wrapper, preEl);
+                wrapper.appendChild(preEl); 
+                wrapper.appendChild(button); 
               }
+              
+              if (!codeElement.dataset.highlighted) {
+                hljs.highlightElement(codeElement);
+                codeElement.dataset.highlighted = 'true';
+              }
+            });
+
+            // Handle sources rendering
+            const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
+            if (sourcesContainer && message.sources && message.sources.length > 0) {
+                 const sourcesElement = createSourceLinksElement(message.sources);
+                 if (sourcesElement) {
+                    sourcesContainer.appendChild(sourcesElement);
+                 }
             }
+
           }
         }, [message.text, message.role, message.isLoading, isError, message.sources]);
-
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
@@ -963,6 +963,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         const isStoppingGenerationRef = useRef(false);
         
+        // Refs for smoother streaming UI updates
+        const streamTextBuffer = useRef("");
+        const streamSourcesBuffer = useRef([]);
+        const streamUpdateScheduled = useRef(false);
+        const streamAnimationFrameId = useRef(null);
+
         useEffect(() => { 
             if (chatError) { 
                 const errorId = Date.now() + '_sys_validation_err'; 
@@ -1014,6 +1020,43 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const handleStopGeneration = useCallback(() => {
             isStoppingGenerationRef.current = true;
             setIsChatLoading(false); 
+
+            // Cancel any pending animation frame for streaming UI update
+            if (streamAnimationFrameId.current) {
+                cancelAnimationFrame(streamAnimationFrameId.current);
+                streamAnimationFrameId.current = null;
+            }
+            streamUpdateScheduled.current = false;
+
+
+            setChatMessages(prevMessages => {
+                let messageUpdated = false;
+                const updatedMessages = prevMessages.map(msg => {
+                    if (msg.role === 'model' && msg.isLoading) {
+                        messageUpdated = true;
+                        let newText = streamTextBuffer.current || msg.text || ""; // Use buffered text if available
+                        const stopNotice = "*Generation stopped by user.*";
+                        
+                        if (!newText.includes(stopNotice)) {
+                            const currentContent = newText;
+                            if (currentContent.trim()) {
+                                let processedContent = currentContent;
+                                const isInCodeBlock = (processedContent.match(/```/g) || []).length % 2 !== 0;
+                                if (isInCodeBlock) {
+                                    processedContent += "\n```"; 
+                                }
+                                newText = processedContent + (processedContent.trim() ? "\n\n---\n" : "") + stopNotice;
+                            } else {
+                                newText = stopNotice;
+                            }
+                        }
+                        
+                        return { ...msg, text: newText, isLoading: false, sources: streamSourcesBuffer.current.length > 0 ? [...streamSourcesBuffer.current] : msg.sources };
+                    }
+                    return msg;
+                });
+                return messageUpdated ? updatedMessages : prevMessages;
+            });
         }, []); 
 
         const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key is not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); }, []);
@@ -1034,10 +1077,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         ) => {
             setIsChatLoading(true);
 
-            let displayedAiText = "";
-            let currentMessageSources = [];
+            // Initialize stream buffers and flags
+            streamTextBuffer.current = "";
+            streamSourcesBuffer.current = [];
+            streamUpdateScheduled.current = false;
+            if (streamAnimationFrameId.current) {
+                cancelAnimationFrame(streamAnimationFrameId.current);
+                streamAnimationFrameId.current = null;
+            }
             
-            if (isStoppingGenerationRef.current) {
+            if (isStoppingGenerationRef.current) { // Check before starting API call
                 setIsChatLoading(false);
                 return;
             }
@@ -1050,18 +1099,34 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const chatModel = genAI.getGenerativeModel(modelConfig);
                 const chatSession = chatModel.startChat({ history: historyForGeminiInit });
                 
-                if (isStoppingGenerationRef.current) {
+                if (isStoppingGenerationRef.current) { // Check again after model init
                      setIsChatLoading(false);
                      return;
                 }
 
                 const result = await chatSession.sendMessageStream(originalPromptParts);
 
+                const performUiUpdate = () => {
+                    if (!isStoppingGenerationRef.current) { 
+                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
+                            ...m, 
+                            text: streamTextBuffer.current, 
+                            isLoading: true, 
+                            isError: false, 
+                            sources: streamSourcesBuffer.current.length > 0 ? [...streamSourcesBuffer.current] : null, 
+                            searchUsed: useSearchInitially || m.searchUsed,
+                            loadingText: currentLoadingText 
+                        } : m));
+                    }
+                    streamUpdateScheduled.current = false;
+                    streamAnimationFrameId.current = null; 
+                };
+
                 for await (const chunk of result.stream) { 
                     if (isStoppingGenerationRef.current) break;
                     
                     const rawChunkText = chunk.text();
-                    let chunkTextForDisplayProcessing = "";
+                    let chunkTextForDisplay = "";
 
                     if (typeof rawChunkText === 'string') {
                         const lines = rawChunkText.split('\n');
@@ -1070,12 +1135,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             !line.trim().startsWith("print(google_search.search")
                         );
                         if (filteredLines.length > 0 && filteredLines.some(line => line.trim() !== "" || lines.length === filteredLines.length )) {
-                           chunkTextForDisplayProcessing = filteredLines.join('\n');
+                           chunkTextForDisplay = filteredLines.join('\n');
                         } else if (filteredLines.length === 0 && rawChunkText.trim() !== "") {
-                            chunkTextForDisplayProcessing = ""; 
+                            chunkTextForDisplay = ""; 
                         } else {
-                            chunkTextForDisplayProcessing = rawChunkText; 
+                            chunkTextForDisplay = rawChunkText; 
                         }
+                    }
+
+                    if (chunkTextForDisplay.length > 0 || (chunkTextForDisplay === "" && rawChunkText === "")) { 
+                        streamTextBuffer.current += chunkTextForDisplay;
                     }
                     
                     let sourcesDelta;
@@ -1084,51 +1153,36 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                           .filter(gc => gc.web && gc.web.uri)
                           .map(gc => ({ uri: gc.web.uri, title: gc.web.title || gc.web.uri }));
                         if (sourcesDelta && sourcesDelta.length > 0) {
-                           currentMessageSources = mergeCitations(currentMessageSources, sourcesDelta);
+                           streamSourcesBuffer.current = mergeCitations(streamSourcesBuffer.current, sourcesDelta);
                         }
                     }
 
-                    if (chunkTextForDisplayProcessing && typeof chunkTextForDisplayProcessing === 'string' && chunkTextForDisplayProcessing.length > 0) {
-                        const textParts = chunkTextForDisplayProcessing.split(/(\s+|\*+|`+|_|~|---|===|\n)/);
-                        for (const part of textParts) {
-                            if (isStoppingGenerationRef.current) break;
-                            if (part.length === 0) continue;
-
-                            displayedAiText += part;
-                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
-                                ...m, 
-                                text: displayedAiText, 
-                                isLoading: true, 
-                                isError: false, 
-                                sources: currentMessageSources.length > 0 ? [...currentMessageSources] : null, 
-                                searchUsed: useSearchInitially || m.searchUsed,
-                                loadingText: currentLoadingText 
-                            } : m));
-                            await new Promise(resolve => setTimeout(resolve, Math.min(10, Math.max(1, part.length * 1))));
-                        }
-                    } else if (sourcesDelta && sourcesDelta.length > 0) {
-                         setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? {
-                            ...m,
-                            text: displayedAiText, 
-                            isLoading: true,
-                            isError: false,
-                            sources: currentMessageSources.length > 0 ? [...currentMessageSources] : null,
-                            searchUsed: useSearchInitially || m.searchUsed,
-                            loadingText: currentLoadingText
-                        } : m));
+                    if (!streamUpdateScheduled.current && (chunkTextForDisplay.length > 0 || (sourcesDelta && sourcesDelta.length > 0))) {
+                        streamUpdateScheduled.current = true;
+                        streamAnimationFrameId.current = requestAnimationFrame(performUiUpdate);
                     }
+                    
                     if (isStoppingGenerationRef.current) break;
                 }
                 
+                // Ensure any final pending update is cancelled if generation was stopped
+                if (isStoppingGenerationRef.current && streamAnimationFrameId.current) {
+                    cancelAnimationFrame(streamAnimationFrameId.current);
+                    streamAnimationFrameId.current = null;
+                }
+                streamUpdateScheduled.current = false; // Reset for safety, though performUiUpdate does it
+
+                // Final update for the fully accumulated content or stop/error message
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
-                        let finalText = displayedAiText;
-                        let finalSources = currentMessageSources;
+                        let finalText = streamTextBuffer.current;
+                        let finalSources = streamSourcesBuffer.current;
                         let isMessageError = false; 
                         const stopNoticeStr = "*Generation stopped by user.*";
 
                         if (isStoppingGenerationRef.current) { 
-                            let baseText = finalText;
+                             // If stopped, ensure stop notice is there, using buffered text
+                            let baseText = streamTextBuffer.current;
                             if (!baseText.includes(stopNoticeStr)) {
                                 const isInCodeBlock = (baseText.match(/```/g) || []).length % 2 !== 0;
                                 if (isInCodeBlock) baseText += "\n```";
@@ -1136,6 +1190,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             }
                             finalText = baseText;
                         } else if (!finalText.trim() && (!finalSources || finalSources.length === 0)) {
+                            // If stream ended with no content and not stopped by user
                             if (useSearchInitially) {
                                 finalText = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar poochein. Shukriya! 🙏";
                             } else {
@@ -1165,6 +1220,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearchInitially } : m));
             } finally {
+                // Ensure rAF is cancelled on any exit path if it was somehow still scheduled
+                if (streamAnimationFrameId.current) {
+                    cancelAnimationFrame(streamAnimationFrameId.current);
+                    streamAnimationFrameId.current = null;
+                }
+                streamUpdateScheduled.current = false;
                 setIsChatLoading(false);
             }
         };
