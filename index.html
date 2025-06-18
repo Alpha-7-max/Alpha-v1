@@ -30,7 +30,7 @@
               'border-light': 'rgb(var(--border-light) / <alpha-value>)',
               'border-medium': 'rgb(var(--border-medium) / <alpha-value>)',
               'interactive-hover': 'rgb(var(--interactive-hover) / <alpha-value>)',
-              'focus-ring-color': 'rgb(var(--focus-ring-color) / <alpha-value>)', // Specific for button focus
+              'focus-ring-color': 'rgb(var(--focus-ring-color) / <alpha-value>)',
               
               'status-info': 'rgb(var(--status-info) / <alpha-value>)',
               'status-success': 'rgb(var(--status-success) / <alpha-value>)',
@@ -110,7 +110,6 @@
             },
             boxShadow: {
                 'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)', 
-                'header': '0 1px 2px rgba(var(--text-primary), 0.03), 0 1px 1px rgba(var(--text-primary), 0.015)',
                 'chat-window': '0 15px 50px -8px rgba(var(--text-primary), 0.08), 0 8px 25px -8px rgba(var(--text-primary),0.05)',
             }
           },
@@ -294,7 +293,7 @@
         }
 
         .file-pill-container {
-          @apply flex flex-wrap gap-1 mb-1.5 px-0.5 py-0.5 overflow-y-auto max-h-[22px]; /* Single row of tiny pills */
+          @apply flex flex-wrap gap-1 mb-1.5 px-0.5 py-0.5 overflow-y-auto max-h-[22px]; 
           scrollbar-width: thin;
           scrollbar-color: rgba(var(--text-subtle), 0.2) transparent;
         }
@@ -305,10 +304,10 @@
         .file-pill {
           @apply bg-gray-100 border border-border-light text-[10px] pl-1.5 pr-1 py-[1px] rounded-full flex items-center shadow-sm hover:shadow transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle;
         }
-        .file-pill-icon { @apply text-brand-primary text-[10px] mr-1; } /* Smaller icon */
-        .file-pill-name { @apply truncate max-w-[60px] sm:max-w-[80px] text-text-secondary font-medium; } /* Shorter name */
+        .file-pill-icon { @apply text-brand-primary text-[10px] mr-1; } 
+        .file-pill-name { @apply truncate max-w-[60px] sm:max-w-[80px] text-text-secondary font-medium; } 
         .file-pill-remove { @apply ml-1 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors; }
-        .file-pill-remove i { @apply text-[9px]; } /* Smaller X icon */
+        .file-pill-remove i { @apply text-[9px]; } 
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -907,12 +906,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const canRegenerateLastAiAsText = isLastMessageAiAndFinalized && userMessageForLastAi && userMessageForLastAi.role === 'user';
 
         const sendOrStopButtonBaseClasses = "font-semibold w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 ease-in-out transform active:animate-button-press flex-shrink-0 focus:outline-none";
-        let sendOrStopButtonDynamicClasses = "bg-slate-200 hover:bg-slate-300 text-slate-700"; // Default for send and stop
+        let sendOrStopButtonDynamicClasses = "bg-slate-200 hover:bg-slate-300 text-text-button-icon"; 
 
-        if (isAiCurrentlyProcessing) { // Stop Button specific (already covered by default)
-             // sendOrStopButtonDynamicClasses remains as default
-        } else { // Send Button specific
-            if (!isSendButtonDisabled) { // Only add focus ring if it's actually clickable
+        if (isAiCurrentlyProcessing) { 
+            // Stop button active styles (already set by default)
+        } else { // Send Button styles
+            if (!isSendButtonDisabled) { 
                  sendOrStopButtonDynamicClasses += ' focus:ring-2 focus:ring-focus-ring-color'; 
             }
         }
@@ -920,7 +919,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
-            <header className="p-4 border-b border-border-default bg-white flex items-center justify-between flex-shrink-0 shadow-header">
+            <header className="p-4 bg-surface-chat-area flex items-center justify-between flex-shrink-0"> {/* Removed border and shadow, matched BG */}
                 <div className="flex items-center space-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="w-8 h-8">
                       <defs>
@@ -935,7 +934,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         <h1 className="text-lg font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
                     </div>
                 </div>
-                <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-interactive-hover transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
+                <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
             <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">
@@ -1023,7 +1022,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         onClick={isAiCurrentlyProcessing ? onStopGeneration : undefined } 
                         disabled={isAiCurrentlyProcessing ? false : isSendButtonDisabled} 
                         className={`${sendOrStopButtonBaseClasses} ${sendOrStopButtonDynamicClasses}`}
-                        style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', border: 'none', overflow: 'hidden' }} // Added overflow:hidden
+                        style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', border: 'none', overflow: 'hidden' }} 
                         aria-label={isAiCurrentlyProcessing ? "Stop generation" : "Send message"}
                     > 
                       {isAiCurrentlyProcessing ? (
