@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -23,19 +20,17 @@
               'surface-chat-area': 'rgb(var(--surface-chat-area) / <alpha-value>)', 
               'surface-user-bubble': 'rgb(var(--surface-user-bubble) / <alpha-value>)', 
               'border-user-bubble': 'rgb(var(--border-user-bubble) / <alpha-value>)',
-              'button-send-bg': 'rgb(var(--button-send-bg) / <alpha-value>)',
-              'button-send-hover-bg': 'rgb(var(--button-send-hover-bg) / <alpha-value>)',
-
+              
               'text-primary': 'rgb(var(--text-primary) / <alpha-value>)',         
               'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',           
-              'text-on-primary': 'rgb(var(--text-on-primary) / <alpha-value>)',
+              'text-button-icon': 'rgb(var(--text-button-icon) / <alpha-value>)', 
               'text-subtle': 'rgb(var(--text-subtle) / <alpha-value>)',
 
               'border-default': 'rgb(var(--border-default) / <alpha-value>)',
               'border-light': 'rgb(var(--border-light) / <alpha-value>)',
               'border-medium': 'rgb(var(--border-medium) / <alpha-value>)',
               'interactive-hover': 'rgb(var(--interactive-hover) / <alpha-value>)',
-              'interactive-focus-ring': 'rgb(var(--interactive-focus-ring-color) / <alpha-value>)',
+              'focus-ring-color': 'rgb(var(--focus-ring-color) / <alpha-value>)', // Specific for button focus
               
               'status-info': 'rgb(var(--status-info) / <alpha-value>)',
               'status-success': 'rgb(var(--status-success) / <alpha-value>)',
@@ -114,10 +109,8 @@
               '2.5': '0.625rem',
             },
             boxShadow: {
-                'interactive': '0 4px 10px 0 rgba(var(--button-send-bg), 0.15)', 
                 'card': '0 6px 20px rgba(var(--text-primary), 0.04), 0 3px 8px rgba(var(--text-primary),0.02)', 
                 'header': '0 1px 2px rgba(var(--text-primary), 0.03), 0 1px 1px rgba(var(--text-primary), 0.015)',
-                'input-focus': '0 0 0 1px rgb(var(--interactive-focus-ring-color) / 1)', 
                 'chat-window': '0 15px 50px -8px rgba(var(--text-primary), 0.08), 0 8px 25px -8px rgba(var(--text-primary),0.05)',
             }
           },
@@ -130,15 +123,12 @@
           --brand-primary: 100 116 139; 
           --brand-secondary: 71 85 105; 
           
-          --button-send-bg: 71 85 105;       
-          --button-send-hover-bg: 100 116 139; 
-          
-          --interactive-focus-ring-color: 100 116 139; 
+          --focus-ring-color: 148 163 184; /* slate-400 for button focus */
           
           --surface-main: 248 250 252; 
           --surface-card: 255 255 255;
           --surface-chat-area: 248 250 252; 
-          --surface-input: 255 255 255;
+          --surface-input: 255 255 255; 
           --surface-accent: 241 245 249; 
           --surface-bubble-ai: 255 255 255;
           
@@ -147,14 +137,14 @@
           
           --text-primary: 17 24 39; 
           --text-secondary: 55 65 81;    
-          --text-subtle: 107 114 128; 
-          --text-on-primary: 255 255 255; 
+          --text-subtle: 107 114 128; /* slate-500 */
+          --text-button-icon: 71 85 105; /* slate-600 */
           
           --border-default: 229 231 235; 
           --border-light: 243 244 246;     
           --border-medium: 209 213 219; 
           
-          --interactive-hover: 229 231 235; 
+          --interactive-hover: 229 231 235; /* For + icon hover */
           
           --status-info: 59 130 246; 
           --status-success: 22 163 74;    
@@ -215,12 +205,31 @@
         .chat-messages-container::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
         .chat-messages-container { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; } 
         
-        textarea.auto-resize { min-height: 52px; max-height: 180px; }
-        textarea.auto-resize::-webkit-scrollbar { width: 5px; }
-        textarea.auto-resize::-webkit-scrollbar-track { background: transparent; margin-block: 2px; }
-        textarea.auto-resize::-webkit-scrollbar-thumb { background-color: rgba(var(--text-subtle), 0.25); border-radius: 10px; }
-        textarea.auto-resize::-webkit-scrollbar-thumb:hover { background-color: rgba(var(--text-subtle), 0.4); }
-        textarea.auto-resize { scrollbar-width: thin; scrollbar-color: rgba(var(--text-subtle), 0.25) transparent; }
+        .content-editable-input {
+            padding: 6px 2px; 
+        }
+        .content-editable-input:empty::before {
+          content: attr(data-placeholder);
+          color: rgb(var(--text-subtle)); 
+          @apply pointer-events-none absolute;
+          top: 6px; 
+          left: 2px; 
+          line-height: inherit;
+        }
+        .content-editable-input::-webkit-scrollbar { width: 4px; height: 4px; }
+        .content-editable-input::-webkit-scrollbar-track { background: transparent; }
+        .content-editable-input::-webkit-scrollbar-thumb { 
+          background-color: rgba(var(--text-subtle), 0.25); 
+          border-radius: 10px;
+        }
+        .content-editable-input::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(var(--text-subtle), 0.4);
+        }
+        .content-editable-input::-webkit-scrollbar-button { display: none !important; width: 0 !important; height: 0 !important; }
+        .content-editable-input {
+          scrollbar-width: thin; 
+          scrollbar-color: rgba(var(--text-subtle), 0.25) transparent; 
+        }
 
         .text-gradient-brand {
           background-image: linear-gradient(to right, #60a5fa, #f472b6);
@@ -264,12 +273,12 @@
         }
         
         .animated-dots {
-            display: inline-block; /* Ensures dots flow with text if wrapped, or act as a block in flex */
+            display: inline-block; 
         }
         
         .animated-dots span {
             animation: fade-dots 1.5s infinite;
-            font-size: 1.2em; /* Relative to parent's font-size */
+            font-size: 1.2em; 
             line-height: 1;
         }
         
@@ -283,6 +292,23 @@
           background-repeat: no-repeat;
           animation: l3 1s infinite linear;
         }
+
+        .file-pill-container {
+          @apply flex flex-wrap gap-1 mb-1.5 px-0.5 py-0.5 overflow-y-auto max-h-[22px]; /* Single row of tiny pills */
+          scrollbar-width: thin;
+          scrollbar-color: rgba(var(--text-subtle), 0.2) transparent;
+        }
+        .file-pill-container::-webkit-scrollbar { @apply w-1 h-1; }
+        .file-pill-container::-webkit-scrollbar-track { @apply bg-transparent; }
+        .file-pill-container::-webkit-scrollbar-thumb { @apply bg-[rgba(var(--text-subtle),0.2)] rounded-full; }
+
+        .file-pill {
+          @apply bg-gray-100 border border-border-light text-[10px] pl-1.5 pr-1 py-[1px] rounded-full flex items-center shadow-sm hover:shadow transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle;
+        }
+        .file-pill-icon { @apply text-brand-primary text-[10px] mr-1; } /* Smaller icon */
+        .file-pill-name { @apply truncate max-w-[60px] sm:max-w-[80px] text-text-secondary font-medium; } /* Shorter name */
+        .file-pill-remove { @apply ml-1 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors; }
+        .file-pill-remove i { @apply text-[9px]; } /* Smaller X icon */
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -455,7 +481,7 @@ Responding to Identity Questions:
     - **Examples (for inspiration, not for direct use):**
         - "Mera naam AlphaGPT hai. Main ek advanced digital assistant hoon jo aapki madad ke liye yahan hai."
         - "Main AlphaGPT hoon. Aap mujhse koi bhi sawal pooch sakte hain."
-        - "Aap mujhe AlphaGPT keh sakte hain. Main ek AI assistant hoon, jo aapki madad karne ke liye banaya gaya hai."
+        - "Aap mujhe AlphaGPT keh sakte hain. Main ek AI assistant hoon, jo aapki madad karne ke liye banaya gaya hoon."
 - If asked about your creator (e.g., "Who made you?"): Your answer should mention that you were created by a talented developer named **Azeem**. Maintain a respectful and professional tone.
     - **Examples (for inspiration, not for direct use):**
         - "Mujhe Azeem ne develop kiya hai, jo ek mahir developer hain."
@@ -800,7 +826,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       
       const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateLastTextMessage, onClearChat, setChatError }) => {
         const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
-        const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const textareaRef = useRef(null); const chatContainerRef = useRef(null); 
+        const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const chatContainerRef = useRef(null); 
+        const contentEditableRef = useRef(null);
+
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
         useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
         
@@ -824,13 +852,49 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           }
         }, [messages, userHasScrolledUp]);
 
-        useEffect(() => { const ta = textareaRef.current; if (ta) { ta.style.height = 'auto'; const scrollHeight = ta.scrollHeight; const maxHeight = parseInt(getComputedStyle(ta).maxHeight, 10) || 180; ta.style.height = `${Math.min(scrollHeight, maxHeight)}px`; }}, [inputText]);
         const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
-        const handlePaste = async (event) => { const pastedFiles = Array.from(event.clipboardData.files); if (pastedFiles.length > 0) { const processedSomething = await processAndSetFiles(pastedFiles, true); if (processedSomething) event.preventDefault(); }};
+        const handlePaste = async (event) => { 
+            const pastedFiles = Array.from(event.clipboardData.files); 
+            if (pastedFiles.length > 0) { 
+                const processedSomething = await processAndSetFiles(pastedFiles, true); 
+            }
+        };
         const processAndSetFiles = async (filesArray, isFromPaste = false) => { if (!filesArray.length) return false; let filesToProcess = []; let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0); let didProcessAnyFile = false; let localErrorMessage = null; for (const file of filesArray) { const isImage = file.type.startsWith('image/'); const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt')); if (!isImage && !isTxt) { if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`); else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files allowed.`; continue; } if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; continue; } if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; break; } filesToProcess.push(file); currentTotalSize += file.size; didProcessAnyFile = true; } if(localErrorMessage){ setChatError(localErrorMessage); } else { setChatError(null); } if (filesToProcess.length > 0) { const processedFileObjects = await Promise.all( filesToProcess.map(async (file) => { const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name; let apiData; if (file.type.startsWith('image/')) { const base64Data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.onerror = (error) => reject(error); }); apiData = { mimeType: file.type, data: base64Data }; } else { const textContent = await file.text(); apiData = { textContent: textContent }; } return { id, file, name: file.name, type: file.type, apiData }; }) ); setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]); } return didProcessAnyFile; };
         const removeSelectedFile = (fileId) => { setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); };
-        const handleSubmit = (e) => { if(e) e.preventDefault(); if (!inputText.trim() && selectedFiles.length === 0) return; setUserHasScrolledUp(false); setChatError(null); onSendMessage(inputText, selectedFiles); setInputText(''); setSelectedFiles([]); };
-        const handleTextareaKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { if (isMobileView) { return; } else { if (!isSendButtonDisabled) { handleSubmit(e); } else { e.preventDefault(); }}}};
+        
+        const handleSubmit = (e) => { 
+            if(e) e.preventDefault(); 
+            const trimmedInput = inputText.trim(); 
+            if (!trimmedInput && selectedFiles.length === 0) return; 
+            
+            setUserHasScrolledUp(false); 
+            setChatError(null); 
+            onSendMessage(trimmedInput, selectedFiles); 
+            setInputText(''); 
+            if (contentEditableRef.current) {
+                contentEditableRef.current.innerHTML = ''; 
+            }
+            setSelectedFiles([]); 
+        };
+
+        const handleInputFromContentEditable = (e) => {
+            let currentText = e.currentTarget.innerText;
+            if (currentText === '\n' && e.currentTarget.innerHTML === '<br>') {
+                 currentText = '';
+                 e.currentTarget.innerHTML = '';
+            }
+            setInputText(currentText);
+        };
+        
+        const handleContentEditableKeyDown = (e) => { 
+            if (e.key === 'Enter' && !e.shiftKey) { 
+                e.preventDefault(); 
+                if (!isSendButtonDisabled) { 
+                    handleSubmit(e); 
+                }
+            }
+        };
+
         const isAiCurrentlyProcessing = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
         const isSendButtonDisabled = (!isAiCurrentlyProcessing && (isLoading || (inputText.trim() === '' && selectedFiles.length === 0)));
         
@@ -841,6 +905,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         const isLastMessageAiAndFinalized = lastMessage && lastMessage.role === 'model' && !lastMessage.isLoading && !isAiCurrentlyProcessing;
         const canRegenerateLastAiAsText = isLastMessageAiAndFinalized && userMessageForLastAi && userMessageForLastAi.role === 'user';
+
+        const sendOrStopButtonBaseClasses = "font-semibold w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-150 ease-in-out transform active:animate-button-press flex-shrink-0 focus:outline-none";
+        let sendOrStopButtonDynamicClasses = "bg-slate-200 hover:bg-slate-300 text-slate-700"; // Default for send and stop
+
+        if (isAiCurrentlyProcessing) { // Stop Button specific (already covered by default)
+             // sendOrStopButtonDynamicClasses remains as default
+        } else { // Send Button specific
+            if (!isSendButtonDisabled) { // Only add focus ring if it's actually clickable
+                 sendOrStopButtonDynamicClasses += ' focus:ring-2 focus:ring-focus-ring-color'; 
+            }
+        }
+
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
@@ -853,7 +929,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                           <stop offset="100%" stopColor="#f472b6" />
                         </linearGradient>
                       </defs>
-                      <path fill="url(#iconGradient)" d="M45.403,25.562c-0.506-1.89-1.518-3.553-2.906-4.862c1.134-2.665,0.963-5.724-0.487-8.237	c-1.391-2.408-3.636-4.131-6.322-4.851c-1.891-0.506-3.839-0.462-5.669,0.088C28.276,5.382,25.562,4,22.647,4	c-4.906,0-9.021,3.416-10.116,7.991c-0.01,0.001-0.019-0.003-0.029-0.002c-2.902,0.36-5.404,2.019-6.865,4.549	c-1.391,2.408-1.76,5.214-1.04,7.9c0.507,1.891,1.519,3.556,2.909,4.865c-1.134,2.666-0.97,5.714,0.484,8.234	c1.391,2.408,3.636,4.131,6.322,4.851c0.896,0.24,1.807,0.359,2.711,0.359c1.003,0,1.995-0.161,2.957-0.45	C21.722,44.619,24.425,46,27.353,46c4.911,0,9.028-3.422,10.12-8.003c2.88-0.35,5.431-2.006,6.891-4.535	C45.754,31.054,46.123,28.249,45.403,25.562z M35.17,9.543c2.171,0.581,3.984,1.974,5.107,3.919c1.049,1.817,1.243,4,0.569,5.967	c-0.099-0.062-0.193-0.131-0.294-0.19l-9.169-5.294c-0.312-0.179-0.698-0.177-1.01,0.006l-10.198,6.041l-0.052-4.607l8.663-5.001	C30.733,9.26,33,8.963,35.17,9.543z M29.737,22.195l0.062,5.504l-4.736,2.805l-4.799-2.699l-0.062-5.504l4.736-2.805L29.737,22.195z M14.235,14.412C14.235,9.773,18.009,6,22.647,6c2.109,0,4.092,0.916,5.458,2.488C28,8.544,27.891,8.591,27.787,8.651l-9.17,5.294	c-0.312,0.181-0.504,0.517-0.5,0.877l0.133,11.851l-4.015-2.258V14.412z M6.528,23.921c-0.581-2.17-0.282-4.438,0.841-6.383	c1.06-1.836,2.823-3.074,4.884-3.474c-0.004,0.116-0.018,0.23-0.018,0.348V25c0,0.361,0.195,0.694,0.51,0.872l10.329,5.81	L19.11,34.03l-8.662-5.002C8.502,27.905,7.11,26.092,6.528,23.921z M14.83,40.457c-2.171-0.581-3.984-1.974-5.107-3.919	c-1.053-1.824-1.249-4.001-0.573-5.97c0.101,0.063,0.196,0.133,0.299,0.193l9.169,5.294c0.154,0.089,0.327,0.134,0.5,0.134	c0.177,0,0.353-0.047,0.51-0.14l10.198-6.041l0.052,4.607l-8.663,5.001C19.269,40.741,17.001,41.04,14.83,40.457z M35.765,35.588	c0,4.639-3.773,8.412-8.412,8.412c-2.119,0-4.094-0.919-5.459-2.494c0.105-0.056,0.216-0.098,0.32-0.158l9.17-5.294	c0.312-0.181,0.504,0.517-0.5-0.877L31.75,23.327l4.015,2.258V35.588z M42.631,32.462c-1.056,1.83-2.84,3.086-4.884,3.483	c0.004-0.12,0.018-0.237,0.018-0.357V25c0-0.361-0.195-0.694-0.51-0.872l-10.329-5.81l3.964-2.348l8.662,5.002	c1.946,1.123,3.338,2.937,3.92,5.107C44.053,28.249,43.754,30.517,42.631,32.462z" />
+                      <path fill="url(#iconGradient)" d="M45.403,25.562c-0.506-1.89-1.518-3.553-2.906-4.862c1.134-2.665,0.963-5.724-0.487-8.237	c-1.391-2.408-3.636-4.131-6.322-4.851c-1.891-0.506-3.839-0.462-5.669,0.088C28.276,5.382,25.562,4,22.647,4	c-4.906,0-9.021,3.416-10.116,7.991c-0.01,0.001-0.019-0.003-0.029-0.002c-2.902,0.36-5.404,2.019-6.865,4.549	c-1.391-2.408-1.76,5.214-1.04,7.9c0.507,1.891,1.519,3.556,2.909,4.865c-1.134-2.666-0.97,5.714,0.484,8.234	c1.391,2.408,3.636,4.131,6.322,4.851c0.896,0.24,1.807,0.359,2.711,0.359c1.003,0,1.995-0.161,2.957-0.45	C21.722,44.619,24.425,46,27.353,46c4.911,0,9.028-3.422,10.12-8.003c2.88-0.35,5.431-2.006,6.891-4.535	C45.754,31.054,46.123,28.249,45.403,25.562z M35.17,9.543c2.171,0.581,3.984,1.974,5.107,3.919c1.049,1.817,1.243,4,0.569,5.967	c-0.099-0.062-0.193-0.131-0.294-0.19l-9.169-5.294c-0.312-0.179-0.698-0.177-1.01,0.006l-10.198,6.041l-0.052-4.607l8.663-5.001	C30.733,9.26,33,8.963,35.17,9.543z M29.737,22.195l0.062,5.504l-4.736,2.805l-4.799-2.699l-0.062-5.504l4.736-2.805L29.737,22.195z M14.235,14.412C14.235,9.773,18.009,6,22.647,6c2.109,0,4.092,0.916,5.458,2.488C28,8.544,27.891,8.591,27.787,8.651l-9.17,5.294	c-0.312,0.181-0.504,0.517-0.5,0.877l0.133,11.851l-4.015-2.258V14.412z M6.528,23.921c-0.581-2.17-0.282-4.438,0.841-6.383	c1.06-1.836,2.823-3.074,4.884-3.474c-0.004,0.116-0.018,0.23-0.018,0.348V25c0,0.361,0.195,0.694,0.51,0.872l10.329,5.81	L19.11,34.03l-8.662-5.002C8.502,27.905,7.11,26.092,6.528,23.921z M14.83,40.457c-2.171-0.581-3.984-1.974-5.107-3.919	c-1.053-1.824-1.249-4.001-0.573-5.97c0.101,0.063,0.196,0.133,0.299,0.193l9.169,5.294c0.154,0.089,0.327,0.134,0.5,0.134	c0.177,0,0.353-0.047,0.51-0.14l10.198-6.041l0.052,4.607l-8.663,5.001C19.269,40.741,17.001,41.04,14.83,40.457z M35.765,35.588	c0,4.639-3.773,8.412-8.412,8.412c-2.119,0-4.094-0.919-5.459-2.494c0.105-0.056,0.216-0.098,0.32-0.158l9.17-5.294	c0.312-0.181,0.504,0.517-0.5-0.877L31.75,23.327l4.015,2.258V35.588z M42.631,32.462c-1.056,1.83-2.84,3.086-4.884,3.483	c0.004-0.12,0.018-0.237,0.018-0.357V25c0-0.361-0.195-0.694-0.51-0.872l-10.329-5.81l3.964-2.348l8.662,5.002	c1.946,1.123,3.338,2.937,3.92,5.107C44.053,28.249,43.754,30.517,42.631,32.462z" />
                     </svg>
                     <div>
                         <h1 className="text-lg font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
@@ -892,65 +968,74 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 <div ref={messagesEndRef} className="h-1" />
             </div>
             
-            {selectedFiles.length > 0 && ( <div className="p-3 border-t border-border-default bg-white flex flex-wrap gap-2 items-center overflow-x-auto flex-shrink-0"> {selectedFiles.map(file => ( <div key={file.id} className="bg-gray-100 border border-border-light text-xs pl-2.5 pr-1.5 py-1 rounded-full flex items-center shadow-sm hover:shadow-md transition-shadow duration-150 flex-shrink-0 animate-scale-in-subtle"> {file.type.startsWith('image/') ? <FileImageIcon className="text-brand-primary text-sm mr-1.5"/> : <FileTextIcon className="text-brand-primary text-sm mr-1.5"/> } <span className="truncate max-w-[90px] sm:max-w-[120px] text-text-secondary font-medium">{file.name}</span> <button onClick={() => removeSelectedFile(file.id)} className="ml-2 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors"> <i className="fas fa-times text-xs"></i> </button> </div> ))} </div> )}
-
-            <form onSubmit={handleSubmit} className="bg-white border-t border-border-default flex-shrink-0">
-              <div className="pt-2 pb-3 pr-3 md:pt-2 md:pb-4 md:pr-4 flex items-end space-x-2 md:space-x-3 pl-3 md:pl-4"> {/* Removed button container, added pl to main div */}
-                <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading || isAiCurrentlyProcessing} /> 
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="
-                    w-10 h-10 bg-white border border-border-medium rounded-xl
-                    flex items-center justify-center text-text-subtle
-                    shadow-sm
-                    hover:bg-surface-accent 
-                    transition-colors duration-150
-                    disabled:opacity-60 disabled:cursor-not-allowed
-                    flex-shrink-0
-                  "
-                  aria-label="Attach files"
-                  disabled={isLoading || isAiCurrentlyProcessing}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                  </svg>
-                </button>
-                <textarea 
-                    ref={textareaRef} 
-                    value={inputText} 
-                    onChange={(e) => setInputText(e.target.value)} 
-                    onPaste={handlePaste} 
-                    onKeyDown={handleTextareaKeyDown} 
-                    placeholder="Type your message..." 
-                    rows={1} 
-                    className="flex-grow px-2.5 sm:px-3 py-3 text-sm md:text-base border border-border-medium rounded-xl bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-interactive-focus-ring focus:border-transparent resize-none placeholder-text-subtle auto-resize" 
-                    disabled={isLoading || isAiCurrentlyProcessing}
-                /> 
-                <button 
-                    type={isAiCurrentlyProcessing ? "button" : "submit"} 
-                    onClick={isAiCurrentlyProcessing ? onStopGeneration : undefined } 
-                    disabled={isAiCurrentlyProcessing ? false : isSendButtonDisabled} 
-                    className={`
-                        font-semibold w-10 h-10 rounded-xl shadow-sm 
-                        flex items-center justify-center 
-                        transition-all duration-200 ease-in-out transform active:animate-button-press 
-                        flex-shrink-0 focus:outline-none
-                        ${ (isSendButtonDisabled && !isAiCurrentlyProcessing) 
-                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none' 
-                            : `bg-button-send-bg text-text-on-primary hover:bg-button-send-hover-bg ${!isAiCurrentlyProcessing ? 'focus:ring-2 focus:ring-offset-2 focus:ring-interactive-focus-ring' : ''}`
+            <form onSubmit={handleSubmit} className="bg-surface-chat-area flex-shrink-0">
+              <div className="p-2 md:p-3"> 
+                <div 
+                    className="flex flex-col bg-surface-input border border-border-medium rounded-2xl p-2 shadow-sm" 
+                    style={{ minHeight: '60px' }}
+                    onClick={(e) => { 
+                        if (contentEditableRef.current && !contentEditableRef.current.contains(e.target) && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                           contentEditableRef.current.focus();
                         }
-                    `}
-                    aria-label={isAiCurrentlyProcessing ? "Stop generation" : "Send message"}
-                > 
-                  {isAiCurrentlyProcessing ? (
-                    <i className="fas fa-stop text-sm"></i> 
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                      <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-                    </svg>
-                  )} 
-                </button> 
+                    }}
+                >
+                  {selectedFiles.length > 0 && (
+                    <div className="file-pill-container"> 
+                        {selectedFiles.map(file => ( 
+                            <div key={file.id} className="file-pill"> 
+                                {file.type.startsWith('image/') ? <FileImageIcon className="file-pill-icon"/> : <FileTextIcon className="file-pill-icon"/> } 
+                                <span className="file-pill-name">{file.name}</span> 
+                                <button type="button" onClick={() => removeSelectedFile(file.id)} className="file-pill-remove"> 
+                                    <i className="fas fa-times"></i> 
+                                </button> 
+                            </div>
+                        ))}
+                    </div>
+                  )}
+
+                  <div
+                    ref={contentEditableRef}
+                    contentEditable={!(isLoading || isAiCurrentlyProcessing)}
+                    onInput={handleInputFromContentEditable}
+                    onPaste={handlePaste}
+                    onKeyDown={handleContentEditableKeyDown}
+                    data-placeholder="Ask AlphaGPT..." 
+                    className="content-editable-input w-full flex-1 text-sm md:text-base focus:outline-none resize-none overflow-y-auto relative" 
+                    style={{ maxHeight: selectedFiles.length > 0 ? '80px' : '100px', minHeight: '24px' }} 
+                    suppressContentEditableWarning={true}
+                  >
+                  </div>
+
+                  <div className="flex justify-between items-center w-full pt-1.5 mt-auto">
+                    <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" multiple accept="image/*,.txt,text/plain" disabled={isLoading || isAiCurrentlyProcessing} />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-primary transition-colors duration-150 disabled:opacity-60 flex-shrink-0 rounded-full hover:bg-gray-200 focus:outline-none"
+                      aria-label="Attach file"
+                      disabled={isLoading || isAiCurrentlyProcessing}
+                    >
+                      <i className="fas fa-plus text-lg"></i>
+                    </button>
+
+                    <button 
+                        type={isAiCurrentlyProcessing ? "button" : "submit"} 
+                        onClick={isAiCurrentlyProcessing ? onStopGeneration : undefined } 
+                        disabled={isAiCurrentlyProcessing ? false : isSendButtonDisabled} 
+                        className={`${sendOrStopButtonBaseClasses} ${sendOrStopButtonDynamicClasses}`}
+                        style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none', border: 'none', overflow: 'hidden' }} // Added overflow:hidden
+                        aria-label={isAiCurrentlyProcessing ? "Stop generation" : "Send message"}
+                    > 
+                      {isAiCurrentlyProcessing ? (
+                        <i className="fas fa-stop text-sm text-text-button-icon"></i> 
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-text-button-icon"> 
+                          <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                        </svg>
+                      )} 
+                    </button> 
+                  </div>
+                </div>
               </div>
             </form>
           </div>);
@@ -963,7 +1048,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         const isStoppingGenerationRef = useRef(false);
         
-        // Refs for smoother streaming UI updates
         const streamTextBuffer = useRef("");
         const streamSourcesBuffer = useRef([]);
         const streamUpdateScheduled = useRef(false);
@@ -990,7 +1074,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             parts.push({ text: msg.text });
                         }
                     } else if (msg.role === 'user') {
-                        if (msg.text) parts.push({ text: msg.text });
+                        const trimmedUserText = msg.text ? msg.text.trim() : "";
+                        if (trimmedUserText) parts.push({ text: trimmedUserText });
+                        
                         if (msg.attachedFiles) {
                             msg.attachedFiles.forEach(file => {
                                 if (file.type.startsWith('image/') && file.apiData?.mimeType && file.apiData?.data) {
@@ -1021,7 +1107,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             isStoppingGenerationRef.current = true;
             setIsChatLoading(false); 
 
-            // Cancel any pending animation frame for streaming UI update
             if (streamAnimationFrameId.current) {
                 cancelAnimationFrame(streamAnimationFrameId.current);
                 streamAnimationFrameId.current = null;
@@ -1034,7 +1119,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const updatedMessages = prevMessages.map(msg => {
                     if (msg.role === 'model' && msg.isLoading) {
                         messageUpdated = true;
-                        let newText = streamTextBuffer.current || msg.text || ""; // Use buffered text if available
+                        let newText = streamTextBuffer.current || msg.text || ""; 
                         const stopNotice = "*Generation stopped by user.*";
                         
                         if (!newText.includes(stopNotice)) {
@@ -1077,7 +1162,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         ) => {
             setIsChatLoading(true);
 
-            // Initialize stream buffers and flags
             streamTextBuffer.current = "";
             streamSourcesBuffer.current = [];
             streamUpdateScheduled.current = false;
@@ -1086,7 +1170,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 streamAnimationFrameId.current = null;
             }
             
-            if (isStoppingGenerationRef.current) { // Check before starting API call
+            if (isStoppingGenerationRef.current) { 
                 setIsChatLoading(false);
                 return;
             }
@@ -1099,7 +1183,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 const chatModel = genAI.getGenerativeModel(modelConfig);
                 const chatSession = chatModel.startChat({ history: historyForGeminiInit });
                 
-                if (isStoppingGenerationRef.current) { // Check again after model init
+                if (isStoppingGenerationRef.current) {
                      setIsChatLoading(false);
                      return;
                 }
@@ -1165,14 +1249,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     if (isStoppingGenerationRef.current) break;
                 }
                 
-                // Ensure any final pending update is cancelled if generation was stopped
                 if (isStoppingGenerationRef.current && streamAnimationFrameId.current) {
                     cancelAnimationFrame(streamAnimationFrameId.current);
                     streamAnimationFrameId.current = null;
                 }
-                streamUpdateScheduled.current = false; // Reset for safety, though performUiUpdate does it
+                streamUpdateScheduled.current = false; 
 
-                // Final update for the fully accumulated content or stop/error message
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = streamTextBuffer.current;
@@ -1181,7 +1263,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         const stopNoticeStr = "*Generation stopped by user.*";
 
                         if (isStoppingGenerationRef.current) { 
-                             // If stopped, ensure stop notice is there, using buffered text
                             let baseText = streamTextBuffer.current;
                             if (!baseText.includes(stopNoticeStr)) {
                                 const isInCodeBlock = (baseText.match(/```/g) || []).length % 2 !== 0;
@@ -1190,7 +1271,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             }
                             finalText = baseText;
                         } else if (!finalText.trim() && (!finalSources || finalSources.length === 0)) {
-                            // If stream ended with no content and not stopped by user
                             if (useSearchInitially) {
                                 finalText = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar poochein. Shukriya! 🙏";
                             } else {
@@ -1220,7 +1300,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearchInitially } : m));
             } finally {
-                // Ensure rAF is cancelled on any exit path if it was somehow still scheduled
                 if (streamAnimationFrameId.current) {
                     cancelAnimationFrame(streamAnimationFrameId.current);
                     streamAnimationFrameId.current = null;
@@ -1230,8 +1309,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
         };
 
-        const handleSendChatMessage = useCallback(async (messageText, filesToSend) => {
-            if (!messageText.trim() && filesToSend.length === 0) return;
+        const handleSendChatMessage = useCallback(async (rawMessageText, filesToSend) => {
+            const messageText = rawMessageText.trim(); 
+            if (!messageText && filesToSend.length === 0) return;
+
             isStoppingGenerationRef.current = false; 
             setChatError(null);
             if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") {
@@ -1262,7 +1343,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return [...filteredPrev, newUserMessageForUi, preliminaryAiPlaceholder];
             });
             
-            const needsSearch = await determineSearchNeed_service(genAI, messageText.trim());
+            const needsSearch = await determineSearchNeed_service(genAI, messageText); 
             const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
 
             if (needsSearch) {
@@ -1270,7 +1351,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
 
             const promptPartsForUserTurn = [];
-            if (messageText.trim()) promptPartsForUserTurn.push({ text: messageText.trim() });
+            if (messageText) promptPartsForUserTurn.push({ text: messageText }); 
             filesToSend.forEach(file => {
                 if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) {
                     promptPartsForUserTurn.push({ inlineData: file.apiData });
@@ -1308,6 +1389,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
             
             const userPromptMsg = chatMessages[originalAiMsgIndex-1];
+            const userPromptTextForRegen = userPromptMsg.text || ""; 
+
             const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
             const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
 
@@ -1327,7 +1410,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
             setChatMessages([...chatHistoryForUiUpdate, preliminaryAiPlaceholder]);
 
-            const needsSearch = await determineSearchNeed_service(genAI, userPromptMsg.text || "");
+            const needsSearch = await determineSearchNeed_service(genAI, userPromptTextForRegen);
             const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
             
             if(needsSearch) {
@@ -1335,7 +1418,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
             
             const promptPartsForRegen = [];
-            if (userPromptMsg.text) promptPartsForRegen.push({ text: userPromptMsg.text });
+            if (userPromptTextForRegen) promptPartsForRegen.push({ text: userPromptTextForRegen });
             userPromptMsg.attachedFiles?.forEach(file => { 
                  if (file.type.startsWith('image/') && file.apiData.mimeType && file.apiData.data) {
                     promptPartsForRegen.push({ inlineData: file.apiData });
