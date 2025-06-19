@@ -701,7 +701,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 i++;
                 const nextSubstring = targetText.substring(0, i);
                 setAnimatedHtml(marked.parse(nextSubstring));
-                animationTimeoutId.current = setTimeout(type, 20); // Typewriter speed
+                animationTimeoutId.current = setTimeout(type, 35); // Typewriter speed
               }
             };
             type();
@@ -892,13 +892,15 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             setInputText(currentText);
         };
         
-        const handleContentEditableKeyDown = (e) => { 
-            if (e.key === 'Enter' && !e.shiftKey) { 
-                e.preventDefault(); 
-                if (!isSendButtonDisabled) { 
-                    handleSubmit(e); 
+        const handleContentEditableKeyDown = (e) => {
+            // Only submit on Enter key press on non-mobile devices
+            if (!isMobileView && e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!isSendButtonDisabled) {
+                    handleSubmit(e);
                 }
             }
+            // On mobile, Enter will just create a new line (default behavior).
         };
 
         const isAiCurrentlyProcessing = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
@@ -928,7 +930,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
-            <header className="p-4 bg-surface-chat-area flex items-center justify-between flex-shrink-0">
+            <header className="p-4 bg-surface-chat-area border-b border-border-default flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center space-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="w-8 h-8">
                       <defs>
