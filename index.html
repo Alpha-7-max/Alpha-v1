@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -59,6 +60,7 @@
               'modal-fade-out': 'modal-fade-out 0.3s ease-in forwards',
               'rotate-square': 'rotate-square 2s linear infinite',
               'fade-dots': 'fade-dots 1.5s infinite',
+              'spin-continuous': 'spinContinuous 2s linear infinite',
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
@@ -92,6 +94,7 @@
                 '0%, 66%': { opacity: '0.3' },
                 '33%': { opacity: '1' },
               },
+              spinContinuous: { '0%': { transform: 'rotate(0deg)' }, '100%': { transform: 'rotate(360deg)' } },
             },
             spacing: { 
               '1.5': '0.375rem', 
@@ -252,19 +255,12 @@
             align-items: center;
             gap: 8px; /* Tailwind gap-2 */
         }
-
-        .thinking-indicator .square {
-            width: 12px;
-            height: 12px;
-            background-image: linear-gradient(to bottom right, rgb(59, 130, 246), rgb(147, 197, 253));
-            border-radius: 3px;
-        }
         
-        .animated-dots {
+        .animated-dots { /* This class is no longer used by ThinkingAnimation but kept for potential other uses */
             display: inline-block; 
         }
         
-        .animated-dots span {
+        .animated-dots span { /* This class is no longer used by ThinkingAnimation but kept for potential other uses */
             animation: fade-dots 1.5s infinite;
             font-size: 1.2em; 
             line-height: 1;
@@ -524,15 +520,24 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const FileTextIcon = (props) => (<i className={`fa-solid fa-file-lines ${props.className || ''}`}></i>);
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
+      const NEW_AI_ICON_PATH_D = "M45.403,25.562c-0.506-1.89-1.518-3.553-2.906-4.862c1.134-2.665,0.963-5.724-0.487-8.237	c-1.391-2.408-3.636-4.131-6.322-4.851c-1.891-0.506-3.839-0.462-5.669,0.088C28.276,5.382,25.562,4,22.647,4	c-4.906,0-9.021,3.416-10.116,7.991c-0.01,0.001-0.019-0.003-0.029-0.002c-2.902,0.36-5.404,2.019-6.865,4.549	c-1.391-2.408-1.76,5.214-1.04,7.9c0.507,1.891,1.519,3.556,2.909,4.865c-1.134-2.666-0.97,5.714,0.484,8.234	c1.391,2.408,3.636,4.131,6.322,4.851c0.896,0.24,1.807,0.359,2.711,0.359c1.003,0,1.995-0.161,2.957-0.45	C21.722,44.619,24.425,46,27.353,46c4.911,0,9.028-3.422,10.12-8.003c2.88-0.35,5.431-2.006,6.891-4.535	C45.754,31.054,46.123,28.249,45.403,25.562z M35.17,9.543c2.171,0.581,3.984,1.974,5.107,3.919c1.049,1.817,1.243,4,0.569,5.967	c-0.099-0.062-0.193-0.131-0.294-0.19l-9.169-5.294c-0.312-0.179-0.698-0.177-1.01,0.006l-10.198,6.041l-0.052-4.607l8.663-5.001	C30.733,9.26,33,8.963,35.17,9.543z M29.737,22.195l0.062,5.504l-4.736,2.805l-4.799-2.699l-0.062-5.504l4.736-2.805L29.737,22.195z M14.235,14.412C14.235,9.773,18.009,6,22.647,6c2.109,0,4.092,0.916,5.458,2.488C28,8.544,27.891,8.591,27.787,8.651l-9.17,5.294	c-0.312,0.181-0.504,0.517-0.5,0.877l0.133,11.851l-4.015-2.258V14.412z M6.528,23.921c-0.581-2.17-0.282-4.438,0.841-6.383	c1.06-1.836,2.823-3.074,4.884-3.474c-0.004,0.116-0.018,0.23-0.018,0.348V25c0,0.361,0.195,0.694,0.51,0.872l10.329,5.81	L19.11,34.03l-8.662-5.002C8.502,27.905,7.11,26.092,6.528,23.921z M14.83,40.457c-2.171-0.581-3.984-1.974-5.107-3.919	c-1.053-1.824-1.249-4.001-0.573-5.97c0.101,0.063,0.196,0.133,0.299,0.193l9.169,5.294c0.154,0.089,0.327,0.134,0.5,0.134	c0.177,0,0.353-0.047,0.51-0.14l10.198-6.041l0.052,4.607l-8.663,5.001C19.269,40.741,17.001,41.04,14.83,40.457z M35.765,35.588	c0,4.639-3.773,8.412-8.412,8.412c-2.119,0-4.094-0.919-5.459-2.494c0.105-0.056,0.216-0.098,0.32-0.158l9.17-5.294	c0.312-0.181,0.504,0.517-0.5-0.877L31.75,23.327l4.015,2.258V35.588z M42.631,32.462c-1.056,1.83-2.84,3.086-4.884,3.483	c0.004-0.12,0.018-0.237,0.018-0.357V25c0-0.361-0.195-0.694-0.51-0.872l-10.329-5.81l3.964-2.348l8.662,5.002	c1.946,1.123,3.338,2.937,3.92,5.107C44.053,28.249,43.754,30.517,42.631,32.462z";
+
+      const ReusableNewAiIcon = (props) => (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" {...props}>
+          <defs>
+            <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#60a5fa" />
+              <stop offset="100%" stopColor="#f472b6" />
+            </linearGradient>
+          </defs>
+          <path fill="url(#iconGradient)" d={NEW_AI_ICON_PATH_D} />
+        </svg>
+      );
+
       const ThinkingAnimation = () => (
           <div className="thinking-indicator mt-2.5">
-              <div className="square animate-rotate-square"></div>
-              Thinking
-              <span className="animated-dots">
-                  <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
-                  <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
-                  <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
-              </span>
+              <ReusableNewAiIcon className="w-5 h-5 animate-spin-continuous" />
+              <p>Thinking...</p>
           </div>
       );
       
@@ -544,16 +549,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const contentRef = useRef(null); 
         const [animatedHtml, setAnimatedHtml] = useState('');
         
-        // MODIFICATION: Removed internal typewriter useEffect. 
-        // Text updates will come directly from App component via props.
         useEffect(() => {
           setAnimatedHtml(marked.parse(message.text || ''));
         }, [message.text]);
 
 
         useEffect(() => {
-          // Code block highlighting and copy button logic (unchanged from previous AlphaGPT)
-          if (!isModelLoading && contentRef.current) { // Ensure it runs only when not loading & content is present
+          if (!isModelLoading && contentRef.current) { 
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
               if (preEl.parentNode?.classList.contains('code-block-wrapper')) { return; }
@@ -605,7 +607,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 link.rel = 'noopener noreferrer';
             });
           }
-        }, [animatedHtml, isModelLoading]); // Rerun when animatedHtml (final parsed content) is complete
+        }, [animatedHtml, isModelLoading]); 
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
@@ -667,7 +669,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
               )}
               {contentToShow} 
-              {/* MODIFICATION: Thinking animation condition changed to !message.text to work with new streaming */}
               {isModelLoading && !message.text && <ThinkingAnimation />} 
             </div>
           </div>);
@@ -693,8 +694,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           } else if (lastMessage.role === 'model') {
             if (!userHasScrolledUp) { 
               if (lastMessage.isLoading) {
-                // For streaming, we might want "auto" or a very gentle scroll
-                // to avoid jarring jumps as new text comes in.
                 messagesEndEl.scrollIntoView({ behavior: "auto", block: "end" }); 
               } else {
                 messagesEndEl.scrollIntoView({ behavior: "smooth" });
@@ -761,8 +760,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         let sendOrStopButtonDynamicClasses = "bg-slate-200 hover:bg-slate-300 text-text-button-icon"; 
 
         if (isAiCurrentlyProcessing) { 
-            // Stop button styles (already covered by default)
-        } else { // Send Button styles
+        } else { 
             if (isSendButtonDisabled) {
               sendOrStopButtonDynamicClasses = 'bg-slate-200 text-slate-400 cursor-not-allowed';
             } else {
@@ -775,15 +773,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
             <header className="p-4 bg-white border-b border-border-default flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="w-8 h-8">
-                      <defs>
-                        <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#60a5fa" />
-                          <stop offset="100%" stopColor="#f472b6" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#iconGradient)" d="M45.403,25.562c-0.506-1.89-1.518-3.553-2.906-4.862c1.134-2.665,0.963-5.724-0.487-8.237	c-1.391-2.408-3.636-4.131-6.322-4.851c-1.891-0.506-3.839-0.462-5.669,0.088C28.276,5.382,25.562,4,22.647,4	c-4.906,0-9.021,3.416-10.116,7.991c-0.01,0.001-0.019-0.003-0.029-0.002c-2.902,0.36-5.404,2.019-6.865,4.549	c-1.391-2.408-1.76,5.214-1.04,7.9c0.507,1.891,1.519,3.556,2.909,4.865c-1.134-2.666-0.97,5.714,0.484,8.234	c1.391,2.408,3.636,4.131,6.322,4.851c0.896,0.24,1.807,0.359,2.711,0.359c1.003,0,1.995-0.161,2.957-0.45	C21.722,44.619,24.425,46,27.353,46c4.911,0,9.028-3.422,10.12-8.003c2.88-0.35,5.431-2.006,6.891-4.535	C45.754,31.054,46.123,28.249,45.403,25.562z M35.17,9.543c2.171,0.581,3.984,1.974,5.107,3.919c1.049,1.817,1.243,4,0.569,5.967	c-0.099-0.062-0.193-0.131-0.294-0.19l-9.169-5.294c-0.312-0.179-0.698-0.177-1.01,0.006l-10.198,6.041l-0.052-4.607l8.663-5.001	C30.733,9.26,33,8.963,35.17,9.543z M29.737,22.195l0.062,5.504l-4.736,2.805l-4.799-2.699l-0.062-5.504l4.736-2.805L29.737,22.195z M14.235,14.412C14.235,9.773,18.009,6,22.647,6c2.109,0,4.092,0.916,5.458,2.488C28,8.544,27.891,8.591,27.787,8.651l-9.17,5.294	c-0.312,0.181-0.504,0.517-0.5,0.877l0.133,11.851l-4.015-2.258V14.412z M6.528,23.921c-0.581-2.17-0.282-4.438,0.841-6.383	c1.06-1.836,2.823-3.074,4.884-3.474c-0.004,0.116-0.018,0.23-0.018,0.348V25c0,0.361,0.195,0.694,0.51,0.872l10.329,5.81	L19.11,34.03l-8.662-5.002C8.502,27.905,7.11,26.092,6.528,23.921z M14.83,40.457c-2.171-0.581-3.984-1.974-5.107-3.919	c-1.053-1.824-1.249-4.001-0.573-5.97c0.101,0.063,0.196,0.133,0.299,0.193l9.169,5.294c0.154,0.089,0.327,0.134,0.5,0.134	c0.177,0,0.353-0.047,0.51-0.14l10.198-6.041l0.052,4.607l-8.663,5.001C19.269,40.741,17.001,41.04,14.83,40.457z M35.765,35.588	c0,4.639-3.773,8.412-8.412,8.412c-2.119,0-4.094-0.919-5.459-2.494c0.105-0.056,0.216-0.098,0.32-0.158l9.17-5.294	c0.312-0.181,0.504,0.517-0.5-0.877L31.75,23.327l4.015,2.258V35.588z M42.631,32.462c-1.056,1.83-2.84,3.086-4.884,3.483	c0.004-0.12,0.018-0.237,0.018-0.357V25c0-0.361-0.195-0.694-0.51-0.872l-10.329-5.81l3.964-2.348l8.662,5.002	c1.946,1.123,3.338,2.937,3.92,5.107C44.053,28.249,43.754,30.517,42.631,32.462z" />
-                    </svg>
+                    <ReusableNewAiIcon className="w-8 h-8" />
                     <div>
                         <h1 className="text-lg font-roboto font-semibold tracking-tight text-gradient-brand">AlphaGPT</h1>
                     </div>
@@ -900,7 +890,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const [chatError, setChatError] = useState(null); 
 
         const isStoppingGenerationRef = useRef(false);
-        const streamTextBuffer = useRef(""); // Still useful for final text on stop/error
+        const streamTextBuffer = useRef(""); 
 
         useEffect(() => { 
             if (chatError) { 
@@ -987,7 +977,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key is not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); }, []);
         
-        // MODIFICATION: _streamAiResponse updated with Oracle AI's streaming logic
         const _streamAiResponse = async (
             originalPromptParts, 
             targetAiMessageId, 
@@ -996,8 +985,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             setIsChatLoading(true);
             isStoppingGenerationRef.current = false;
             
-            let displayedAiText = ""; // Accumulator for the live text being displayed
-            streamTextBuffer.current = ""; // Reset for this stream
+            let displayedAiText = ""; 
+            streamTextBuffer.current = ""; 
 
             try {
                 const modelConfig = { 
@@ -1037,13 +1026,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                     }
 
                     if (chunkContentForDisplay.length > 0 || (chunkContentForDisplay === "" && rawChunkText === "")) { 
-                        const textParts = chunkContentForDisplay.split(/(\s+|\*+|`+|_|~|---|===|\n)/); // Split by common markdown chars and whitespace for smoother streaming
+                        const textParts = chunkContentForDisplay.split(/(\s+|\*+|`+|_|~|---|===|\n)/); 
                         for (const part of textParts) {
                             if (isStoppingGenerationRef.current) break;
                             if (part.length === 0) continue;
 
                             displayedAiText += part;
-                            streamTextBuffer.current = displayedAiText; // Keep buffer in sync
+                            streamTextBuffer.current = displayedAiText; 
 
                             setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
                                 ...m, 
@@ -1052,14 +1041,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                                 isError: false,
                             } : m));
                             
-                            // Adjusted delay: small base + tiny per-character delay for the part
                             await new Promise(resolve => setTimeout(resolve, 5 + part.length * 1)); 
                         }
                     }
                     if (isStoppingGenerationRef.current) break;
                 }
                 
-                // Final update to message after stream ends or is stopped
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = streamTextBuffer.current;
@@ -1097,7 +1084,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true } : m));
             } finally {
                 setIsChatLoading(false);
-                 if (isStoppingGenerationRef.current) { // Ensure isLoading is false if stopped during processing
+                 if (isStoppingGenerationRef.current) { 
                     setChatMessages(prev => prev.map(m => (m.id === targetAiMessageId && m.isLoading) ? {...m, isLoading: false} : m ));
                 }
             }
@@ -1123,7 +1110,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const preliminaryAiPlaceholder = { 
                 id: aiMessageId, 
                 role: 'model', 
-                text: '', // Start with empty text for ThinkingAnimation
+                text: '', 
                 timestamp: new Date(), 
                 isLoading: true, 
                 isError: false, 
@@ -1176,7 +1163,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
             const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
 
-            const newAiPlaceholderId = Date.now().toString() + '_model_regen'; // New ID for new message
+            const newAiPlaceholderId = Date.now().toString() + '_model_regen'; 
             
             const preliminaryAiPlaceholder = { 
                 id: newAiPlaceholderId, 
@@ -1187,7 +1174,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 isError: false, 
             };
             
-            // Remove old AI message and add new placeholder
             const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
             setChatMessages([...chatHistoryForUiUpdate, preliminaryAiPlaceholder]);
             
@@ -1204,7 +1190,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             if (promptPartsForRegen.length > 0) {
                 await _streamAiResponse(
                     promptPartsForRegen, 
-                    newAiPlaceholderId, // Use the new ID for the new message
+                    newAiPlaceholderId, 
                     historyForGeminiInit
                 );
             } else { 
