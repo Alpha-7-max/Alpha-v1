@@ -61,6 +61,7 @@
               'rotate-square': 'rotate-square 2s linear infinite',
               'fade-dots': 'fade-dots 1.5s infinite',
               'l3': 'l3 1s infinite linear',
+              'holo-slide': 'holoSlide 8s linear infinite',
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
@@ -102,6 +103,10 @@
                 '75%': { backgroundPosition: '0 0, 100% 0, 100% 100%, 0 50%' },
                 '75.01%': { backgroundPosition: '100% 0, 100% 0, 100% 100%, 0 50%' },
                 '100%': { backgroundPosition: '50% 0, 100% 0, 100% 100%, 0 100%' },
+              },
+              holoSlide: {
+                '0%': { backgroundPosition: '-100% 0' },
+                '100%': { backgroundPosition: '200% 0' },
               },
             },
             spacing: { 
@@ -153,7 +158,7 @@
         }
         html, body, #root { @apply h-full overflow-hidden; }
         body { @apply font-sans bg-surface-main text-text-primary m-0; }
-        ::selection { @apply bg-gray-200 text-gray-700; } 
+        ::selection { @apply bg-blue-200 text-blue-800; } 
       }
       @layer components {
         .markdown-content p { @apply mb-3 last:mb-0; }
@@ -179,7 +184,7 @@
         .markdown-content pre::-webkit-scrollbar-thumb { @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors; } 
         .markdown-content pre { scrollbar-width: thin; scrollbar-color: theme('colors.gray.200') transparent; }
 
-        .markdown-content a { @apply text-brand-primary hover:text-brand-secondary underline decoration-brand-primary/50 hover:decoration-brand-secondary/50 transition-colors; } 
+        .markdown-content a { @apply text-blue-600 hover:text-blue-800 underline decoration-blue-600/50 hover:decoration-blue-800/50 transition-colors; } 
         .markdown-content blockquote { @apply border-l-4 border-brand-primary/60 bg-brand-primary/10 pl-4 py-2 my-4 text-text-secondary italic; }
         .markdown-content h1, .markdown-content h2, .markdown-content h3,
         .markdown-content h4, .markdown-content h5, .markdown-content h6 { @apply font-poppins font-semibold my-4 text-text-primary; }
@@ -307,7 +312,20 @@
         .file-pill-icon { @apply text-brand-primary text-[10px] mr-1; } 
         .file-pill-name { @apply truncate max-w-[60px] sm:max-w-[80px] text-text-secondary font-medium; } 
         .file-pill-remove { @apply ml-1 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors; }
-        .file-pill-remove i { @apply text-[9px]; } 
+        .file-pill-remove i { @apply text-[9px]; }
+
+        .holo-pill {
+            @apply p-0.5 rounded-[25px] no-underline animate-holo-slide;
+            background: linear-gradient(90deg, #ff0080, #ff8c00, #40e0d0, #ff00ff, #00ff80, #ff0080);
+            background-size: 300% 100%;
+        }
+
+        .holo-inner {
+            @apply block rounded-[23px] pl-1.5 pr-1 py-[1px] relative text-white truncate text-[10px] font-medium;
+            background: #1a1a1a;
+            z-index: 1;
+            max-width: 220px;
+        }
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -373,26 +391,33 @@
         }
       }
 
-      function createSourceLinksElement(sources) { 
-        if (!sources || sources.length === 0) return null; 
-        const containerDiv = document.createElement('div'); 
-        containerDiv.className = "mt-3 pt-3 border-t border-border-light"; 
+      function createSourceLinksElement(sources) {
+        if (!sources || sources.length === 0) return null;
+        const containerDiv = document.createElement('div');
+        containerDiv.className = "mt-3 pt-3 border-t border-border-light";
         const heading = document.createElement('h4');
-        heading.className = "text-xs font-medium text-text-subtle mb-2 flex items-center"; 
+        heading.className = "text-xs font-medium text-text-subtle mb-2 flex items-center";
         heading.innerHTML = `<i class="fas fa-link text-xs mr-1.5 opacity-70"></i>Sources`;
         containerDiv.appendChild(heading);
         const pillsContainer = document.createElement('div');
-        pillsContainer.className = "flex flex-wrap gap-2"; 
-        sources.forEach((source, index) => { 
-            const pillLink = document.createElement('a'); 
-            pillLink.href = source.uri; pillLink.target = "_blank"; pillLink.rel = "noopener noreferrer";
-            pillLink.className = "text-xs bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 hover:border-slate-300 px-2.5 py-1 rounded-full transition-colors duration-150 truncate max-w-[180px] sm:max-w-[220px] inline-block";
-            
-            const displayTitle = source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri) || 'Source';
-            pillLink.textContent = `${index + 1}. ${displayTitle}`; 
+        pillsContainer.className = "flex flex-wrap gap-2";
+        sources.forEach((source, index) => {
+            const pillLink = document.createElement('a');
+            pillLink.href = source.uri;
+            pillLink.target = "_blank";
+            pillLink.rel = "noopener noreferrer";
+            pillLink.className = "holo-pill";
             pillLink.title = source.title || source.uri;
-            pillsContainer.appendChild(pillLink); 
-        }); 
+
+            const innerDiv = document.createElement('div');
+            innerDiv.className = "holo-inner";
+
+            const displayTitle = source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri) || 'Source';
+            innerDiv.textContent = `${index + 1}. ${displayTitle}`;
+
+            pillLink.appendChild(innerDiv);
+            pillsContainer.appendChild(pillLink);
+        });
         containerDiv.appendChild(pillsContainer);
         return containerDiv;
       }
@@ -718,7 +743,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         useEffect(() => {
           // This effect runs after the text has been set, either fully or by the typewriter.
-          // It's responsible for highlighting code blocks.
+          // It's responsible for highlighting code blocks and modifying links.
           if (!isModelLoading && contentRef.current) {
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
@@ -750,6 +775,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 hljs.highlightElement(codeElement);
                 codeElement.dataset.highlighted = 'true';
               }
+            });
+            
+            // Add target="_blank" to all links in the markdown content
+            const links = contentRef.current.querySelectorAll('.markdown-content a');
+            links.forEach(link => {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
             });
 
             const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
@@ -930,7 +962,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
-            <header className="p-4 bg-surface-chat-area border-b border-border-default flex items-center justify-between flex-shrink-0">
+            <header className="p-4 bg-white border-b border-border-default flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center space-x-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" className="w-8 h-8">
                       <defs>
@@ -981,7 +1013,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             <form onSubmit={handleSubmit} className="bg-surface-chat-area flex-shrink-0">
               <div className="p-2 md:p-3"> 
                 <div 
-                    className="flex flex-col bg-surface-input border border-border-medium rounded-2xl p-2 shadow-sm" 
+                    className="flex flex-col bg-white border border-border-medium rounded-2xl p-2 shadow-sm" 
                     style={{ minHeight: '60px' }}
                     onClick={(e) => { 
                         if (contentEditableRef.current && !contentEditableRef.current.contains(e.target) && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
