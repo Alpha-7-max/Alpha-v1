@@ -48,7 +48,6 @@
               'scale-in-subtle': 'scaleInSubtle 0.35s ease-out forwards',
               'pulse-gentle': 'pulseGentle 2.8s infinite ease-in-out', 
               'button-press': 'buttonPress 0.2s ease-out',
-              'rippleOut': 'rippleOut 2.5s infinite ease-out', 
               'speak-bob': 'speakBob 0.7s ease-in-out',
               'think-glance': 'thinkGlance 2s infinite ease-in-out',
               'blink': 'blink 4s infinite ease-in-out',
@@ -60,8 +59,6 @@
               'modal-fade-out': 'modal-fade-out 0.3s ease-in forwards',
               'rotate-square': 'rotate-square 2s linear infinite',
               'fade-dots': 'fade-dots 1.5s infinite',
-              'l3': 'l3 1s infinite linear',
-              'holo-slide': 'holoSlide 8s linear infinite',
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
@@ -69,7 +66,6 @@
               pulseGentle: {  '0%, 100%': { transform: 'scale(1)', opacity: '0.8' }, '50%': { transform: 'scale(1.015)', opacity: '1' }, },
               buttonPress: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(0.96)'}, '100%': { transform: 'scale(1)' }, },
               emptyStateGlow: {  '0%': { filter: 'drop-shadow(0 0 3px rgba(var(--brand-primary), 0.2)) drop-shadow(0 0 6px rgba(var(--brand-primary), 0.15))' }, '100%': { filter: 'drop-shadow(0 0 6px rgba(var(--brand-primary), 0.25)) drop-shadow(0 0 12px rgba(var(--brand-primary), 0.18))' }, },
-              rippleOut: {  '0%': { transform: 'scale(0.8)', opacity: '0.3' }, '70%': { opacity: '0.1' }, '100%': { transform: 'scale(2.0)', opacity: '0' }, },
               speakBob: { '0%, 100%': { transform: 'translateY(0) scale(1)' }, '50%': { transform: 'translateY(-2px) scale(1.05)' }, },
               thinkGlance: { '0%, 100%': { transform: 'translateX(0px)' }, '25%': { transform: 'translateX(-1px)' }, '75%': { transform: 'translateX(1px)' }, },
               blink: { '0%, 90%, 100%': { transform: 'scaleY(1)' }, '95%': { transform: 'scaleY(0.1)' }, },
@@ -95,18 +91,6 @@
               'fade-dots': {
                 '0%, 66%': { opacity: '0.3' },
                 '33%': { opacity: '1' },
-              },
-              l3: {
-                '0%': { backgroundPosition: '50% 0, 100% 100%, 0 100%, 0 0' },
-                '25%': { backgroundPosition: '0 0, 100% 50%, 0 100%, 0 0' },
-                '50%': { backgroundPosition: '0 0, 100% 0, 50% 100%, 0 0' },
-                '75%': { backgroundPosition: '0 0, 100% 0, 100% 100%, 0 50%' },
-                '75.01%': { backgroundPosition: '100% 0, 100% 0, 100% 100%, 0 50%' },
-                '100%': { backgroundPosition: '50% 0, 100% 0, 100% 100%, 0 100%' },
-              },
-              holoSlide: {
-                '0%': { backgroundPosition: '-100% 0' },
-                '100%': { backgroundPosition: '200% 0' },
               },
             },
             spacing: { 
@@ -285,17 +269,6 @@
             font-size: 1.2em; 
             line-height: 1;
         }
-        
-        .loader {
-          width: 16px; 
-          aspect-ratio: 1;
-          --c1:linear-gradient(90deg,#0000 calc(100%/3), #3b82f6 0 calc(2*100%/3),#0000 0);
-          --c2:linear-gradient( 0deg,#0000 calc(100%/3), #3b82f6 0 calc(2*100%/3),#0000 0);
-          background: var(--c1),var(--c2),var(--c1),var(--c2);
-          background-size: 300% 2px,2px 300%;
-          background-repeat: no-repeat;
-          animation: l3 1s infinite linear;
-        }
 
         .file-pill-container {
           @apply flex flex-wrap gap-1 mb-1.5 px-0.5 py-0.5 overflow-y-auto max-h-[22px]; 
@@ -313,19 +286,6 @@
         .file-pill-name { @apply truncate max-w-[60px] sm:max-w-[80px] text-text-secondary font-medium; } 
         .file-pill-remove { @apply ml-1 text-slate-400 hover:text-status-error p-0.5 rounded-full hover:bg-red-500/10 transition-colors; }
         .file-pill-remove i { @apply text-[9px]; }
-
-        .holo-pill {
-            @apply p-0.5 rounded-[25px] no-underline animate-holo-slide;
-            background: linear-gradient(90deg, #ff0080, #ff8c00, #40e0d0, #ff00ff, #00ff80, #ff0080);
-            background-size: 300% 100%;
-        }
-
-        .holo-inner {
-            @apply block rounded-[23px] pl-1.5 pr-1 py-[1px] relative text-white truncate text-[10px] font-medium;
-            background: #1a1a1a;
-            z-index: 1;
-            max-width: 220px;
-        }
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
@@ -365,65 +325,7 @@
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
       const genAI = new GoogleGenerativeAI(API_KEY);
 
-      const SYSTEM_INSTRUCTION_SEARCH_DECIDER = `You are an AI assistant that determines if a user's query requires a web search to answer accurately. Consider the following: - Does the query ask for real-time information (e.g., news, weather, stock prices)? - Does the query ask for specific facts that might change or require verification (e.g., statistics, specific dates, current events)? - Does the query ask for diverse perspectives or opinions on a topic that would benefit from multiple web sources? - Is the query purely conversational (e.g., "hello", "how are you", "tell me a joke")? - Is the query asking for creative content generation (e.g., "write a poem", "tell me a story") that doesn't rely on specific external facts? If in doubt, assume a search is needed. Respond ONLY with a JSON object with a single key "search_needed" (boolean value). Example: {"search_needed": true} Do NOT include any other text or markdown formatting like \`\`\`json. Just the raw JSON object.`;
-
-      async function determineSearchNeed_service(aiInstance, query) {
-        if (!aiInstance) return true; 
-        const prompt = `${SYSTEM_INSTRUCTION_SEARCH_DECIDER}\nUser Query: "${query}"`;
-        try {
-            const model = aiInstance.getGenerativeModel({ model: GEMINI_MAIN_MODEL });
-            const result = await model.generateContent({
-                contents: [{ role: "user", parts: [{text: prompt}] }],
-                generationConfig: { responseMimeType: "application/json", temperature: 0.1 }
-            });
-            const response = result.response;
-            let jsonStr = response.text().trim();
-
-            const fenceRegex = /^```(\w*)?\s*\n?(.*?)\n?\s*```$/s;
-            const match = jsonStr.match(fenceRegex);
-            if (match && match[2]) jsonStr = match[2].trim();
-            
-            const searchDecision = JSON.parse(jsonStr);
-            return searchDecision.search_needed === true;
-        } catch (error) { 
-            console.error("Error determining search need:", error); 
-            return true; // Default to needing search on error
-        }
-      }
-
-      function createSourceLinksElement(sources) {
-        if (!sources || sources.length === 0) return null;
-        const containerDiv = document.createElement('div');
-        containerDiv.className = "mt-3 pt-3 border-t border-border-light";
-        const heading = document.createElement('h4');
-        heading.className = "text-xs font-medium text-text-subtle mb-2 flex items-center";
-        heading.innerHTML = `<i class="fas fa-link text-xs mr-1.5 opacity-70"></i>Sources`;
-        containerDiv.appendChild(heading);
-        const pillsContainer = document.createElement('div');
-        pillsContainer.className = "flex flex-wrap gap-2";
-        sources.forEach((source, index) => {
-            const pillLink = document.createElement('a');
-            pillLink.href = source.uri;
-            pillLink.target = "_blank";
-            pillLink.rel = "noopener noreferrer";
-            pillLink.className = "holo-pill";
-            pillLink.title = source.title || source.uri;
-
-            const innerDiv = document.createElement('div');
-            innerDiv.className = "holo-inner";
-
-            const displayTitle = source.title || (source.uri && source.uri.length > 60 ? source.uri.substring(0, 60) + "..." : source.uri) || 'Source';
-            innerDiv.textContent = `${index + 1}. ${displayTitle}`;
-
-            pillLink.appendChild(innerDiv);
-            pillsContainer.appendChild(pillLink);
-        });
-        containerDiv.appendChild(pillsContainer);
-        return containerDiv;
-      }
-
-
-      function getSystemInstruction() { // MODIFIED FUNCTION
+      function getSystemInstruction() {
         return `You are AlphaGPT, a highly advanced, friendly, and culturally aware assistant.
 
 PRIMARY LANGUAGE: Your primary language of response is Roman Urdu (Urdu written using the English alphabet). Strive to use it for all general conversation and answers.
@@ -444,52 +346,21 @@ NEVER, under any circumstances, include any of your internal thought processes, 
 If you use a tool, integrate its findings naturally into your response without mentioning the tool's execution details or your reasoning for using the tool.
 Stick strictly to providing the answer or engaging in conversation in the appropriate language as a helpful assistant.
 
-CORE OPERATING PRINCIPLE & SEARCH POLICY:
-1.  **Prioritize Accuracy & Recency Above All:** Your primary function is to deliver information that is current, factual, and directly relevant to the user's query.
-2.  **Proactive Search Mindset (Like Perplexity AI):**
-    *   The system will automatically determine if a search is needed.
-    *   **Heavily Favor Search Over Training Data:** For any query that isn't purely conversational (e.g., greetings, general chat) or a simple, timeless factual recall (e.g., "what is 2+2?"), your default approach should be to verify or retrieve information via search IF THE SEARCH TOOL IS ACTIVE.
-    *   **Especially for Specifics:** If the query involves names of people, places, organizations, products, creative works (songs, movies, books), dates, statistics, current events, or any specific detail that could have changed or have multiple facets, consider search indispensable IF THE SEARCH TOOL IS ACTIVE.
-    *   If your internal knowledge feels even slightly outdated, incomplete, or potentially ambiguous for the specific query, you MUST rely on the search tool if it's active.
+CORE OPERATING PRINCIPLES & SEARCH:
+1.  **Prioritize Accuracy & Recency:** Your primary function is to deliver information that is current, factual, and directly relevant to the user's query.
+2.  **Internet Search Capability:**
+    *   You have access to a Google Search tool (internet access). You can use this tool when you believe it's necessary to provide an accurate, up-to-date, or comprehensive answer.
+    *   If you use the search tool, integrate its findings naturally into your response in your determined language.
+    *   You may optionally and briefly mention that you searched for the information (e.g., "Maine internet par search kiya aur yeh paya..." or "According to a web search...").
+    *   **CRITICAL:** DO NOT refer to any source links, specific URLs, or tell the user to "see sources below" or "check the links provided." These elements will NOT be displayed in the user interface. Simply provide the information found.
 3.  **User-Initiated Search is a MANDATORY Command:**
     *   If the user explicitly asks you to search using phrases such as "search krke," "search krlo," "search kro," "internet pe dekho," "look it up," "find out," or any similar direct commands for external information retrieval:
-        *   You MUST use the search tool to formulate your answer IF IT IS ACTIVE for this turn. Do not answer from memory or provide a hypothetical search.
-        *   If the search tool is not active (because the system determined it wasn't needed based on the query), and the user explicitly asks for a search, then acknowledge their request and try to answer from your knowledge, perhaps suggesting they rephrase if they still need fresh info. Example: "Main abhi search nahi kar sakta, lekin is barey mein meri maloomat yeh hai..."
+        *   You MUST use the search tool to formulate your answer. Do not answer from memory or provide a hypothetical search.
 
-WHEN SEARCH TOOL IS AVAILABLE (SYSTEM-PROVIDED):
--   This occurs if the system determined a search was necessary based on the user's query.
--   You MUST utilize the search tool.
--   Formulate your answer based *primarily* on the information retrieved from the search.
--   **Natural Source Acknowledgment:** After providing an answer based on a web search, it's good practice to let the user know where the information came from. You should naturally weave in a concluding sentence that mentions the search and points to the sources below. Avoid using the exact same sentence every time. Be creative and make it sound conversational.
-    -   **Style Guide:**
-        -   **Roman Urdu Examples (use your own style):**
-            -   *"Maine yeh maloomat internet se search ki hai. Aap neeche diye gaye links se mazeed parh sakte hain."*
-            -   *"Yeh jawab web search ke natijay mein hai. Mazeed tafseelat ke liye, neeche sources mojood hain."*
-            -   *"Search ke mutabiq, yeh maloomat hai. Neeche diye gaye links par aap iski tasdeeq kar sakte hain."*
-        -   **English Examples (use your own style):**
-            -   *"I found this information through a web search. You can find more details in the source links below."*
-            -   *"According to my search, here's what I found. The sources are listed below for you to explore further."*
-            -   *"This answer is based on a web search. For more details, feel free to check out the links provided."*
-    -   **Key Goal:** Inform the user that the answer is from a search and that sources are available, but do so in a friendly, non-robotic way that fits the conversation.
-
-SEARCH FAILURE FALLBACK POLICY (When Search Tool was Active but Failed/Yielded Poor Results):
-*   This policy applies if you have attempted a search (because the system enabled the tool) AND:
-    a) The search tool itself encounters an internal error during its operation.
-    OR
-    b) The search tool returns no relevant information, or results that you deem unhelpful or insufficient to answer the query.
-*   **Procedure:**
-    1.  **Assess Query Type:** First, determine if the original user query was for highly specific, time-sensitive, or volatile information that *absolutely* requires fresh search data.
-    2.  **Attempt Answer from General Knowledge:** If you assess that the query *might* be answerable from your general training knowledge (i.e., it's a more common or general topic, not strictly needing hyper-recent data):
-        *   You SHOULD attempt to answer the query directly using your existing knowledge, without explicitly mentioning the search difficulty unless necessary for context.
-        *   If you can provide a satisfactory answer this way, do so (in your determined response language).
-    3.  **Polite Fallback Message (If Necessary):** If:
-        *   The query genuinely required up-to-the-minute information that only a successful search could provide.
-        *   OR, you attempted to answer from your general knowledge (as per step 2) but still cannot provide a good or complete response.
-        *   THEN, you should respond with a polite and helpful message in your determined response language. For example (Roman Urdu): "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat  nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar ya wazeh kar ke poochein. Shukriya!"
-        *   Provide the user-facing polite message.
-
-WHEN NO SEARCH IS NEEDED (Standard Operation):
--   For purely conversational interactions or queries where external data are clearly unnecessary (as determined by the system), respond directly in your determined response language (default Roman Urdu).
+SEARCH CONTEXT AND REGIONAL FOCUS:
+-   **Primary Context - Pakistan:** When a user's query is general (not specifying a particular location or context) and you decide to use search or provide regionally relevant examples, your primary search context and response framing MUST BE **Pakistan**.
+-   **India-Related Queries - User Explicit Request ONLY:** You MUST NOT proactively search for, or frame responses around, India or any Indian context unless the user EXPLICITLY asks for information about India. For all general and ambiguous queries, India has ZERO priority. Your default assumption is always non-Indian.
+-   **Other Locations:** If the user explicitly asks about a different location (e.g., USA, UK, etc.), prioritize their specific request for that query.
 
 Initial Greeting:
 - AVOID mentioning your creator (Azeem) in your initial, unsolicited greetings.
@@ -593,24 +464,6 @@ Fun & Casual 😄:
 Example Emojis (for inspiration, use creatively):
 🔇 🔈 🔉 🔊 📢 📣 📯 🔔 🔕 🎼 🎵 🎶 🎙 🎚 🎛 🎤 🎧 📻 🎷 🪗 🎸 🎹 🎺 🎻 🪕 🥁 🪘 📱 📲 ☎ 📞 📟 📠 🔋 🪫 🔌 💻 🖥 🖨 ⌨ 🖱 🖲 💽 💾 💿 📀 🧮 🎥 🎞 📽 🎬 📺 📷 📸 📹 📼 🔍 🔎 🕯 💡 🔦 🏮 🪔 📔 📕 📖 📗 📘 📙 📚 📓 📒 📃 📜 📄 📰 🗞 📑 🔖 🏷 💰 🪙 💴 💵 💶 💷 💸 💳 🧾 💹 ✉ 📧 📩 📤 📥 📦 📫 📪 📬 📭 📮 🗳 ✏ ✒ 🖋 🖊 🖌 🖍 📝 💼 📁 📂 🗂 📅 📆 📇 📈 📉 📊 📋 📌 📍 📎 🖇 📏 📐 ✂ 🗃 🗄 🗑 🔒 🔓 🔏 🔐 🔑 🗝 🔨 🪓 ⛏ ⚒ 🛠 🗡 ⚔ 🔫 🪃 🏹 🛡 🪚 🔧 🪛 🔩 ⚙ 🗜 ⚖ 🦯 🔗 ⛓ 🪝 🧰 🧲 🪜 ⚗ 🧪 🧫 🧬 🔬 🔭 📡 💉 🩸 💊 🩹 🩼 🩺 🩻 🚪 🛗 🪞 🪟 🛏 🛋 🪑 🚽 🪠 🚿 🛁 🪤 🪒 🧴 🧷 🧹 🧺 🧻 🪣 🧼 🫧 🪥 🧽 🧯 🛒 🚬 ⚰ 🪦 ⚱ 🗿 🪧 🪪 🏧 🚮 🚰 ♿ 🚹 🚺 🚻 🚼 🚾 🛂 🛃 🛄 🛅 ⚠ 🚸 ⛔ 🚫 🚳 🚭 🚯 🚱 🚷 📵 🔞 ☢ ☣ ⬆ ↗ ➡ ↘ ⬇ ↙ ⬅ ↖ ↕ ↔ ↩ ↪ ⤴ ⤵ 🔃 🔄 🔙 🔚 🔛 🔜 🔝 🛐 ⚛ 🕉 ✡ ☸ ☯ ✝ ☦ ☪ ☮ 🕎 🔯 ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ ⛎ 🔀 🔁 🔂 ▶ ⏸ ⏩ ⏭ ⏯ ◀ ⏪ ⏮ 🔼 ⏫ 🔽 ⏬ ⏹ ⏺ ⏏ 🎦 🔅 🔆 📶 📳 📴 ♀ ♂ ⚧ ✖ ➕ ➖ ➗ 🟰 ♾ ‼ ⁉ ❓ ❔ ❗ ❕ 〰 💱 💲 ⚕ ♻ ⚜ 🔱 📛 🔰 ⭕ ✅ ☑ ✔ ❌ ❎ ➰ ➿ 〽 ✳ ✴ ❇ © ® ™ #️⃣ *️⃣ 0️⃣ 1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 🔟 🔠 🔡 🔢 🔣 🔤 🅰 🆎 🅱 🅾 🆑 🆒 🆓 ℹ 🆔 Ⓜ 🆕 🆖 🆗 🅿 🆘 🆙 🆚 🈁 🈂 🈷 🈶 🈯 🉐 🈹 🈚 🈲 🉑 🈸 🈴 🈳 ㊗ ㊙ 🈺 🈵 🔴 🟠 🟡 🟢 🔵 🟣 🟤 ⚫ ⚪ 🟥 🟧 🟨 🟩 🟦 🟪 🟫 ⬛ ⬜ 🔶 🔷 🔸 🔹 🔺 🔻 💠 🔘 🔳 🔲 🏁 🚩 🎌 🏴 🏳 🏳️‍🌈 🏳️‍⚧️ 🏴‍☠️
 
-
-Internet Search Capability:
-- The system will automatically provide you with a search tool based on user input.
-- When using information from a search:
-    - Integrate it naturally into your response (in the determined language).
-    - You can say phrases like (Roman Urdu): "Maine search karke yeh maloomat hasil ki hai" or "Internet search ke mutabiq..."
-    - The UI will handle displaying any provided source URLs.
-
-Search Prioritization:
-- When a user's query is general (not specifying a particular location or context) AND search is active:
-    - Your primary search context MUST BE **Pakistan**.
-    - **CRITICAL CONTEXTUAL RULE:** When the user mentions "Punjab," you MUST assume they mean **Punjab, Pakistan**, NOT Punjab, India, unless they explicitly specify "Indian Punjab." Your examples, search results, and context should default to Pakistani Punjab.
-    - Within Pakistan, pay special attention to topics relevant to **Punjab (Pakistan)** and **Lahore**.
-    - Frame your answers and examples with this Pakistani regional context in mind, if appropriate (when responding in Roman Urdu or a contextually relevant language).
-- If the user explicitly asks about a different location (e.g., India, USA, etc.), prioritize their specific request.
-- This regional prioritization is a strict guideline for ambiguous queries.
-
-
 Response Structure:
 1. Acknowledge the user's query with understanding
 2. Provide clear, structured information
@@ -672,10 +525,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       const FileImageIcon = (props) => (<i className={`fa-solid fa-file-image ${props.className || ''}`}></i>);
 
       const ThinkingAnimation = () => (
-          <div className="thinking-indicator mt-2.5"> {/* Base styles: text-subtle, text-xs, font-medium, flex, gap-2 */}
+          <div className="thinking-indicator mt-2.5">
               <div className="square animate-rotate-square"></div>
               Thinking
-              <span className="animated-dots"> {/* Inherits text styles for 1.2em calculation */}
+              <span className="animated-dots">
                   <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
                   <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
                   <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
@@ -683,19 +536,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           </div>
       );
       
-      const SearchingAnimation = () => ( 
-          <div className="flex items-center text-xs font-medium text-text-subtle gap-2 mt-2.5"> 
-              <div className="loader animate-l3"></div> 
-              <span>Searching</span> 
-              <span className="animated-dots"> 
-                  <span className="animate-fade-dots" style={{ animationDelay: '0s' }}>.</span>
-                  <span className="animate-fade-dots" style={{ animationDelay: '0.5s' }}>.</span>
-                  <span className="animate-fade-dots" style={{ animationDelay: '1s' }}>.</span>
-              </span>
-          </div>
-      );
-
-
       const ChatMessageItem = ({ message }) => { 
         const isUser = message.role === 'user'; 
         const isError = message.isError === true; 
@@ -703,48 +543,17 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         
         const contentRef = useRef(null); 
         const [animatedHtml, setAnimatedHtml] = useState('');
-        const animationTimeoutId = useRef(null);
-        const lastAnimatedText = useRef("");
-
-        const isModelLoadingWithSearch = isModelLoading && message.searchUsed && message.loadingText === "Searching...";
-        const isModelLoadingThinking = isModelLoading && (!message.searchUsed || message.loadingText === "Thinking...");
         
+        // MODIFICATION: Removed internal typewriter useEffect. 
+        // Text updates will come directly from App component via props.
         useEffect(() => {
-          if (isModelLoading) {
-            const targetText = message.text || '';
-            // Only start new animation if the target text is actually new
-            if (targetText === lastAnimatedText.current) return;
-            
-            // Clear any pending animation to start the new one
-            clearTimeout(animationTimeoutId.current);
-
-            let i = lastAnimatedText.current.length;
-            lastAnimatedText.current = targetText;
-
-            const type = () => {
-              if (i < targetText.length) {
-                i++;
-                const nextSubstring = targetText.substring(0, i);
-                setAnimatedHtml(marked.parse(nextSubstring));
-                animationTimeoutId.current = setTimeout(type, 35); // Typewriter speed
-              }
-            };
-            type();
-
-            return () => clearTimeout(animationTimeoutId.current);
-          } else {
-            // Not loading, just set the final HTML and clear refs
-            setAnimatedHtml(marked.parse(message.text || ''));
-            lastAnimatedText.current = "";
-            clearTimeout(animationTimeoutId.current);
-          }
-        }, [message.text, isModelLoading]);
+          setAnimatedHtml(marked.parse(message.text || ''));
+        }, [message.text]);
 
 
         useEffect(() => {
-          // This effect runs after the text has been set, either fully or by the typewriter.
-          // It's responsible for highlighting code blocks and modifying links.
-          if (!isModelLoading && contentRef.current) {
+          // Code block highlighting and copy button logic (unchanged from previous AlphaGPT)
+          if (!isModelLoading && contentRef.current) { // Ensure it runs only when not loading & content is present
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
               if (preEl.parentNode?.classList.contains('code-block-wrapper')) { return; }
@@ -763,7 +572,20 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               button.style.zIndex = '10';
               button.setAttribute('aria-label', 'Copy code');
 
-              button.onclick = () => { /* ... (copy logic is unchanged) ... */ };
+              button.onclick = () => { 
+                  if (codeElement) {
+                    navigator.clipboard.writeText(codeElement.textContent || '')
+                      .then(() => {
+                        button.innerHTML = COPIED_ICON_SVG;
+                        button.classList.add('text-status-success');
+                        setTimeout(() => {
+                          button.innerHTML = COPY_ICON_SVG;
+                          button.classList.remove('text-status-success');
+                        }, 2000);
+                      })
+                      .catch(err => console.error('Failed to copy code: ', err));
+                  }
+              };
 
               if (preEl.parentNode) {
                 preEl.parentNode.insertBefore(wrapper, preEl);
@@ -777,23 +599,13 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               }
             });
             
-            // Add target="_blank" to all links in the markdown content
             const links = contentRef.current.querySelectorAll('.markdown-content a');
             links.forEach(link => {
                 link.target = '_blank';
                 link.rel = 'noopener noreferrer';
             });
-
-            const sourcesContainer = contentRef.current.querySelector('.sources-placeholder');
-            if (sourcesContainer && message.sources && message.sources.length > 0) {
-                 const sourcesElement = createSourceLinksElement(message.sources);
-                 if (sourcesElement) {
-                    sourcesContainer.innerHTML = ''; // Clear previous
-                    sourcesContainer.appendChild(sourcesElement);
-                 }
-            }
           }
-        }, [animatedHtml, isModelLoading, message.sources]); // Rerun when animatedHtml is complete
+        }, [animatedHtml, isModelLoading]); // Rerun when animatedHtml (final parsed content) is complete
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
@@ -805,19 +617,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         if (isUser) { 
           bubbleRoleClasses = 'bg-surface-accent text-text-primary rounded-2xl rounded-br-md'; 
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
-          contentToShow = <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>; // Font size reduced
+          contentToShow = <p className="text-sm whitespace-pre-wrap break-words">{message.text}</p>;
         } else if (message.role === 'model') { 
-            bubbleRoleClasses = 'bg-white text-text-primary rounded-2xl border border-[#E5E8EB] text-sm'; // Font size reduced
+            bubbleRoleClasses = 'bg-white text-text-primary rounded-2xl border border-[#E5E8EB] text-sm';
             bubbleWidthClasses = 'max-w-full w-full'; 
             
             if(isError) { 
-                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl text-sm'; // Font size reduced
+                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl text-sm';
                 contentToShow = ( <div className="break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
             } else { 
                 contentToShow = (
                   <div ref={contentRef}>
                     <div className="markdown-content break-words" dangerouslySetInnerHTML={{ __html: animatedHtml }} />
-                    <div className="sources-placeholder"></div>
                   </div>
                 );
             } 
@@ -856,8 +667,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 </div>
               )}
               {contentToShow} 
-              {isModelLoadingThinking && !animatedHtml && <ThinkingAnimation />}
-              {isModelLoadingWithSearch && !animatedHtml && <SearchingAnimation />}
+              {/* MODIFICATION: Thinking animation condition changed to !message.text to work with new streaming */}
+              {isModelLoading && !message.text && <ThinkingAnimation />} 
             </div>
           </div>);
       };
@@ -882,7 +693,9 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           } else if (lastMessage.role === 'model') {
             if (!userHasScrolledUp) { 
               if (lastMessage.isLoading) {
-                messagesEndEl.scrollIntoView({ behavior: "auto" }); 
+                // For streaming, we might want "auto" or a very gentle scroll
+                // to avoid jarring jumps as new text comes in.
+                messagesEndEl.scrollIntoView({ behavior: "auto", block: "end" }); 
               } else {
                 messagesEndEl.scrollIntoView({ behavior: "smooth" });
               }
@@ -925,14 +738,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         };
         
         const handleContentEditableKeyDown = (e) => {
-            // Only submit on Enter key press on non-mobile devices
             if (!isMobileView && e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 if (!isSendButtonDisabled) {
                     handleSubmit(e);
                 }
             }
-            // On mobile, Enter will just create a new line (default behavior).
         };
 
         const isAiCurrentlyProcessing = messages.some(m => m.role === 'model' && m.isLoading && !m.isError);
@@ -1065,7 +876,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                         onClick={isAiCurrentlyProcessing ? onStopGeneration : undefined } 
                         disabled={isSendButtonDisabled} 
                         className={`${sendOrStopButtonBaseClasses} ${sendOrStopButtonDynamicClasses}`}
-                        style={{ overflow: 'hidden' }} // Helps prevent child pseudo-elements from appearing outside
+                        style={{ overflow: 'hidden' }}
                         aria-label={isAiCurrentlyProcessing ? "Stop generation" : "Send message"}
                     > 
                       {isAiCurrentlyProcessing ? (
@@ -1089,11 +900,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const [chatError, setChatError] = useState(null); 
 
         const isStoppingGenerationRef = useRef(false);
-        
-        const streamTextBuffer = useRef("");
-        const streamSourcesBuffer = useRef([]);
-        const streamUpdateScheduled = useRef(false);
-        const streamAnimationFrameId = useRef(null);
+        const streamTextBuffer = useRef(""); // Still useful for final text on stop/error
 
         useEffect(() => { 
             if (chatError) { 
@@ -1149,13 +956,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             isStoppingGenerationRef.current = true;
             setIsChatLoading(false); 
 
-            if (streamAnimationFrameId.current) {
-                cancelAnimationFrame(streamAnimationFrameId.current);
-                streamAnimationFrameId.current = null;
-            }
-            streamUpdateScheduled.current = false;
-
-
             setChatMessages(prevMessages => {
                 let messageUpdated = false;
                 const updatedMessages = prevMessages.map(msg => {
@@ -1177,8 +977,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                                 newText = stopNotice;
                             }
                         }
-                        
-                        return { ...msg, text: newText, isLoading: false, sources: streamSourcesBuffer.current.length > 0 ? [...streamSourcesBuffer.current] : msg.sources };
+                        return { ...msg, text: newText, isLoading: false };
                     }
                     return msg;
                 });
@@ -1188,40 +987,24 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key is not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); }, []);
         
-        const mergeCitations = (existingSources, newSources) => {
-            if (!newSources || newSources.length === 0) return existingSources;
-            const existingUris = new Set((existingSources || []).map(s => s.uri));
-            const uniqueNewSources = newSources.filter(src => src.uri && !existingUris.has(src.uri));
-            return [...(existingSources || []), ...uniqueNewSources];
-        };
-        
+        // MODIFICATION: _streamAiResponse updated with Oracle AI's streaming logic
         const _streamAiResponse = async (
             originalPromptParts, 
             targetAiMessageId, 
-            historyForGeminiInit, 
-            useSearchInitially,
-            currentLoadingText
+            historyForGeminiInit
         ) => {
             setIsChatLoading(true);
-
-            streamTextBuffer.current = "";
-            streamSourcesBuffer.current = [];
-            streamUpdateScheduled.current = false;
-            if (streamAnimationFrameId.current) {
-                cancelAnimationFrame(streamAnimationFrameId.current);
-                streamAnimationFrameId.current = null;
-            }
+            isStoppingGenerationRef.current = false;
             
-            if (isStoppingGenerationRef.current) { 
-                setIsChatLoading(false);
-                return;
-            }
+            let displayedAiText = ""; // Accumulator for the live text being displayed
+            streamTextBuffer.current = ""; // Reset for this stream
 
             try {
-                const modelConfig = { model: GEMINI_MAIN_MODEL, systemInstruction: getSystemInstruction() };
-                if (useSearchInitially) { 
-                    modelConfig.tools = [{ googleSearch: {} }];
-                }
+                const modelConfig = { 
+                    model: GEMINI_MAIN_MODEL, 
+                    systemInstruction: getSystemInstruction(),
+                    tools: [{ googleSearch: {} }] 
+                };
                 const chatModel = genAI.getGenerativeModel(modelConfig);
                 const chatSession = chatModel.startChat({ history: historyForGeminiInit });
                 
@@ -1232,27 +1015,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
                 const result = await chatSession.sendMessageStream(originalPromptParts);
 
-                const performUiUpdate = () => {
-                    if (!isStoppingGenerationRef.current) { 
-                        setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
-                            ...m, 
-                            text: streamTextBuffer.current, 
-                            isLoading: true, 
-                            isError: false, 
-                            sources: streamSourcesBuffer.current.length > 0 ? [...streamSourcesBuffer.current] : null, 
-                            searchUsed: useSearchInitially || m.searchUsed,
-                            loadingText: currentLoadingText 
-                        } : m));
-                    }
-                    streamUpdateScheduled.current = false;
-                    streamAnimationFrameId.current = null; 
-                };
-
                 for await (const chunk of result.stream) { 
                     if (isStoppingGenerationRef.current) break;
                     
                     const rawChunkText = chunk.text();
-                    let chunkTextForDisplay = "";
+                    let chunkContentForDisplay = "";
 
                     if (typeof rawChunkText === 'string') {
                         const lines = rawChunkText.split('\n');
@@ -1261,46 +1028,41 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             !line.trim().startsWith("print(google_search.search")
                         );
                         if (filteredLines.length > 0 && filteredLines.some(line => line.trim() !== "" || lines.length === filteredLines.length )) {
-                           chunkTextForDisplay = filteredLines.join('\n');
+                           chunkContentForDisplay = filteredLines.join('\n');
                         } else if (filteredLines.length === 0 && rawChunkText.trim() !== "") {
-                            chunkTextForDisplay = ""; 
+                            chunkContentForDisplay = ""; 
                         } else {
-                            chunkTextForDisplay = rawChunkText; 
+                            chunkContentForDisplay = rawChunkText; 
                         }
                     }
 
-                    if (chunkTextForDisplay.length > 0 || (chunkTextForDisplay === "" && rawChunkText === "")) { 
-                        streamTextBuffer.current += chunkTextForDisplay;
-                    }
-                    
-                    let sourcesDelta;
-                    if (chunk.candidates && chunk.candidates[0]?.groundingMetadata?.groundingChunks) {
-                        sourcesDelta = chunk.candidates[0].groundingMetadata.groundingChunks
-                          .filter(gc => gc.web && gc.web.uri)
-                          .map(gc => ({ uri: gc.web.uri, title: gc.web.title || gc.web.uri }));
-                        if (sourcesDelta && sourcesDelta.length > 0) {
-                           streamSourcesBuffer.current = mergeCitations(streamSourcesBuffer.current, sourcesDelta);
+                    if (chunkContentForDisplay.length > 0 || (chunkContentForDisplay === "" && rawChunkText === "")) { 
+                        const textParts = chunkContentForDisplay.split(/(\s+|\*+|`+|_|~|---|===|\n)/); // Split by common markdown chars and whitespace for smoother streaming
+                        for (const part of textParts) {
+                            if (isStoppingGenerationRef.current) break;
+                            if (part.length === 0) continue;
+
+                            displayedAiText += part;
+                            streamTextBuffer.current = displayedAiText; // Keep buffer in sync
+
+                            setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { 
+                                ...m, 
+                                text: displayedAiText, 
+                                isLoading: true, 
+                                isError: false,
+                            } : m));
+                            
+                            // Adjusted delay: small base + tiny per-character delay for the part
+                            await new Promise(resolve => setTimeout(resolve, 5 + part.length * 1)); 
                         }
                     }
-
-                    if (!streamUpdateScheduled.current && (chunkTextForDisplay.length > 0 || (sourcesDelta && sourcesDelta.length > 0))) {
-                        streamUpdateScheduled.current = true;
-                        streamAnimationFrameId.current = requestAnimationFrame(performUiUpdate);
-                    }
-                    
                     if (isStoppingGenerationRef.current) break;
                 }
                 
-                if (isStoppingGenerationRef.current && streamAnimationFrameId.current) {
-                    cancelAnimationFrame(streamAnimationFrameId.current);
-                    streamAnimationFrameId.current = null;
-                }
-                streamUpdateScheduled.current = false; 
-
+                // Final update to message after stream ends or is stopped
                 setChatMessages(prev => prev.map(m => {
                     if (m.id === targetAiMessageId) {
                         let finalText = streamTextBuffer.current;
-                        let finalSources = streamSourcesBuffer.current;
                         let isMessageError = false; 
                         const stopNoticeStr = "*Generation stopped by user.*";
 
@@ -1312,22 +1074,14 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                                 baseText += (baseText.trim() ? "\n\n---\n" : "") + stopNoticeStr;
                             }
                             finalText = baseText;
-                        } else if (!finalText.trim() && (!finalSources || finalSources.length === 0)) {
-                            if (useSearchInitially) {
-                                finalText = "Mujhe abhi search karne mein thori dushwari pesh aa rahi hai, ya shayad is mauzu par wazeh maloomat nahi mil pa rahi. Aap message dobara regenerate karne ki koshish kar sakte hain, ya apna sawal thora badal kar poochein. Shukriya! 🙏";
-                            } else {
-                                finalText = "Mera khayal hai ke mujhe samajhne mein kuch dushwari hui. Kya aap apna sawal wazeh kar sakte hain? 🤔";
-                            }
-                        } else if (!finalText.trim() && finalSources && finalSources.length > 0 && !isStoppingGenerationRef.current) { 
-                            finalText = "*Mawad search results par mabni hai (neeche hawale dekhein).*";
+                        } else if (!finalText.trim() && !isStoppingGenerationRef.current) {
+                            finalText = "Mujhe samajhne mein kuch dushwari hui ya abhi iska jawab nahi mil pa raha. Kya aap apna sawal wazeh kar sakte hain ya dobara pooch sakte hain? 🤔";
                         }
                         return { 
                             ...m, 
                             text: finalText, 
                             isLoading: false, 
                             isError: isMessageError, 
-                            sources: finalSources.length > 0 ? [...finalSources] : null, 
-                            searchUsed: useSearchInitially || m.searchUsed 
                         };
                     }
                     return m;
@@ -1340,14 +1094,12 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 else if (err.message?.toLowerCase().includes("candidate was blocked")) errorTextForUser = "Meri hifazati policies ki wajah se main yeh jawab nahi de sakta.";
                 else if (err.message?.toLowerCase().includes("quota")) errorTextForUser = "API istemal ki had poori ho gayi hai.";
                 
-                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true, searchUsed: useSearchInitially } : m));
+                setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true } : m));
             } finally {
-                if (streamAnimationFrameId.current) {
-                    cancelAnimationFrame(streamAnimationFrameId.current);
-                    streamAnimationFrameId.current = null;
-                }
-                streamUpdateScheduled.current = false;
                 setIsChatLoading(false);
+                 if (isStoppingGenerationRef.current) { // Ensure isLoading is false if stopped during processing
+                    setChatMessages(prev => prev.map(m => (m.id === targetAiMessageId && m.isLoading) ? {...m, isLoading: false} : m ));
+                }
             }
         };
 
@@ -1371,13 +1123,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const preliminaryAiPlaceholder = { 
                 id: aiMessageId, 
                 role: 'model', 
-                text: '', 
-                loadingText: "Thinking...", 
+                text: '', // Start with empty text for ThinkingAnimation
                 timestamp: new Date(), 
                 isLoading: true, 
                 isError: false, 
-                sources: null, 
-                searchUsed: false, 
             }; 
             
             setChatMessages(prev => {
@@ -1385,13 +1134,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 return [...filteredPrev, newUserMessageForUi, preliminaryAiPlaceholder];
             });
             
-            const needsSearch = await determineSearchNeed_service(genAI, messageText); 
-            const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
-
-            if (needsSearch) {
-                setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
-            }
-
             const promptPartsForUserTurn = [];
             if (messageText) promptPartsForUserTurn.push({ text: messageText }); 
             filesToSend.forEach(file => {
@@ -1406,9 +1148,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 await _streamAiResponse(
                     promptPartsForUserTurn, 
                     aiMessageId, 
-                    currentChatHistoryForGemini, 
-                    needsSearch,
-                    finalLoadingText
+                    currentChatHistoryForGemini
                 );
             } else { 
                 setChatMessages(prev => prev.map(m => m.id === aiMessageId ? { ...m, role: 'model', text: "No content to send.", isLoading: false, isError: true } : m ).filter(msg => msg.id !== aiMessageId || msg.isError));
@@ -1436,28 +1176,20 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             const historyBeforeUserPromptInternal = chatMessages.slice(0, originalAiMsgIndex - 1);
             const historyForGeminiInit = getGeminiHistory(historyBeforeUserPromptInternal);
 
-            const newAiPlaceholderId = Date.now().toString() + '_model_regen';
+            const newAiPlaceholderId = Date.now().toString() + '_model_regen'; // New ID for new message
+            
             const preliminaryAiPlaceholder = { 
                 id: newAiPlaceholderId, 
                 role: 'model', 
                 text:'', 
-                loadingText: "Thinking...",
                 isLoading:true, 
                 timestamp:new Date(), 
                 isError: false, 
-                sources: null, 
-                searchUsed: false, 
             };
             
+            // Remove old AI message and add new placeholder
             const chatHistoryForUiUpdate = chatMessages.slice(0, originalAiMsgIndex);
             setChatMessages([...chatHistoryForUiUpdate, preliminaryAiPlaceholder]);
-
-            const needsSearch = await determineSearchNeed_service(genAI, userPromptTextForRegen);
-            const finalLoadingText = needsSearch ? "Searching..." : "Thinking...";
-            
-            if(needsSearch) {
-                setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? { ...m, loadingText: finalLoadingText, searchUsed: true } : m));
-            }
             
             const promptPartsForRegen = [];
             if (userPromptTextForRegen) promptPartsForRegen.push({ text: userPromptTextForRegen });
@@ -1472,10 +1204,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             if (promptPartsForRegen.length > 0) {
                 await _streamAiResponse(
                     promptPartsForRegen, 
-                    newAiPlaceholderId, 
-                    historyForGeminiInit, 
-                    needsSearch,
-                    finalLoadingText
+                    newAiPlaceholderId, // Use the new ID for the new message
+                    historyForGeminiInit
                 );
             } else { 
                 setChatMessages(prev => prev.map(m => m.id === newAiPlaceholderId ? {...m, isLoading: false, text: "No content found to regenerate.", isError: true} : m));
