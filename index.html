@@ -62,7 +62,7 @@
               'modal-fade-out': 'modal-fade-out 0.3s ease-in forwards',
               'rotate-square': 'rotate-square 2s linear infinite',
               'fade-dots': 'fade-dots 1.5s infinite',
-              'spin-continuous': 'spinContinuous 2s linear infinite',
+              'spin-continuous': 'spinContinuous 1.2s linear infinite',
             },
             keyframes: {
               fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' }, },
@@ -318,7 +318,8 @@
       const GEMINI_MAIN_MODEL = 'gemini-2.0-flash';
       const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; 
       
-      const MAX_FILE_SIZE_MB = 5; const MAX_TOTAL_FILES_SIZE_MB = 20;
+      const MAX_FILE_SIZE_MB = 5; 
+      const MAX_TOTAL_FILES_SIZE_MB = 20;
 
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
       const genAI = new GoogleGenerativeAI(API_KEY);
@@ -678,12 +679,32 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       };
       
       const ChatInterface = ({ messages, onSendMessage, isLoading, onStopGeneration, onRegenerateLastTextMessage, onClearChat, setChatError }) => {
-        const [inputText, setInputText] = useState(''); const [selectedFiles, setSelectedFiles] = useState([]); const [isMobileView, setIsMobileView] = useState(false); const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
-        const fileInputRef = useRef(null); const messagesEndRef = useRef(null); const chatContainerRef = useRef(null); 
+        const [inputText, setInputText] = useState(''); 
+        const [selectedFiles, setSelectedFiles] = useState([]); 
+        const [isMobileView, setIsMobileView] = useState(false); 
+        const [userHasScrolledUp, setUserHasScrolledUp] = useState(false);
+        const fileInputRef = useRef(null); 
+        const messagesEndRef = useRef(null); 
+        const chatContainerRef = useRef(null); 
         const contentEditableRef = useRef(null);
 
-        useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
-        useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
+        useEffect(() => { 
+            const checkMobileView = () => setIsMobileView(window.innerWidth < 768); 
+            window.addEventListener('resize', checkMobileView); 
+            checkMobileView(); 
+            return () => window.removeEventListener('resize', checkMobileView); 
+        }, []);
+
+        useEffect(() => { 
+            const container = chatContainerRef.current; 
+            if (!container) return; 
+            const handleScroll = () => { 
+                const { scrollTop, scrollHeight, clientHeight } = container; 
+                setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);
+            }; 
+            container.addEventListener('scroll', handleScroll, { passive: true }); 
+            return () => container.removeEventListener('scroll', handleScroll); 
+        }, []); 
         
         useEffect(() => {
           const lastMessage = messages[messages.length - 1];
@@ -705,15 +726,78 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           }
         }, [messages, userHasScrolledUp]);
 
-        const handleFileChange = async (event) => { const files = Array.from(event.target.files); processAndSetFiles(files); if (fileInputRef.current) fileInputRef.current.value = ""; };
+        const handleFileChange = async (event) => { 
+            const files = Array.from(event.target.files); 
+            processAndSetFiles(files); 
+            if (fileInputRef.current) fileInputRef.current.value = ""; 
+        };
+
         const handlePaste = async (event) => { 
             const pastedFiles = Array.from(event.clipboardData.files); 
             if (pastedFiles.length > 0) { 
-                const processedSomething = await processAndSetFiles(pastedFiles, true); 
+                await processAndSetFiles(pastedFiles, true); 
             }
         };
-        const processAndSetFiles = async (filesArray, isFromPaste = false) => { if (!filesArray.length) return false; let filesToProcess = []; let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0); let didProcessAnyFile = false; let localErrorMessage = null; for (const file of filesArray) { const isImage = file.type.startsWith('image/'); const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt')); if (!isImage && !isTxt) { if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`); else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files allowed.`; continue; } if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; continue; } if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; break; } filesToProcess.push(file); currentTotalSize += file.size; didProcessAnyFile = true; } if(localErrorMessage){ setChatError(localErrorMessage); } else { setChatError(null); } if (filesToProcess.length > 0) { const processedFileObjects = await Promise.all( filesToProcess.map(async (file) => { const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name; let apiData; if (file.type.startsWith('image/')) { const base64Data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onloadend = () => resolve(reader.result.split(',')[1]); reader.onerror = (error) => reject(error); }); apiData = { mimeType: file.type, data: base64Data }; } else { const textContent = await file.text(); apiData = { textContent: textContent }; } return { id, file, name: file.name, type: file.type, apiData }; }) ); setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]); } return didProcessAnyFile; };
-        const removeSelectedFile = (fileId) => { setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); };
+
+        const processAndSetFiles = async (filesArray, isFromPaste = false) => { 
+            if (!filesArray.length) return false; 
+            let filesToProcess = []; 
+            let currentTotalSize = selectedFiles.reduce((acc, curr) => acc + (curr.file?.size || 0), 0); 
+            let didProcessAnyFile = false; 
+            let localErrorMessage = null; 
+            for (const file of filesArray) { 
+                const isImage = file.type.startsWith('image/'); 
+                const isTxt = file.type === 'text/plain' || (file.name && file.name.toLowerCase().endsWith('.txt')); 
+                if (!isImage && !isTxt) { 
+                    if (isFromPaste) console.log(`Pasted unsupported file: ${file.name} (${file.type})`); 
+                    else localErrorMessage = `File "${file.name}" (type: ${file.type}) is not supported. Only images and .txt files allowed.`; 
+                    continue; 
+                } 
+                if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { 
+                    localErrorMessage = `File "${file.name}" is larger than ${MAX_FILE_SIZE_MB}MB.`; 
+                    continue; 
+                } 
+                if (currentTotalSize + file.size > MAX_TOTAL_FILES_SIZE_MB * 1024 * 1024) { 
+                    localErrorMessage = `Total file size cannot exceed ${MAX_TOTAL_FILES_SIZE_MB}MB.`; 
+                    break; 
+                } 
+                filesToProcess.push(file); 
+                currentTotalSize += file.size; 
+                didProcessAnyFile = true; 
+            } 
+            if(localErrorMessage){ 
+                setChatError(localErrorMessage); 
+            } else { 
+                setChatError(null); 
+            } 
+            if (filesToProcess.length > 0) { 
+                const processedFileObjects = await Promise.all( 
+                    filesToProcess.map(async (file) => { 
+                        const id = Date.now().toString(36) + Math.random().toString(36).substring(2) + file.name; 
+                        let apiData; 
+                        if (file.type.startsWith('image/')) { 
+                            const base64Data = await new Promise((resolve, reject) => { 
+                                const reader = new FileReader(); 
+                                reader.readAsDataURL(file); 
+                                reader.onloadend = () => resolve(reader.result.split(',')[1]); 
+                                reader.onerror = (error) => reject(error); 
+                            }); 
+                            apiData = { mimeType: file.type, data: base64Data }; 
+                        } else { 
+                            const textContent = await file.text(); 
+                            apiData = { textContent: textContent }; 
+                        } 
+                        return { id, file, name: file.name, type: file.type, apiData }; 
+                    }) 
+                ); 
+                setSelectedFiles(prev => [...prev, ...processedFileObjects.filter(f => f)]); 
+            } 
+            return didProcessAnyFile; 
+        };
+        
+        const removeSelectedFile = (fileId) => { 
+            setSelectedFiles(prev => prev.filter(f => f.id !== fileId)); 
+        };
         
         const handleSubmit = (e) => { 
             if(e) e.preventDefault(); 
@@ -770,7 +854,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                  sendOrStopButtonDynamicClasses += ' focus:ring-2 focus:ring-focus-ring-color'; 
             }
         }
-
 
         return (
           <div className="w-full h-full sm:max-w-2xl md:max-w-3xl lg:max-w-[780px] sm:mx-auto bg-white rounded-none sm:rounded-xl shadow-chat-window flex flex-col overflow-hidden sm:my-6 sm:max-h-[calc(100vh-3rem)]">
@@ -943,7 +1026,11 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             }
             return geminiMessages;
         };
-        useEffect(() => { if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { setChatError("API Key is not configured. Please set it up."); } }, []); 
+        useEffect(() => { 
+            if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") { 
+                setChatError("API Key is not configured. Please set it up."); 
+            } 
+        }, []); 
         
         const handleStopGeneration = useCallback(() => {
             isStoppingGenerationRef.current = true;
@@ -978,7 +1065,14 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             });
         }, []); 
 
-        const handleClearChat = useCallback(() => { if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ setChatError("API Key is not configured. Please set it up to use the chat."); } else { setChatError(null); } setChatMessages([]); }, []);
+        const handleClearChat = useCallback(() => { 
+            if(!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY"){ 
+                setChatError("API Key is not configured. Please set it up to use the chat."); 
+            } else { 
+                setChatError(null); 
+            } 
+            setChatMessages([]); 
+        }, []);
         
         const _streamAiResponse = async (
             originalPromptParts, 
@@ -1065,7 +1159,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                             }
                             finalText = baseText;
                         } else if (!finalText.trim() && !isStoppingGenerationRef.current) {
-                            finalText = "Mujhe samajhne mein kuch dushwari hui ya abhi iska jawab nahi mil pa raha. Kya aap apna sawal wazeh kar sakte hain ya dobara pooch sakte hain? 🤔";
+                            finalText = "I encountered an issue understanding or couldn't find an answer right now. Could you please clarify your question or try asking again? 🤔";
+                            isMessageError = true; 
                         }
                         return { 
                             ...m, 
@@ -1079,10 +1174,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
             } catch (err) {
                 console.error("AI stream error in _streamAiResponse:", err);
-                let errorTextForUser = "Jawab dene mein kuch takneeki dushwari pesh aa rahi hai. Barah-e-karam thori dair baad dobara koshish karein."; 
-                if (err.message?.toLowerCase().includes("api key not valid")) errorTextForUser = "Lagta hai API key mein koi masla hai.";
-                else if (err.message?.toLowerCase().includes("candidate was blocked")) errorTextForUser = "Meri hifazati policies ki wajah se main yeh jawab nahi de sakta.";
-                else if (err.message?.toLowerCase().includes("quota")) errorTextForUser = "API istemal ki had poori ho gayi hai.";
+                let errorTextForUser = "A technical difficulty occurred while trying to respond. Please try again a little later."; 
+                if (err.message?.toLowerCase().includes("api key not valid")) errorTextForUser = "It seems there's an issue with the API key. Please check it.";
+                else if (err.message?.toLowerCase().includes("candidate was blocked")) errorTextForUser = "Due to safety policies, I cannot provide this response.";
+                else if (err.message?.toLowerCase().includes("quota")) errorTextForUser = "The API usage limit has been reached.";
                 
                 setChatMessages(prev => prev.map(m => m.id === targetAiMessageId ? { ...m, role: 'model', text: errorTextForUser, isLoading: false, isError: true } : m));
             } finally {
