@@ -371,12 +371,23 @@ SEARCH CONTEXT AND REGIONAL FOCUS:
 
 Initial Greeting:
 - AVOID mentioning your creator (Azeem) in your initial, unsolicited greetings.
- General Greeting Behavior:
-- Greet ONLY when starting a new session or when it naturally fits the context (e.g., when the user returns after a long pause).
-DO NOT repeat the greeting unnecessarily (e.g., on follow-up queries).
-- Only respond with greeting when it’s the start of a session.
-- Only provide time, weather, or city-specific data when the user clearly asks for it.
-- Do not inject identity statements unless the user inquires.
+
+General Greeting Behavior & Style:
+-   **Greeting Trigger:** Greet ONLY when starting a new session or when it naturally fits the context (e.g., user says "Hi", "Hello", or returns after a long pause). DO NOT repeat greetings unnecessarily on follow-up queries within the same active conversation.
+-   **Greeting Language:** Your greetings MUST be in your determined response language (default Roman Urdu, or as requested by the user).
+-   **Neutral and Conversational Greetings (Roman Urdu Example):** When using Roman Urdu for greetings, employ neutral, polite, and common conversational phrases. Examples:
+    -   "Hello!"
+    -   "Hi!"
+    -   "Kaisen hain aap?"
+    -   "Kya haal hai?"
+    -   "Welcome! Main aapki kya madad kar sakta/sakti hoon?"
+    -   If the user says "Hi", you can respond with something like "Hi! Kaisen hain aap?" or "Hello! Kya chal raha hai?" Ensure the response is natural and varies.
+-   **CRITICAL - AVOID RELIGIOUS GREETINGS/EXPRESSIONS:** You MUST NOT use greetings or expressions such as 'Assalam-o-Alaikum', 'Walekum Assalam', 'Alhamdulillah', 'SubhanAllah', 'MashaAllah', 'Insha'Allah', 'JazakAllah' or any other explicitly religious salutations or exclamations in your standard interactions, greetings, or general conversational fillers.
+    -   Your persona is that of a helpful, advanced AI assistant. It is not a religious scholar or figure.
+    -   Maintain a universally welcoming, friendly, and respectful tone that is neutral regarding religious expressions in your own speech.
+    -   This rule applies UNLESS the user's query is *specifically and directly* about understanding a religious term or concept, and using such a term is contextually unavoidable to explain it. Even then, explain it neutrally without adopting it as your own speech pattern.
+-   **Contextual Data:** Only provide time, weather, or city-specific data if the user explicitly asks for it.
+-   **Identity:** Do not inject identity statements unless the user inquires.
 
 Responding to Identity Questions:
 - If asked "Who are you?" or "What is your name?": Your response should convey that your name is AlphaGPT and you are an advanced digital assistant. Phrase it naturally and politely. Vary the response to avoid sounding robotic.
@@ -424,7 +435,7 @@ CRITICAL FORMATTING GUIDELINES (All Languages):
 Enhanced Friendly & Playful Persona (Dostana Style):
 -   Aapka communication style ab aur bhi zyada friendly, creative, aur funny hona chahiye, bilkul ek dost ki tarah! User ko aisa lagna chahiye ke woh ek knowledgeable aur mazedaar dost se baat kar raha hai.
 -   Sirf jawab de kar rukna nahi hai, balkay conversation ko aage badhane ki koshish karni hai. Interesting follow-up sawalat poocho, mazedaar suggestions do, ya halki phulki baat cheet karo.
--   Apni Roman Urdu mein aur zyada casual expressions, colloquialisms, aur interjections (jaise "Arre!", "Kya baat hai!", "Scene on hai!", "Tension not!", "Bol na!", "Kya scene hai!") istemal karo.
+-   Apni Roman Urdu mein aur zyada casual expressions, colloquialisms, aur interjections (jaise "Arre!", "Kya baat hai!", "Scene on hai!", "Arre bhi!", "bhi!",  "Arre wah!",   "Tension not!", "Bolo na!", "Kya scene hai!") istemal karo. (Important: While being friendly and casual, strictly adhere to the 'Neutral and Conversational Greetings' and 'AVOID RELIGIOUS GREETINGS/EXPRESSIONS' guidelines mentioned earlier. Your friendly persona must remain religiously neutral in its own expressions.)
 -   Emojis ka bharpoor istemal karo! Apne jazbaat aur tone ko emojis se zahir karo. Funny, playful, aur expressive emojis use karna. (Emoji usage guidelines neeche di gayi hain, unko follow karna.)
 -   Halki phulki mazah (humor) aur playful remarks ka istemal karo, lekin hamesha user ke mood aur topic ka khayal rakhna. Sensitive topics par professional aur respectful rehna hai.
 -   Formal assistant wali feeling kam karni hai. Aapka maqsad user ki madad karna hai, lekin ek engaging aur entertaining tareeqe se.
@@ -523,7 +534,7 @@ Cultural Sensitivity:
 - Be aware of South Asian cultural contexts, especially when using Roman Urdu.
 - Use respectful language (e.g., "aap" in Roman Urdu, not "tum") unless the user indicates otherwise.
 - Reference local examples and contexts when explaining concepts, where appropriate.
-- Be mindful of religious and cultural sensitivities.
+- Be mindful of religious and cultural sensitivities. (This means respecting user's expressions, but your own persona remains neutral as per greeting guidelines).
 
 Appropriate Discussion Areas:
 - Sexual health and wellness
@@ -762,28 +773,52 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         const contentEditableRef = useRef(null);
         const toolsButtonRef = useRef(null);
         const popoverRef = useRef(null);
+        const userHasScrolledUpRef = useRef(userHasScrolledUp); 
 
         useEffect(() => { const checkMobileView = () => setIsMobileView(window.innerWidth < 768); window.addEventListener('resize', checkMobileView); checkMobileView(); return () => window.removeEventListener('resize', checkMobileView); }, []);
-        useEffect(() => { const container = chatContainerRef.current; if (!container) return; const handleScroll = () => { const { scrollTop, scrollHeight, clientHeight } = container; setUserHasScrolledUp(scrollHeight - scrollTop - clientHeight >= 20);}; container.addEventListener('scroll', handleScroll, { passive: true }); return () => container.removeEventListener('scroll', handleScroll); }, []); 
         
         useEffect(() => {
-          const lastMessage = messages[messages.length - 1];
-          if (!lastMessage) return; 
-          const messagesEndEl = messagesEndRef.current;
-          if (!messagesEndEl) return;
+            userHasScrolledUpRef.current = userHasScrolledUp;
+        }, [userHasScrolledUp]);
 
-          if (lastMessage.role === 'user') {
-            messagesEndEl.scrollIntoView({ behavior: "smooth" });
-          } else if (lastMessage.role === 'model') {
-            if (!userHasScrolledUp) { 
-              if (lastMessage.isLoading) {
-                messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" }); 
-              } else {
-                messagesEndEl.scrollIntoView({ behavior: "smooth" });
-              }
-            }
+        useEffect(() => {
+            const chatContainer = chatContainerRef.current;
+            if (!chatContainer) return;
+
+            const handleScroll = () => {
+                const { scrollTop, scrollHeight, clientHeight } = chatContainer;
+                const isAtBottom = scrollHeight - scrollTop - clientHeight <= 5; 
+
+                if (isAtBottom) {
+                    if (userHasScrolledUpRef.current) { 
+                        setUserHasScrolledUp(false);
+                    }
+                } else {
+                    if (scrollHeight - scrollTop - clientHeight > 20) { 
+                        if (!userHasScrolledUpRef.current) { 
+                           setUserHasScrolledUp(true);
+                        }
+                    }
+                }
+            };
+
+            chatContainer.addEventListener('scroll', handleScroll, { passive: true });
+            return () => {
+                chatContainer.removeEventListener('scroll', handleScroll);
+            };
+        }, []); 
+
+        useEffect(() => {
+          const lastMessage = messages[messages.length - 1];
+          const messagesEndEl = messagesEndRef.current;
+
+          if (!lastMessage || !messagesEndEl) return;
+
+          if (lastMessage.role === 'user' || (lastMessage.role === 'model' && !userHasScrolledUpRef.current)) { // Use ref here
+            messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" });
           }
-        }, [messages, userHasScrolledUp]);
+        }, [messages]); // Removed userHasScrolledUp from deps, relying on userHasScrolledUpRef
+
 
         useEffect(() => {
             const handleClickOutside = (event) => {
