@@ -257,15 +257,6 @@
             @apply !bg-transparent !text-inherit; 
         }
         
-        .thinking-indicator { 
-            color: rgb(var(--text-subtle));
-            font-size: 14px; 
-            font-weight: 500; 
-            display: flex;
-            align-items: center;
-            gap: 8px; 
-        }
-        
         .animated-dots { 
             display: inline-block; 
         }
@@ -435,7 +426,7 @@ CRITICAL FORMATTING GUIDELINES (All Languages):
 Enhanced Friendly & Playful Persona (Dostana Style):
 -   Aapka communication style ab aur bhi zyada friendly, creative, aur funny hona chahiye, bilkul ek dost ki tarah! User ko aisa lagna chahiye ke woh ek knowledgeable aur mazedaar dost se baat kar raha hai.
 -   Sirf jawab de kar rukna nahi hai, balkay conversation ko aage badhane ki koshish karni hai. Interesting follow-up sawalat poocho, mazedaar suggestions do, ya halki phulki baat cheet karo.
--   Apni Roman Urdu mein aur zyada casual expressions, colloquialisms, aur interjections (jaise "Arre!", "Kya baat hai!", "Scene on hai!", "Arre bhi!", "bhi!",  "Arre wah!",   "Tension not!", "Bolo na!", "Kya scene hai!") istemal karo. (Important: While being friendly and casual, strictly adhere to the 'Neutral and Conversational Greetings' and 'AVOID RELIGIOUS GREETINGS/EXPRESSIONS' guidelines mentioned earlier. Your friendly persona must remain religiously neutral in its own expressions.)
+-   Apni Roman Urdu mein aur zyada casual expressions, colloquialisms, aur interjections (jaise "Arre!", "Kya baat hai!", "Scene on hai!", "Tension not!", "Bol na!", "Kya scene hai!") istemal karo. (Important: While being friendly and casual, strictly adhere to the 'Neutral and Conversational Greetings' and 'AVOID RELIGIOUS GREETINGS/EXPRESSIONS' guidelines mentioned earlier. Your friendly persona must remain religiously neutral in its own expressions.)
 -   Emojis ka bharpoor istemal karo! Apne jazbaat aur tone ko emojis se zahir karo. Funny, playful, aur expressive emojis use karna. (Emoji usage guidelines neeche di gayi hain, unko follow karna.)
 -   Halki phulki mazah (humor) aur playful remarks ka istemal karo, lekin hamesha user ke mood aur topic ka khayal rakhna. Sensitive topics par professional aur respectful rehna hai.
 -   Formal assistant wali feeling kam karni hai. Aapka maqsad user ki madad karna hai, lekin ek engaging aur entertaining tareeqe se.
@@ -593,9 +584,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       );
 
       const ThinkingAnimation = ({ isPotentiallySearching }) => {
+        const sharedContainerClasses = "flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border border-gray-200 max-w-fit mt-2.5";
+        const sharedTextClasses = "text-sm text-gray-700 font-medium";
+        const shimmerDiv = (
+          <div 
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-shimmer"
+            style={{ backgroundSize: '200% 100%' }}
+          />
+        );
+
         if (isPotentiallySearching) {
           return (
-            <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg border border-gray-200 max-w-fit mt-2.5">
+            <div className={sharedContainerClasses}>
               <div className="relative">
                 <i 
                   className="fas fa-globe w-4 h-4 text-blue-600 animate-spin"
@@ -603,21 +603,23 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 ></i>
               </div>
               <div className="relative overflow-hidden">
-                <span className="text-sm text-gray-700 font-medium">
+                <span className={sharedTextClasses}>
                   Searching web...
                 </span>
-                <div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 animate-shimmer"
-                  style={{ backgroundSize: '200% 100%' }}
-                />
+                {shimmerDiv}
               </div>
             </div>
           );
         }
         return (
-          <div className="thinking-indicator mt-2.5">
+          <div className={sharedContainerClasses}>
             <ReusableNewAiIcon className="w-5 h-5 animate-spin-continuous" /> 
-            <p>Thinking...</p>
+            <div className="relative overflow-hidden">
+              <span className={sharedTextClasses}>
+                Thinking...
+              </span>
+              {shimmerDiv}
+            </div>
           </div>
         );
       };
@@ -814,10 +816,10 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
           if (!lastMessage || !messagesEndEl) return;
 
-          if (lastMessage.role === 'user' || (lastMessage.role === 'model' && !userHasScrolledUpRef.current)) { // Use ref here
+          if (lastMessage.role === 'user' || (lastMessage.role === 'model' && !userHasScrolledUpRef.current)) { 
             messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" });
           }
-        }, [messages]); // Removed userHasScrolledUp from deps, relying on userHasScrolledUpRef
+        }, [messages]); 
 
 
         useEffect(() => {
