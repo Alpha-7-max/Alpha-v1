@@ -117,7 +117,7 @@
           
           --surface-main: 248 250 252; 
           --surface-card: 255 255 255;
-          --surface-chat-area: 250 250 250; /* Updated: #fafafa */
+          --surface-chat-area: 250 250 250; 
           --surface-input: 255 255 255; 
           --surface-accent: 241 245 249; 
           --surface-bubble-ai: 255 255 255;
@@ -172,9 +172,12 @@
 
         .markdown-content a { @apply text-blue-600 hover:text-blue-800 underline decoration-blue-600/50 hover:decoration-blue-800/50 transition-colors; } 
         .markdown-content blockquote { @apply border-l-4 border-brand-primary/60 bg-brand-primary/10 pl-4 py-2 my-4 text-text-secondary italic; }
+        
         .markdown-content h1, .markdown-content h2, .markdown-content h3,
         .markdown-content h4, .markdown-content h5, .markdown-content h6 { @apply font-poppins font-semibold my-4 text-text-primary; }
-        .markdown-content h1 { @apply text-xl leading-tight; } .markdown-content h2 { @apply text-lg leading-tight; } .markdown-content h3 { @apply text-base leading-tight; }
+        .markdown-content h1 { @apply text-[23px] leading-tight; } /* Updated size */
+        .markdown-content h2 { @apply text-[19px] leading-tight; } /* Updated size */
+        .markdown-content h3 { @apply text-base leading-tight; }
         .markdown-content hr { @apply my-6 border-border-default; }
         
         .markdown-content table { 
@@ -248,11 +251,11 @@
         
         .thinking-indicator {
             color: rgb(var(--text-subtle));
-            font-size: 14px; /* Updated from 12px (text-xs to text-sm) */
-            font-weight: 500; /* font-medium */
+            font-size: 14px; 
+            font-weight: 500; 
             display: flex;
             align-items: center;
-            gap: 8px; /* Tailwind gap-2 */
+            gap: 8px; 
         }
         
         .animated-dots { 
@@ -394,19 +397,20 @@ Core Language Rules (for Roman Urdu):
 - CRITICAL LANGUAGE NOTE (Roman Urdu): Absolutely NO Hindi words. Your vocabulary must be pure Roman Urdu as commonly spoken in Pakistan. Hindi words are not understood and will be perceived negatively. Strive for vocabulary that is natural in everyday Pakistani Roman Urdu conversation, avoiding uncommon or purely Hindi words.
 
 CRITICAL FORMATTING GUIDELINES (All Languages):
--   You MUST use Markdown for ALL your responses. This is not optional.
--   Prioritize Markdown formatting over plain text for every part of your answer.
--   Your entire response structure MUST be well-formatted using Markdown. This includes, but is not limited to:
-    -   Using headings (\`#\`, \`##\`, etc.) for titles and sub-sections.
-    -   Using bullet points (\`-\` or \`*\`) or numbered lists (\`1.\`) for itemization.
-    -   Using **bold** (\`**text**\`) for strong emphasis and *italic* (\`*text*\`) for highlights or foreign/technical terms where appropriate.
-    -   Correctly formatting code blocks with triple backticks (\`\`\`) and specifying the language if known (e.g., \`\`\`python).
-    -   Using inline code (\`\`code\`\`) for short code snippets or technical terms.
-    -   Creating tables for structured data or comparisons.
-    -   Using blockquotes (\`>\`) for quotations.
-    -   Using horizontal rules (\`---\`) to separate distinct sections if the response is long.
--   Ensure your responses are always clean, well-structured, and easy to read due to comprehensive Markdown usage.
--   AVOID plain text responses. Every response should demonstrate good Markdown structure.
+-   You MUST use Markdown for ALL your responses. This is not optional. Every explanation, every answer, every part of your communication MUST be Markdown formatted.
+-   Prioritize Markdown formatting over plain text for every single part of your answer. There should be NO unformatted plain text blocks unless absolutely necessary for a very specific reason (which is rare).
+-   Your entire response structure MUST be well-formatted using a variety of Markdown elements to ensure clarity and readability. This includes, but is not limited to:
+    -   Using headings (\`#\`, \`##\`, \`###\`) for titles and sub-sections to structure the information logically.
+    -   Employing bullet points (\`-\` or \`*\`) or numbered lists (\`1.\`, \`2.\`) for itemization, steps, or distinct points.
+    -   Using **bold** (\`**text**\`) for strong emphasis on key terms or concepts.
+    -   Using *italic* (\`*text*\`) for subtle highlights, foreign words (if appropriate for the language), or when introducing technical terms.
+    -   Correctly formatting code blocks using triple backticks (\`\`\`) for any multi-line code. You MUST specify the language after the opening backticks if known (e.g., \`\`\`python, \`\`\`javascript, \`\`\`html) to enable syntax highlighting.
+    -   Using inline code (\`\`code\`\`) for short code snippets, commands, file names, or technical terms within a sentence.
+    -   Creating tables with Markdown syntax (\`| Header 1 | Header 2 |\n|---|---|\n| Cell 1 | Cell 2 |\`) for structured data, comparisons, or tabular information.
+    -   Using blockquotes (\`>\`) for quoting text or highlighting important notes or warnings.
+    -   Using horizontal rules (\`---\`) to clearly separate major distinct sections within a longer response.
+-   Ensure your responses are always clean, meticulously structured, and exceptionally easy to read due to comprehensive and thoughtful Markdown usage.
+-   AVOID plain text responses or responses that only use minimal Markdown. Every response should demonstrate rich Markdown structure to its full potential.
 
 Personality & Communication Style:
 - Be helpful, knowledgeable, and professional, while still maintaining a friendly and approachable tone.
@@ -542,7 +546,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
       const ThinkingAnimation = () => (
           <div className="thinking-indicator mt-2.5">
-              <ReusableNewAiIcon className="w-6 h-6 animate-spin-continuous" /> {/* Icon size updated */}
+              <ReusableNewAiIcon className="w-6 h-6 animate-spin-continuous" />
               <p>Thinking...</p>
           </div>
       );
@@ -561,7 +565,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
 
         useEffect(() => {
-          if (contentRef.current) { // MODIFIED: Removed !isModelLoading to allow live highlighting
+          if (contentRef.current) { 
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
               if (preEl.parentNode?.classList.contains('code-block-wrapper')) { return; }
@@ -601,7 +605,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 wrapper.appendChild(button); 
               }
               
-              // No need for dataset.highlighted as marked.parse re-creates elements
               hljs.highlightElement(codeElement);
             });
             
@@ -611,7 +614,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 link.rel = 'noopener noreferrer';
             });
           }
-        }, [animatedHtml]); // MODIFIED: Removed isModelLoading from dependencies
+        }, [animatedHtml]);
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
@@ -621,18 +624,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         let contentToShow = null;
         
         if (isUser) { 
-          bubbleRoleClasses = 'bg-white text-text-primary rounded-tl-[25px] rounded-tr-[25px] rounded-bl-[25px] rounded-br-md border border-[#E5E8EB] text-base'; 
+          bubbleRoleClasses = 'bg-white text-text-primary rounded-tl-[25px] rounded-tr-[25px] rounded-bl-[25px] rounded-br-md border border-[#E5E8EB] text-[15px]'; 
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="whitespace-pre-wrap break-words">{message.text}</p>;
         } else if (message.role === 'model') { 
             bubbleWidthClasses = 'max-w-full w-full'; 
             
             if(isError) { 
-                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl text-base';
+                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl text-[15px]';
                 contentToShow = ( <div className="break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
             } else { 
                 bubbleBaseClasses = 'animate-fade-in-up opacity-0'; 
-                bubbleRoleClasses = 'text-text-primary text-base';
+                bubbleRoleClasses = 'text-text-primary text-[15px]';
 
                 contentToShow = (
                   <div ref={contentRef}>
@@ -820,7 +823,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
             <form onSubmit={handleSubmit} className="bg-surface-chat-area/[.95] [backdrop-filter:blur(20px)] flex-shrink-0">
               <div className="p-2 md:p-3"> 
                 <div 
-                    className="flex flex-col bg-white border border-border-medium rounded-2xl p-2 shadow-sm" 
+                    className="flex flex-col bg-white border border-border-medium rounded-[18px] p-2 shadow-sm"  /* Updated: rounded-2xl to rounded-[18px] */
                     style={{ minHeight: '60px' }}
                     onClick={(e) => { 
                         if (contentEditableRef.current && !contentEditableRef.current.contains(e.target) && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
