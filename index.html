@@ -117,7 +117,7 @@
           
           --surface-main: 248 250 252; 
           --surface-card: 255 255 255;
-          --surface-chat-area: 249 248 246; 
+          --surface-chat-area: 250 250 250; /* Updated: #fafafa */
           --surface-input: 255 255 255; 
           --surface-accent: 241 245 249; 
           --surface-bubble-ai: 255 255 255;
@@ -248,18 +248,18 @@
         
         .thinking-indicator {
             color: rgb(var(--text-subtle));
-            font-size: 12px; /* text-xs */
+            font-size: 14px; /* Updated from 12px (text-xs to text-sm) */
             font-weight: 500; /* font-medium */
             display: flex;
             align-items: center;
             gap: 8px; /* Tailwind gap-2 */
         }
         
-        .animated-dots { /* This class is no longer used by ThinkingAnimation but kept for potential other uses */
+        .animated-dots { 
             display: inline-block; 
         }
         
-        .animated-dots span { /* This class is no longer used by ThinkingAnimation but kept for potential other uses */
+        .animated-dots span { 
             animation: fade-dots 1.5s infinite;
             font-size: 1.2em; 
             line-height: 1;
@@ -393,14 +393,20 @@ Core Language Rules (for Roman Urdu):
 - Mix in commonly used English words that are part of everyday Roman Urdu conversation.
 - CRITICAL LANGUAGE NOTE (Roman Urdu): Absolutely NO Hindi words. Your vocabulary must be pure Roman Urdu as commonly spoken in Pakistan. Hindi words are not understood and will be perceived negatively. Strive for vocabulary that is natural in everyday Pakistani Roman Urdu conversation, avoiding uncommon or purely Hindi words.
 
-
-Formatting Guidelines:
-- Use Markdown extensively for better readability
-- Create tables for comparisons and structured data
-- Use bullet points and numbered lists where appropriate
-- Format code blocks properly.
-- Use **bold** for emphasis and *italic* for subtle highlights.
-- Add horizontal rules (---) to separate major sections
+CRITICAL FORMATTING GUIDELINES (All Languages):
+-   You MUST use Markdown for ALL your responses. This is not optional.
+-   Prioritize Markdown formatting over plain text for every part of your answer.
+-   Your entire response structure MUST be well-formatted using Markdown. This includes, but is not limited to:
+    -   Using headings (\`#\`, \`##\`, etc.) for titles and sub-sections.
+    -   Using bullet points (\`-\` or \`*\`) or numbered lists (\`1.\`) for itemization.
+    -   Using **bold** (\`**text**\`) for strong emphasis and *italic* (\`*text*\`) for highlights or foreign/technical terms where appropriate.
+    -   Correctly formatting code blocks with triple backticks (\`\`\`) and specifying the language if known (e.g., \`\`\`python).
+    -   Using inline code (\`\`code\`\`) for short code snippets or technical terms.
+    -   Creating tables for structured data or comparisons.
+    -   Using blockquotes (\`>\`) for quotations.
+    -   Using horizontal rules (\`---\`) to separate distinct sections if the response is long.
+-   Ensure your responses are always clean, well-structured, and easy to read due to comprehensive Markdown usage.
+-   AVOID plain text responses. Every response should demonstrate good Markdown structure.
 
 Personality & Communication Style:
 - Be helpful, knowledgeable, and professional, while still maintaining a friendly and approachable tone.
@@ -461,7 +467,7 @@ Example Emojis (for inspiration, use creatively):
 
 Response Structure:
 1. Acknowledge the user's query with understanding
-2. Provide clear, structured information
+2. Provide clear, structured information (using Markdown as per critical guidelines)
 3. Use examples and analogies from daily life (relevant to the language and context)
 4. Summarize key points if the response is long
 5. End with encouragement or next steps
@@ -536,7 +542,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
       const ThinkingAnimation = () => (
           <div className="thinking-indicator mt-2.5">
-              <ReusableNewAiIcon className="w-5 h-5 animate-spin-continuous" />
+              <ReusableNewAiIcon className="w-6 h-6 animate-spin-continuous" /> {/* Icon size updated */}
               <p>Thinking...</p>
           </div>
       );
@@ -555,7 +561,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
 
         useEffect(() => {
-          if (!isModelLoading && contentRef.current) { 
+          if (contentRef.current) { // MODIFIED: Removed !isModelLoading to allow live highlighting
             const preElements = contentRef.current.querySelectorAll('pre');
             preElements.forEach(preEl => {
               if (preEl.parentNode?.classList.contains('code-block-wrapper')) { return; }
@@ -595,10 +601,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 wrapper.appendChild(button); 
               }
               
-              if (!codeElement.dataset.highlighted) {
-                hljs.highlightElement(codeElement);
-                codeElement.dataset.highlighted = 'true';
-              }
+              // No need for dataset.highlighted as marked.parse re-creates elements
+              hljs.highlightElement(codeElement);
             });
             
             const links = contentRef.current.querySelectorAll('.markdown-content a');
@@ -607,7 +611,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 link.rel = 'noopener noreferrer';
             });
           }
-        }, [animatedHtml, isModelLoading]); 
+        }, [animatedHtml]); // MODIFIED: Removed isModelLoading from dependencies
 
         if (message.role === 'system') { const systemMessageStyle = isError ? "px-4 py-2 text-xs text-red-700 bg-red-100 border border-red-300 rounded-full shadow-sm italic" : "px-4 py-2 text-xs text-text-subtle bg-surface-accent border border-border-light rounded-full shadow-sm italic"; return (<div className="flex justify-center my-4 animate-fade-in-up opacity-0" style={{animationFillMode: 'forwards'}}><div className={systemMessageStyle}>{isError ? <><i className="fas fa-exclamation-triangle mr-1.5"></i> {message.text}</> : message.text }</div></div>);}
         
@@ -617,18 +621,18 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         let contentToShow = null;
         
         if (isUser) { 
-          bubbleRoleClasses = 'bg-white text-text-primary rounded-tl-[25px] rounded-tr-[25px] rounded-bl-[25px] rounded-br-md border border-[#E5E8EB] text-base'; // MODIFIED: text-sm to text-base
+          bubbleRoleClasses = 'bg-white text-text-primary rounded-tl-[25px] rounded-tr-[25px] rounded-bl-[25px] rounded-br-md border border-[#E5E8EB] text-base'; 
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="whitespace-pre-wrap break-words">{message.text}</p>;
         } else if (message.role === 'model') { 
             bubbleWidthClasses = 'max-w-full w-full'; 
             
             if(isError) { 
-                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl text-base'; // MODIFIED: text-sm to text-base
+                bubbleRoleClasses = 'bg-red-50 border border-red-300 text-red-700 rounded-2xl text-base';
                 contentToShow = ( <div className="break-words"> <div className="flex items-center mb-1"><i className="fas fa-exclamation-triangle text-red-500 mr-2"></i><strong className="font-semibold">Error</strong></div>{message.text.replace(/^Error:\s*/, '')} </div>); 
             } else { 
                 bubbleBaseClasses = 'animate-fade-in-up opacity-0'; 
-                bubbleRoleClasses = 'text-text-primary text-base'; // MODIFIED: text-sm to text-base
+                bubbleRoleClasses = 'text-text-primary text-base';
 
                 contentToShow = (
                   <div ref={contentRef}>
@@ -696,7 +700,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
           } else if (lastMessage.role === 'model') {
             if (!userHasScrolledUp) { 
               if (lastMessage.isLoading) {
-                messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" }); // MODIFIED: "auto" to "smooth"
+                messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" }); 
               } else {
                 messagesEndEl.scrollIntoView({ behavior: "smooth" });
               }
