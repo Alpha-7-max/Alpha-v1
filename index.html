@@ -117,7 +117,7 @@
           
           --surface-main: 248 250 252; 
           --surface-card: 255 255 255;
-          --surface-chat-area: 249 248 246; 
+          --surface-chat-area: 249 248 246; /* Updated: #F9F8F6 */
           --surface-input: 255 255 255; 
           --surface-accent: 241 245 249; 
           --surface-bubble-ai: 255 255 255;
@@ -617,7 +617,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         let contentToShow = null;
         
         if (isUser) { 
-          bubbleRoleClasses = 'bg-white text-text-primary rounded-t-2xl rounded-bl-2xl rounded-br-md border border-[#E5E8EB] text-sm'; 
+          bubbleRoleClasses = 'bg-white text-text-primary rounded-tl-[25px] rounded-tr-[25px] rounded-bl-[25px] rounded-br-md border border-[#E5E8EB] text-sm'; 
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="whitespace-pre-wrap break-words">{message.text}</p>;
         } else if (message.role === 'model') { 
@@ -785,7 +785,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 <button onClick={() => { setChatError(null); onClearChat(); }} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-150 disabled:opacity-50 flex items-center space-x-1.5 group" aria-label="Clear chat" disabled={isLoading || messages.filter(m=>m.text || m.attachedFiles?.length > 0).length === 0}><i className="fas fa-broom fa-fw text-sm transition-transform group-hover:scale-110"></i><span className="hidden sm:inline">Clear</span></button>
             </header>
             
-            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area">
+            <div ref={chatContainerRef} className="flex-grow p-4 md:p-5 space-y-4 md:space-y-5 overflow-y-auto chat-messages-container relative bg-surface-chat-area"> {/* MODIFIED: bg-surface-chat-area */}
                 { !hasVisibleChatContent && !isLoading && ( 
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none p-8 opacity-0 animate-fade-in-up" style={{animationDelay: '0.2s', animationFillMode: 'forwards'}}>
                         <p className="text-xl md:text-2xl font-[Outfit] font-semibold mb-2" style={{ color: '#536872' }}>Hello there!</p>
@@ -815,7 +815,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
                 <div ref={messagesEndRef} className="h-1" />
             </div>
             
-            <form onSubmit={handleSubmit} className="bg-surface-chat-area flex-shrink-0">
+            <form onSubmit={handleSubmit} className="bg-surface-chat-area/[.95] [backdrop-filter:blur(20px)] flex-shrink-0"> {/* MODIFIED: bg-surface-chat-area */}
               <div className="p-2 md:p-3"> 
                 <div 
                     className="flex flex-col bg-white border border-border-medium rounded-2xl p-2 shadow-sm" 
