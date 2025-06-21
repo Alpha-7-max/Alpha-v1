@@ -303,8 +303,8 @@
 
 
       const GEMINI_MAIN_MODEL = 'gemini-2.5-flash-preview-05-20';
-      const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74"; 
-      
+      const API_KEY = "AIzaSyDSF270Y1VJf1fe4G8ZAuw7bOITbAlal74";  // Replace with your actual API key for local testing
+
       const MAX_FILE_SIZE_MB = 5; const MAX_TOTAL_FILES_SIZE_MB = 20;
 
       if (!API_KEY || API_KEY === "YOUR_GEMINI_API_KEY") console.error(" ERROR: Gemini API Key is not set.");
@@ -575,7 +575,6 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
       
       const ThinkingAnimation = ({ isPotentiallySearching }) => {
         const sharedContainerClasses = "flex items-center space-x-1.5 p-2.5 bg-gray-50 rounded-lg border border-gray-200 max-w-fit my-2 relative overflow-hidden";
-        const sharedTextClasses = "text-xs text-gray-600 font-medium"; 
         const shimmerDiv = (
           <div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 animate-shimmer"
@@ -586,8 +585,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         if (isPotentiallySearching) {
           return (
             <div className={`${sharedContainerClasses} self-start ml-0`}>
-              <GlobeIcon className="w-4 h-4 text-blue-500 animate-spin-continuous z-10" />
-              <span className={`${sharedTextClasses} z-10`}>Searching web...</span>
+              <GlobeIcon className="w-5 h-5 text-blue-500 animate-spin-continuous z-10" />
+              <span className="text-sm text-gray-600 font-medium z-10">Searching web...</span>
               {shimmerDiv}
             </div>
           );
@@ -595,8 +594,8 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
         return (
           <div className={`${sharedContainerClasses} self-start ml-0`}>
-            <ReusableNewAiIcon className="w-4 h-4 animate-spin-continuous z-10" />
-            <span className={`${sharedTextClasses} z-10`}>Thinking...</span>
+            <ReusableNewAiIcon className="w-5 h-5 animate-spin-continuous z-10" />
+            <span className="text-sm text-gray-600 font-medium z-10">Thinking...</span>
             {shimmerDiv}
           </div>
         );
@@ -689,7 +688,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
         let contentToShow = null;
         
         if (isUser) { 
-          bubbleRoleClasses = 'bg-surface-user-bubble-bg text-text-primary rounded-2xl rounded-br-md border border-border-user-bubble-color';
+          bubbleRoleClasses = 'bg-surface-user-bubble-bg/70 text-text-primary rounded-2xl rounded-br-md border border-border-user-bubble-color';
           bubbleWidthClasses = 'max-w-[80%] sm:max-w-[75%]'; 
           contentToShow = <p className="text-[15px] whitespace-pre-wrap break-words">{message.text}</p>; 
         } else if (message.role === 'model') { 
@@ -935,7 +934,7 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
               <div className="p-2 md:p-3">
                 <div
                     className="flex flex-col bg-white border border-border-medium rounded-[19px] p-2 shadow-sm"
-                    style={{ minHeight: '60px' }}
+                    style={{ minHeight: '68px' }} // Increased min-height
                     onClick={(e) => {
                         if (contentEditableRef.current && 
                             !contentEditableRef.current.contains(e.target) && 
