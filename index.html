@@ -816,10 +816,16 @@ Remember: You're not just an AI assistant, you're a helpful friend who happens t
 
           if (!lastMessage || !messagesEndEl) return;
 
-          if (lastMessage.role === 'user' || (lastMessage.role === 'model' && !userHasScrolledUpRef.current)) { 
-            messagesEndEl.scrollIntoView({ behavior: "smooth", block: "end" });
+          if (lastMessage.role === 'user' || (lastMessage.role === 'model' && !userHasScrolledUpRef.current)) {
+            // MODIFICATION: Defer scroll slightly and use 'auto' behavior
+            const ScollDOM = () => {
+                if (messagesEndRef.current) { 
+                    messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+                }
+            }
+            setTimeout(ScollDOM, 0);
           }
-        }, [messages]); 
+        }, [messages]);
 
 
         useEffect(() => {
